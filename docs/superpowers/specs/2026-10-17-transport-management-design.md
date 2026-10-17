@@ -1,8 +1,8 @@
 # Thiết kế: Hệ thống quản lý vận tải và đặt vé xe (Đề tài 11 – HaUI)
 
 **Ngày:** 2026-10-17
-**Công nghệ:** C# WPF (.NET 8) + Oracle Database 21c XE (PDB `XEPDB1`)
-**Hướng tiếp cận:** App mỏng – toàn bộ nghiệp vụ nằm trong Oracle (trigger, package, view, role)
+**Công nghệ:** C# WPF (.NET 10, Fluent theme, CommunityToolkit.Mvvm, Generic Host) + Oracle Database 21c XE (PDB `XEPDB1`)
+**Hướng tiếp cận:** Nghiệp vụ cốt lõi nằm trong Oracle (trigger, package, view, role); frontend theo Clean Architecture + MVVM
 
 ## 0. Yêu cầu đề tài và nơi đáp ứng
 
@@ -34,10 +34,13 @@
 ## 2. Kiến trúc tổng thể
 
 ```
-┌───────────────────────────── WPF App (TransportApp) ─────────────────────────────┐
-│ LoginWindow → MainWindow (sidebar + Frame) → Pages                               │
-│ Db.cs (ADO.NET, Oracle.ManagedDataAccess.Core) │ Loc.cs (i18n + dịch mã lỗi)      │
-│ ExcelExporter.cs (ClosedXML) │ TicketPrinter.cs (FlowDocument + PrintDialog)      │
+┌──────────────────────── WPF App (TransportManagement.slnx) ──────────────────────┐
+│ Presentation.Wpf : Views (XAML) ↔ ViewModels (CommunityToolkit.Mvvm), Generic Host│
+│        ↓                                                                         │
+│ Application      : Services, interface repository/port, models                   │
+│        ↓                         ↑ (implements)                                  │
+│ Domain           : Entities, enums, BusinessErrorCode    Infrastructure: Oracle  │
+│                                                          (Dapper), ClosedXML     │
 └──────────────┬───────────────────────────────────────────────────────────────────┘
                │ đăng nhập bằng user Oracle của nhân viên (OPERATOR01, SELLER01…)
                │ ALTER SESSION SET CURRENT_SCHEMA = TRANSPORT
@@ -797,39 +800,82 @@ END;
 - `install_all.bat`: hỏi mật khẩu SYS, chạy `01_sys_setup.sql` bằng SYS, rồi `02` → `08` bằng TRANSPORT qua `sqlplus`, dừng khi có lỗi (`WHENEVER SQLERROR EXIT FAILURE` ở đầu mỗi file).
 - `00_uninstall.sql` (SYS): drop các user có trong `transport.staff`, `DROP USER transport CASCADE`, drop 2 role, drop directory – để cài lại sạch.
 
-## 12. Desktop App (WPF)
+## 12. Desktop App (WPF) – Clean Architecture
 
-### 12.1 Công nghệ
+### 12.1 Công nghệ và chuẩn code (theo khuyến nghị Microsoft)
 
-- .NET 8 WPF, code-behind + `DataTable` bind vào `DataGrid` (không dùng framework MVVM – app mỏng).
-- NuGet: `Oracle.ManagedDataAccess.Core`, `MaterialDesignThemes`, `ScottPlot.WPF`, `ClosedXML`.
-- Màu: navy HaUI `#0B3D91` (sidebar, primary), vàng `#F5B700` (accent), nền `#F4F6FA`.
+- .NET 10 (LTS), C# 14, `Nullable` bật, file-scoped namespace, `ImplicitUsings`.
+- `Directory.Build.props` (cấu hình chung), `Directory.Packages.props` (Central Package Management), `.editorconfig` theo quy ước đặt tên .NET.
+- Solution dạng `.slnx`.
+- MVVM bằng **CommunityToolkit.Mvvm 8.4**: `[ObservableProperty]` trên partial property, `[RelayCommand]` async (tự chống bấm lặp khi đang chạy), `ObservableValidator` + Data Annotations cho form.
+- DI + cấu hình bằng **Generic Host** (`Host.CreateApplicationBuilder()`), `appsettings.json` đọc qua `IOptions<DatabaseOptions>`.
+- Giao diện: **Fluent theme có sẵn của WPF** – tham chiếu ResourceDictionary `pack://application:,,,/PresentationFramework.Fluent;component/Themes/Fluent.xaml` trong `App.xaml` (không dùng `ThemeMode` thử nghiệm để tránh cảnh báo WPF0001); ghi đè màu nhấn navy HaUI `#0B3D91`, điểm nhấn vàng `#F5B700`.
+- View: code-behind chỉ có `InitializeComponent()`; có `d:DataContext` cho design-time; `AutomationProperties.Name`, thứ tự Tab, phím tắt (Ctrl+F tìm, Ctrl+E xuất Excel, Ctrl+P in vé).
+- ViewModel không tham chiếu `System.Windows` (test được bằng xUnit).
+- Mọi thao tác DB async + `CancellationToken`, ViewModel có `IsBusy` để hiện trạng thái chờ.
+- NuGet: `CommunityToolkit.Mvvm`, `Microsoft.Extensions.Hosting`, `Oracle.ManagedDataAccess.Core`, `Dapper`, `ClosedXML`, `ScottPlot.WPF`; test: `xunit`, `xunit.runner.visualstudio`, `Microsoft.NET.Test.Sdk`.
+- Cố ý không dùng: MediatR, AutoMapper, Entity Framework, thư viện mock, service chỉ chuyển tiếp CRUD.
 
-### 12.2 Cấu trúc
+### 12.2 Các tầng
+
+Chiều phụ thuộc: **Presentation.Wpf → Application → Domain ← Infrastructure**. Presentation tham chiếu Infrastructure **chỉ** trong composition root (`App.xaml.cs`) để gọi `AddInfrastructure()`.
 
 ```
-src/TransportApp/
-├── App.xaml / App.xaml.cs        -- Theme MaterialDesign, nạp Strings.vi.xaml mặc định
-├── appsettings.json              -- { "DataSource": "localhost:1521/XEPDB1", "Language": "vi" }
-├── Data/
-│   ├── Db.cs                     -- Kết nối duy nhất của phiên; Query(), Exec(), ExecProc()
-│   └── Session.cs                -- Username, FullName, IsOperator
-├── Localization/
-│   ├── Strings.vi.xaml
-│   ├── Strings.en.xaml
-│   └── Loc.cs                    -- SetLanguage(), T(key), Error(OracleException)
-├── Services/
-│   ├── ExcelExporter.cs          -- Export(DataTable, title) → SaveFileDialog → .xlsx
-│   └── TicketPrinter.cs          -- Dựng FlowDocument vé → PrintDialog
-└── Views/
-    ├── LoginWindow.xaml
-    ├── MainWindow.xaml           -- Sidebar + top bar + Frame + Snackbar
-    └── Pages/
-        DashboardPage, SellTicketPage, TicketsPage, PassengersPage, RoutesPage,
-        VehiclesPage, DriversPage, SchedulesPage, StatisticsPage, StaffPage, BackupPage
+TransportManagement.slnx
+├── src/
+│   ├── Transport.Domain/                 -- net10.0, không phụ thuộc gì
+│   │   ├── Entities/      Route, Vehicle, Driver, Schedule, Passenger, Ticket, Payment, StaffMember
+│   │   ├── Enums/         VehicleStatus, DriverStatus, LicenseClass, ScheduleStatus, TicketStatus,
+│   │   │                  PaymentMethod, PaymentType, StaffRole, StaffStatus
+│   │   └── Errors/        BusinessErrorCode (enum, giá trị = mã Oracle dương: SeatNotFound = 20001…),
+│   │                      BusinessRuleException(code, message)
+│   ├── Transport.Application/            -- net10.0 → Domain
+│   │   ├── Abstractions/  IRouteRepository, IVehicleRepository, IDriverRepository, IScheduleRepository,
+│   │   │                  IPassengerRepository, ITicketRepository, IStaffRepository, IStatisticsQueries,
+│   │   │                  IBackupRepository, IAuthService, IUserSession, IExcelExporter
+│   │   ├── Models/        TripStatistic, TripSearchCriteria, SeatInfo, TicketListItem, TicketPrintModel,
+│   │   │                  DashboardSummary, DailyRevenue, BackupLog, BackupJobStatus, ExportColumn
+│   │   ├── Services/      TicketService, ScheduleService, StaffService, DashboardService, BackupService
+│   │   └── DependencyInjection.cs   -- AddApplication()
+│   ├── Transport.Infrastructure/         -- net10.0 → Application
+│   │   ├── Oracle/        DatabaseOptions, OracleConnectionFactory, OracleErrorMapper,
+│   │   │                  OracleAuthService, UserSession
+│   │   ├── Repositories/  (mỗi interface ở Application một lớp, dùng Dapper)
+│   │   ├── Export/        ClosedXmlExcelExporter
+│   │   └── DependencyInjection.cs   -- AddInfrastructure(IConfiguration)
+│   └── Transport.Presentation.Wpf/       -- net10.0-windows → Application (+ Infrastructure ở composition root)
+│       ├── App.xaml / App.xaml.cs        -- Fluent theme, dựng Generic Host, mở LoginWindow
+│       ├── appsettings.json              -- { "Database": { "DataSource": "localhost:1521/XEPDB1" }, "Language": "vi" }
+│       ├── Themes/        Colors.xaml (ghi đè accent), Controls.xaml (Card, InfoBar, SeatButton, SidebarItem)
+│       ├── Resources/     Strings.resx (en), Strings.vi.resx (vi)
+│       ├── Services/      NavigationService, DialogService, NotificationService,
+│       │                  LocalizationService, TicketPrintService
+│       ├── ViewModels/    LoginViewModel, MainViewModel, DashboardViewModel, SellTicketViewModel,
+│       │                  TicketsViewModel, PassengersViewModel, RoutesViewModel, VehiclesViewModel,
+│       │                  DriversViewModel, SchedulesViewModel, StatisticsViewModel, StaffViewModel,
+│       │                  BackupViewModel, (dialog VMs: PaymentDialogViewModel, CancelDialogViewModel,
+│       │                  StaffEditorViewModel…)
+│       └── Views/         LoginWindow, MainWindow, Pages/*Page.xaml, Dialogs/*Dialog.xaml
+└── tests/
+    └── Transport.UnitTests/              -- xUnit, fake repositories viết tay
 ```
 
-`Db.cs` là nơi duy nhất nói chuyện với Oracle. Kết nối mở lúc đăng nhập, giữ suốt phiên, sau khi mở chạy `ALTER SESSION SET CURRENT_SCHEMA = TRANSPORT`. Mọi câu SQL dùng bind parameter (`:p_name`), không nối chuỗi.
+Trách nhiệm chính:
+
+| Thành phần | Trách nhiệm |
+|---|---|
+| `OracleConnectionFactory` | Tạo `OracleConnection` từ pool bằng thông tin đăng nhập của phiên; sau khi mở chạy `ALTER SESSION SET CURRENT_SCHEMA = TRANSPORT`. Mỗi thao tác mở/đóng một kết nối (pool tái sử dụng), tránh dùng chung một kết nối giữa các lời gọi async |
+| `OracleAuthService` | Thử đăng nhập; đọc `session_roles` và `staff.full_name`; lưu vào `IUserSession` (Username, FullName, Roles, IsOperator) |
+| Repositories | SQL có bind parameter (`:p_name`), không nối chuỗi; gọi `PKG_TICKET`, `PKG_SCHEDULE`, `PKG_STAFF`, `BACKUP_OPERATIONAL_DATA` bằng `CommandType.StoredProcedure`; đọc `V_TRIP_STATISTICS`, `V_BACKUP_JOB_STATUS` |
+| `OracleErrorMapper` | `Map(int number, string message)`: 20001–20052 → `BusinessRuleException(BusinessErrorCode, englishMessage)`; 1017, 28000, 1031, 1, 2292, 1920, 12541, 12514 → `BusinessRuleException` với mã hệ thống tương ứng (enum có thêm `InvalidCredentials`, `AccountLocked`, `InsufficientPrivileges`, `DuplicateValue`, `ChildRecordExists`, `UsernameExists`, `DatabaseUnavailable`); còn lại giữ nguyên exception |
+| Application services | Kiểm tra đầu vào trước khi gọi DB (SĐT 10 số, ghế > 0, lý do hủy không rỗng, username/mật khẩu theo đúng luật của `PKG_STAFF`…), điều phối nhiều repository, kiểm tra `IUserSession.IsOperator` cho thao tác của điều hành |
+| ViewModels danh mục (Routes, Vehicles, Drivers, Passengers) | Gọi trực tiếp repository interface (CRUD thuần, không cần service trung gian) |
+| `NavigationService` | Giữ `CurrentPage` (ViewModel) cho `MainViewModel`; `DataTemplate` ánh xạ ViewModel → Page |
+| `DialogService` | Xác nhận, mở dialog theo ViewModel, `SaveFileDialog` |
+| `NotificationService` | Hiện InfoBar (thành công / cảnh báo / lỗi) trên MainWindow |
+| `LocalizationService` | Indexer `this[string key]` + `PropertyChanged("Item[]")` để XAML bind `{Binding [Key], Source={x:Static ...}}` đổi ngôn ngữ tức thì; `Translate(BusinessRuleException, params object[] args)` tra khóa `Err_{code}`, không có thì trả message tiếng Anh |
+| `TicketPrintService` | Dựng `FlowDocument` từ `TicketPrintModel`, gọi `PrintDialog` |
+| `ClosedXmlExcelExporter` | `Export<T>(IEnumerable<T> rows, IReadOnlyList<ExportColumn> columns, string title, string filePath)` |
 
 ### 12.3 Màn hình
 
@@ -837,31 +883,32 @@ src/TransportApp/
 |---|---|---|---|---|
 | 1 | Đăng nhập | ✔ | ✔ | Username/password Oracle, chọn VI/EN |
 | 2 | Tổng quan | ✔ | ✔ | 4 thẻ hôm nay (số chuyến, vé bán, doanh thu, tỷ lệ lấp đầy TB) + biểu đồ cột doanh thu 7 ngày (từ `v_trip_statistics`) |
-| 3 | Bán vé | ✔ | ✔ | Lọc: điểm đi, điểm đến, ngày, **giá từ/đến** → danh sách chuyến (giờ, xe, giá, ghế trống). Chọn chuyến → **sơ đồ ghế** (4 ghế/hàng, lối đi giữa; xanh lá trống, đỏ đã đặt, xanh dương đang chọn). Form khách: nhập SĐT → tự điền nếu đã có. Nút **Đặt vé** → `book_ticket`; hộp thoại **Thanh toán** (CASH/TRANSFER/CARD) → `pay_ticket` → hỏi **In vé** |
-| 4 | Quản lý vé | ✔ | ✔ | Tìm theo mã vé / SĐT / chuyến / trạng thái. Nút Thanh toán, Hủy (bắt buộc lý do), **In vé**, **Xuất Excel** |
+| 3 | Bán vé | ✔ | ✔ | Lọc: điểm đi, điểm đến, ngày, **giá từ/đến** → danh sách chuyến (giờ, xe, giá, ghế trống). Chọn chuyến → **sơ đồ ghế** (4 ghế/hàng, lối đi giữa; xanh lá trống, đỏ đã đặt, xanh dương đang chọn). Form khách: nhập SĐT → tự điền nếu đã có. Nút **Đặt vé** → `book_ticket`; dialog **Thanh toán** (CASH/TRANSFER/CARD) → `pay_ticket` → hỏi **In vé** |
+| 4 | Quản lý vé | ✔ | ✔ | Tìm theo mã vé / SĐT / chuyến / trạng thái. Thanh toán, Hủy (bắt buộc lý do), **In vé**, **Xuất Excel** |
 | 5 | Hành khách | ✔ | ✔ (không xóa) | CRUD, tìm kiếm, lịch sử vé của khách, Xuất Excel |
 | 6 | Tuyến xe | ✔ | chỉ xem | CRUD, Xuất Excel |
 | 7 | Phương tiện | ✔ | ẩn | CRUD, đổi trạng thái, Xuất Excel |
 | 8 | Tài xế | ✔ | ẩn | CRUD, tô vàng bằng lái hết hạn < 30 ngày, tô đỏ đã hết hạn, Xuất Excel |
-| 9 | Lịch chạy | ✔ | chỉ xem | CRUD; combobox chỉ liệt kê xe `ACTIVE` và tài xế `ACTIVE` còn hạn bằng tại ngày chạy; giá vé mặc định lấy `base_price` của tuyến; giờ đến mặc định = giờ đi + `duration_min`; nút **Hủy chuyến** → `pkg_schedule.cancel_schedule`; đổi trạng thái RUNNING/COMPLETED; Xuất Excel |
-| 10 | Thống kê | ✔ | ✔ | Lọc khoảng ngày + tuyến; DataGrid `v_trip_statistics`; tổng doanh thu, tổng vé; biểu đồ cột doanh thu theo tuyến; Xuất Excel |
+| 9 | Lịch chạy | ✔ | chỉ xem | CRUD; combobox chỉ liệt kê xe `ACTIVE` và tài xế `ACTIVE` còn hạn bằng tại ngày chạy; giá vé mặc định = `base_price` của tuyến; giờ đến mặc định = giờ đi + `duration_min`; **Hủy chuyến** → `pkg_schedule.cancel_schedule`; đổi trạng thái RUNNING/COMPLETED; Xuất Excel |
+| 10 | Thống kê | ✔ | ✔ | Lọc khoảng ngày + tuyến; bảng `v_trip_statistics`; tổng doanh thu, tổng vé; biểu đồ cột doanh thu theo tuyến; Xuất Excel |
 | 11 | Nhân viên | ✔ | ẩn | Danh sách `staff`; Thêm (username, mật khẩu, họ tên, SĐT, role) → `create_staff`; Sửa thông tin; Đổi role; Đặt lại mật khẩu; Khóa/Mở khóa; Xuất Excel |
-| 12 | Sao lưu | ✔ | ẩn | Nút **Sao lưu ngay** → `backup_operational_data`; bảng `backup_logs`; trạng thái job từ `v_backup_job_status`; hướng dẫn ngắn dùng `backup.bat`/`restore.bat` |
+| 12 | Sao lưu | ✔ | ẩn | **Sao lưu ngay** → `backup_operational_data`; bảng `backup_logs`; trạng thái job từ `v_backup_job_status`; hướng dẫn ngắn `backup.bat`/`restore.bat` |
 
-Bố cục: sidebar trái navy (logo + menu, mục không có quyền bị ẩn); thanh trên cùng: tên trang, họ tên + nhãn role, nút đổi ngôn ngữ, nút đăng xuất; thông báo dùng Snackbar.
+Bố cục: sidebar trái navy (logo + menu, mục không có quyền bị ẩn); thanh trên cùng: tên trang, họ tên + nhãn role, nút đổi ngôn ngữ, nút đăng xuất; InfoBar thông báo dưới thanh trên cùng.
 
 ### 12.4 In vé
 
-`TicketPrinter.Print(ticketId)` truy vấn vé (join chuyến, tuyến, xe, khách), dựng `FlowDocument` khổ A6 dọc gồm: tiêu đề "VÉ XE KHÁCH", mã vé lớn, tuyến, giờ khởi hành, biển số, số ghế, tên + SĐT khách, giá, trạng thái thanh toán, người bán, thời điểm in. Gọi `PrintDialog` – chọn "Microsoft Print to PDF" để ra file. Văn bản trên vé theo ngôn ngữ đang chọn.
+`TicketService.GetPrintModelAsync(ticketId)` trả `TicketPrintModel` (vé + chuyến + tuyến + xe + khách). `TicketPrintService` dựng `FlowDocument` khổ A6 dọc: tiêu đề "VÉ XE KHÁCH", mã vé lớn, tuyến, giờ khởi hành, biển số, số ghế, tên + SĐT khách, giá, trạng thái thanh toán, người bán, thời điểm in; gọi `PrintDialog` (chọn "Microsoft Print to PDF" để ra file). Nhãn trên vé theo ngôn ngữ đang chọn.
 
 ### 12.5 Xuất Excel
 
-`ExcelExporter.Export(DataTable dt, string title)`: `SaveFileDialog` → ClosedXML: dòng 1 tiêu đề in đậm, dòng 2 thời điểm xuất + người xuất, từ dòng 4 là bảng (`InsertTable`), định dạng cột số tiền `#,##0`, cột ngày `dd/MM/yyyy HH:mm`, `AdjustToContents()`. Tiêu đề cột dùng chuỗi đã dịch.
+ViewModel gọi `IDialogService.ShowSaveFile(...)` lấy đường dẫn, rồi `IExcelExporter.Export(...)` với danh sách cột đã dịch. ClosedXML: dòng 1 tiêu đề in đậm, dòng 2 thời điểm xuất + người xuất, từ dòng 4 là bảng (`InsertTable`), cột tiền `#,##0`, cột ngày `dd/MM/yyyy HH:mm`, `AdjustToContents()`.
 
 ### 12.6 Đa ngôn ngữ
 
-- `Strings.vi.xaml`, `Strings.en.xaml` (ResourceDictionary). XAML dùng `{DynamicResource Key}` nên đổi ngôn ngữ có hiệu lực ngay, không cần khởi động lại.
-- `Loc.Error(OracleException ex)`: tra khóa `Err_{ex.Number}` (VD `Err_20003` = "Ghế {0} đã có người đặt."); tham số (số ghế…) do màn hình truyền vào vì màn hình đã biết; không có khóa → hiện nguyên message tiếng Anh của Oracle (bỏ tiền tố `ORA-xxxxx:`).
+- `Resources/Strings.resx` (tiếng Anh, mặc định) và `Strings.vi.resx` (tiếng Việt); khóa giao diện dạng `Menu_SellTicket`, `Btn_Save`…; khóa lỗi `Err_{code}` (VD `Err_20003` = "Ghế {0} đã có người đặt.").
+- `LocalizationService.SetLanguage("vi"|"en")` đổi `CultureInfo` và phát `PropertyChanged("Item[]")` → mọi binding cập nhật ngay.
+- Tham số trong câu lỗi (số ghế…) do ViewModel truyền vì ViewModel đã biết; không có khóa → hiện message tiếng Anh của Oracle (bỏ tiền tố `ORA-xxxxx:`).
 - Ngôn ngữ mặc định đọc từ `appsettings.json`; chọn ở màn đăng nhập hoặc nút trên top bar.
 
 ## 13. Kiểm thử
@@ -878,6 +925,12 @@ Bố cục: sidebar trái navy (logo + menu, mục không có quyền bị ẩn)
   9. `backup_operational_data` → số dòng `*_bk` của lần sao lưu mới bằng số dòng bảng gốc; `backup_logs` có dòng mới.
   10. `pkg_staff.create_staff` với username `'x; drop'` → -20040; role sai → -20041; mật khẩu ngắn → -20044.
 - Cuối file: hướng dẫn kiểm tra phân quyền thủ công – đăng nhập `seller01`, chạy `INSERT INTO transport.tickets ...` → ORA-01031; `EXEC transport.pkg_staff.set_locked('SELLER02',1)` → ORA-01031 (seller không có quyền).
+- `tests/Transport.UnitTests` (xUnit, fake repositories viết tay):
+  - `OracleErrorMapper` dịch đúng toàn bộ mã trong mục 9.
+  - `TicketService`: chặn SĐT sai, ghế ≤ 0, lý do hủy rỗng trước khi gọi repository.
+  - `StaffService`: kiểm tra username/mật khẩu/role đúng luật `PKG_STAFF`; seller gọi thao tác điều hành → bị chặn.
+  - `SellTicketViewModel`: chọn chuyến → tải ghế → chọn ghế → đặt vé → thanh toán; ghế đã đặt không chọn được; lỗi từ service hiện qua `INotificationService`.
+  - `LocalizationService`: có khóa → câu dịch; không khóa → message tiếng Anh.
 - App: checklist thao tác tay cho từng màn hình (trong plan), chạy với cả `operator01` và `seller01`.
 
 ## 14. Tài liệu hướng dẫn sử dụng
@@ -886,7 +939,7 @@ Bố cục: sidebar trái navy (logo + menu, mục không có quyền bị ẩn)
 1. Yêu cầu hệ thống.
 2. Cài Oracle 21c XE, kiểm tra `XEPDB1`.
 3. Cài CSDL bằng `install_all.bat`; tạo thư mục `D:\OracleBackup`.
-4. Cấu hình `appsettings.json`, chạy app (`dotnet run` hoặc file `.exe` đã publish).
+4. Cài .NET 10 SDK; cấu hình `appsettings.json`; chạy app (`dotnet run --project src/Transport.Presentation.Wpf` hoặc file `.exe` đã publish).
 5. Bảng tài khoản demo (`operator01`/`Operator#01`, `seller01`/`Seller#001`, `seller02`/`Seller#002`) và quyền của từng loại.
 6. Hướng dẫn từng màn hình (mục 12.3) kèm ảnh.
 7. Quy trình bán vé đầy đủ: tìm chuyến → chọn ghế → đặt → thanh toán → in vé; hủy vé/hoàn tiền.
@@ -912,7 +965,12 @@ OracleDB_QuanLyVanTai/
 │   ├── install_all.bat
 │   ├── backup.bat
 │   └── restore.bat
-├── src/TransportApp/        (mục 12.2)
+├── src/                    (4 project, mục 12.2)
+├── tests/Transport.UnitTests/
+├── TransportManagement.slnx
+├── Directory.Build.props
+├── Directory.Packages.props
+├── .editorconfig
 ├── docs/
 │   ├── user-guide.md
 │   ├── images/
