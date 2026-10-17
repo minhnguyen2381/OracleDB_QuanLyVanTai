@@ -41,6 +41,8 @@ DECLARE
   -- Dọn toàn bộ dữ liệu test (gọi cả ở đầu để chạy lại được sau một lần lỗi)
   PROCEDURE cleanup IS
   BEGIN
+    DELETE FROM staff WHERE username = 'TEST_STAFF_01';
+    BEGIN EXECUTE IMMEDIATE 'DROP USER test_staff_01'; EXCEPTION WHEN OTHERS THEN NULL; END;
     DELETE FROM payments WHERE ticket_id IN (
       SELECT t.ticket_id FROM tickets t JOIN schedules s ON s.schedule_id = t.schedule_id
         JOIN vehicles v ON v.vehicle_id = s.vehicle_id WHERE v.plate_number = '99Z-999.99');
@@ -139,7 +141,32 @@ BEGIN
   SELECT COUNT(*) INTO v_n FROM v_backup_job_status WHERE enabled = 'TRUE';
   ok('9e. nightly job exists and is enabled', v_n = 1);
 
-  -- @@STAFF_TESTS@@
+  -- 10. PKG_STAFF chặn dữ liệu sai
+  expect_error('10a. invalid username is rejected', -20040,
+    'BEGIN pkg_staff.create_staff(''x; drop'', ''Password1'', ''X'', NULL, ''ROLE_OPERATOR''); END;');
+  expect_error('10b. invalid role is rejected', -20041,
+    'BEGIN pkg_staff.create_staff(''test_staff_01'', ''Password1'', ''X'', NULL, ''ROLE_ADMIN''); END;');
+  expect_error('10c. short password is rejected', -20044,
+    'BEGIN pkg_staff.create_staff(''test_staff_01'', ''short'', ''X'', NULL, ''ROLE_OPERATOR''); END;');
+  expect_error('10d. unknown staff is rejected', -20042,
+    'BEGIN pkg_staff.set_locked(''nobody_xyz'', 1); END;');
+
+  -- 11. Vòng đời nhân viên: tạo, đổi role, khóa
+  pkg_staff.create_staff('test_staff_01', 'TestPass#1', 'Test Staff', NULL, 'ROLE_TICKET_SELLER');
+  SELECT COUNT(*) INTO v_n FROM all_users WHERE username = 'TEST_STAFF_01';
+  ok('11a. Oracle user created', v_n = 1);
+  pkg_staff.change_role('test_staff_01', 'ROLE_OPERATOR');
+  SELECT COUNT(*) INTO v_n FROM staff WHERE username = 'TEST_STAFF_01' AND role_name = 'ROLE_OPERATOR';
+  ok('11b. role changed', v_n = 1);
+  pkg_staff.set_locked('test_staff_01', 1);
+  SELECT COUNT(*) INTO v_n FROM staff WHERE username = 'TEST_STAFF_01' AND status = 'LOCKED';
+  ok('11c. account locked', v_n = 1);
+  expect_error('11d. duplicate username is rejected', -1920,
+    'BEGIN pkg_staff.create_staff(''test_staff_01'', ''TestPass#1'', ''X'', NULL, ''ROLE_OPERATOR''); END;');
+  -- Dọn user test
+  DELETE FROM staff WHERE username = 'TEST_STAFF_01';
+  COMMIT;
+  EXECUTE IMMEDIATE 'DROP USER test_staff_01';
 
   cleanup;
   DBMS_OUTPUT.PUT_LINE(CASE WHEN g_fail = 0 THEN 'ALL TESTS PASSED'

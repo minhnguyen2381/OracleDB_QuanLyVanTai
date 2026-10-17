@@ -135,6 +135,127 @@ CREATE OR REPLACE PACKAGE BODY pkg_schedule AS
 END pkg_schedule;
 /
 
+CREATE OR REPLACE PACKAGE pkg_staff AS
+  -- Tạo user Oracle, cấp role, ghi vào STAFF
+  PROCEDURE create_staff(p_username IN VARCHAR2, p_password IN VARCHAR2, p_full_name IN VARCHAR2,
+                         p_phone IN VARCHAR2, p_role IN VARCHAR2);
+  -- Sửa họ tên, SĐT
+  PROCEDURE update_staff_info(p_username IN VARCHAR2, p_full_name IN VARCHAR2, p_phone IN VARCHAR2);
+  -- Đổi role (thu role cũ, cấp role mới)
+  PROCEDURE change_role(p_username IN VARCHAR2, p_role IN VARCHAR2);
+  -- Đặt lại mật khẩu
+  PROCEDURE reset_password(p_username IN VARCHAR2, p_password IN VARCHAR2);
+  -- Khóa (p_locked = 1) hoặc mở khóa (p_locked = 0) tài khoản
+  PROCEDURE set_locked(p_username IN VARCHAR2, p_locked IN NUMBER);
+END pkg_staff;
+/
+
+CREATE OR REPLACE PACKAGE BODY pkg_staff AS
+
+  -- Username: bắt đầu bằng chữ, 3-30 ký tự chữ/số/gạch dưới (chặn SQL injection trong EXECUTE IMMEDIATE)
+  FUNCTION valid_username(p_username IN VARCHAR2) RETURN VARCHAR2 IS
+  BEGIN
+    IF p_username IS NULL OR NOT REGEXP_LIKE(p_username, '^[A-Za-z][A-Za-z0-9_]{2,29}$') THEN
+      RAISE_APPLICATION_ERROR(-20040, 'Invalid username.');
+    END IF;
+    RETURN UPPER(p_username);
+  END valid_username;
+
+  PROCEDURE check_role(p_role IN VARCHAR2) IS
+  BEGIN
+    IF p_role IS NULL OR p_role NOT IN ('ROLE_OPERATOR', 'ROLE_TICKET_SELLER') THEN
+      RAISE_APPLICATION_ERROR(-20041, 'Invalid role.');
+    END IF;
+  END check_role;
+
+  -- Mật khẩu tối thiểu 8 ký tự, không chứa dấu nháy kép (vì được bọc trong "...")
+  PROCEDURE check_password(p_password IN VARCHAR2) IS
+  BEGIN
+    IF p_password IS NULL OR LENGTH(p_password) < 8 OR INSTR(p_password, '"') > 0 THEN
+      RAISE_APPLICATION_ERROR(-20044, 'Password must be at least 8 characters and must not contain double quotes.');
+    END IF;
+  END check_password;
+
+  -- Chỉ được thao tác trên user có trong STAFF; trả về role hiện tại
+  FUNCTION managed_role(p_user IN VARCHAR2) RETURN VARCHAR2 IS
+    v_role staff.role_name%TYPE;
+  BEGIN
+    SELECT role_name INTO v_role FROM staff WHERE username = p_user;
+    RETURN v_role;
+  EXCEPTION
+    WHEN NO_DATA_FOUND THEN RAISE_APPLICATION_ERROR(-20042, 'Staff not found.');
+  END managed_role;
+
+  PROCEDURE not_self(p_user IN VARCHAR2) IS
+  BEGIN
+    IF p_user = USER THEN
+      RAISE_APPLICATION_ERROR(-20043, 'You cannot lock or change your own account.');
+    END IF;
+  END not_self;
+
+  PROCEDURE create_staff(p_username IN VARCHAR2, p_password IN VARCHAR2, p_full_name IN VARCHAR2,
+                         p_phone IN VARCHAR2, p_role IN VARCHAR2) IS
+    v_user VARCHAR2(30) := valid_username(p_username);
+  BEGIN
+    check_role(p_role);
+    check_password(p_password);
+    EXECUTE IMMEDIATE 'CREATE USER ' || v_user || ' IDENTIFIED BY "' || p_password || '"';
+    BEGIN
+      EXECUTE IMMEDIATE 'GRANT ' || p_role || ' TO ' || v_user;
+      INSERT INTO staff (username, full_name, phone, role_name) VALUES (v_user, p_full_name, p_phone, p_role);
+      COMMIT;
+    EXCEPTION
+      WHEN OTHERS THEN
+        -- Dọn user vừa tạo để không để lại tài khoản mồ côi
+        ROLLBACK;
+        EXECUTE IMMEDIATE 'DROP USER ' || v_user;
+        RAISE;
+    END;
+  END create_staff;
+
+  PROCEDURE update_staff_info(p_username IN VARCHAR2, p_full_name IN VARCHAR2, p_phone IN VARCHAR2) IS
+    v_user VARCHAR2(30) := valid_username(p_username);
+    v_role staff.role_name%TYPE := managed_role(v_user);
+  BEGIN
+    UPDATE staff SET full_name = p_full_name, phone = p_phone WHERE username = v_user;
+    COMMIT;
+  END update_staff_info;
+
+  PROCEDURE change_role(p_username IN VARCHAR2, p_role IN VARCHAR2) IS
+    v_user     VARCHAR2(30) := valid_username(p_username);
+    v_old_role staff.role_name%TYPE := managed_role(v_user);
+  BEGIN
+    check_role(p_role);
+    not_self(v_user);
+    IF v_old_role <> p_role THEN
+      EXECUTE IMMEDIATE 'REVOKE ' || v_old_role || ' FROM ' || v_user;
+      EXECUTE IMMEDIATE 'GRANT '  || p_role     || ' TO '   || v_user;
+      UPDATE staff SET role_name = p_role WHERE username = v_user;
+      COMMIT;
+    END IF;
+  END change_role;
+
+  PROCEDURE reset_password(p_username IN VARCHAR2, p_password IN VARCHAR2) IS
+    v_user VARCHAR2(30) := valid_username(p_username);
+    v_role staff.role_name%TYPE := managed_role(v_user);
+  BEGIN
+    check_password(p_password);
+    EXECUTE IMMEDIATE 'ALTER USER ' || v_user || ' IDENTIFIED BY "' || p_password || '"';
+  END reset_password;
+
+  PROCEDURE set_locked(p_username IN VARCHAR2, p_locked IN NUMBER) IS
+    v_user VARCHAR2(30) := valid_username(p_username);
+    v_role staff.role_name%TYPE := managed_role(v_user);
+  BEGIN
+    not_self(v_user);
+    EXECUTE IMMEDIATE 'ALTER USER ' || v_user || CASE WHEN p_locked = 1 THEN ' ACCOUNT LOCK' ELSE ' ACCOUNT UNLOCK' END;
+    UPDATE staff SET status = CASE WHEN p_locked = 1 THEN 'LOCKED' ELSE 'ACTIVE' END WHERE username = v_user;
+    COMMIT;
+  END set_locked;
+
+END pkg_staff;
+/
+
 -- Dừng nếu có object bị lỗi biên dịch
 SELECT name, type, line, text FROM user_errors ORDER BY name, sequence;
 DECLARE
