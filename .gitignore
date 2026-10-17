@@ -5,3 +5,5 @@ obj/
 *.dmp
 *.log
 publish/
+TestResults/
+*.slnx.user

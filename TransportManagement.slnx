@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Transport.Application/Transport.Application.csproj" />
+    <Project Path="src/Transport.Domain/Transport.Domain.csproj" />
+    <Project Path="src/Transport.Infrastructure/Transport.Infrastructure.csproj" />
+    <Project Path="src/Transport.Presentation.Wpf/Transport.Presentation.Wpf.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Transport.UnitTests/Transport.UnitTests.csproj" />
+  </Folder>
+</Solution>
