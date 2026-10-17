@@ -1,0 +1,58 @@
+<UserControl x:Class="Transport.Presentation.Wpf.Views.Pages.VehiclesPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:l="clr-namespace:Transport.Presentation.Wpf.Localization"
+             xmlns:ctl="clr-namespace:Transport.Presentation.Wpf.Views.Controls"
+             xmlns:vm="clr-namespace:Transport.Presentation.Wpf.ViewModels.Pages"
+             mc:Ignorable="d" d:DesignWidth="1100" d:DesignHeight="680"
+             d:DataContext="{d:DesignInstance Type=vm:VehiclesViewModel}">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+
+        <Border Style="{StaticResource CardStyle}">
+            <DockPanel>
+                <ctl:CrudToolbar DockPanel.Dock="Top" />
+                <DataGrid Style="{StaticResource ListGridStyle}" ItemsSource="{Binding Items}" SelectedItem="{Binding SelectedItem}"
+                          AutomationProperties.Name="{l:Loc Menu_Vehicles}">
+                    <DataGrid.InputBindings>
+                        <MouseBinding Gesture="LeftDoubleClick" Command="{Binding EditCommand}" />
+                    </DataGrid.InputBindings>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="{l:Loc Vehicles_Plate}" Binding="{Binding PlateNumber}" Width="*" />
+                        <DataGridTextColumn Header="{l:Loc Vehicles_Type}" Binding="{Binding VehicleType}" Width="2*" />
+                        <DataGridTextColumn Header="{l:Loc Vehicles_Seats}" Binding="{Binding SeatCount}" Width="Auto" />
+                        <DataGridTextColumn Header="{l:Loc Vehicles_Status}" Width="*"
+                                            Binding="{Binding Status, Converter={StaticResource Localize}, ConverterParameter=VehicleStatus_}" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </DockPanel>
+        </Border>
+
+        <Border Grid.Column="1" Style="{StaticResource FormCardStyle}">
+            <StackPanel>
+                <ctl:FormHeader />
+                <TextBlock Text="{l:Loc Vehicles_Plate}" Style="{StaticResource FieldLabelStyle}" />
+                <TextBox Text="{Binding PlateNumber, UpdateSourceTrigger=PropertyChanged}" CharacterCasing="Upper"
+                         AutomationProperties.Name="{l:Loc Vehicles_Plate}" />
+                <TextBlock Text="{l:Loc Vehicles_Type}" Style="{StaticResource FieldLabelStyle}" />
+                <TextBox Text="{Binding VehicleType, UpdateSourceTrigger=PropertyChanged}" AutomationProperties.Name="{l:Loc Vehicles_Type}" />
+                <TextBlock Text="{l:Loc Vehicles_Seats}" Style="{StaticResource FieldLabelStyle}" />
+                <TextBox Text="{Binding SeatCount, UpdateSourceTrigger=PropertyChanged}" AutomationProperties.Name="{l:Loc Vehicles_Seats}" />
+                <TextBlock Text="{l:Loc Vehicles_Status}" Style="{StaticResource FieldLabelStyle}" />
+                <ComboBox ItemsSource="{Binding Statuses}" SelectedItem="{Binding Status}" AutomationProperties.Name="{l:Loc Vehicles_Status}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Converter={StaticResource Localize}, ConverterParameter=VehicleStatus_}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+                <ctl:FormButtons />
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>

@@ -92,4 +92,15 @@
   <data name="Routes_Duration" xml:space="preserve"><value>Thời gian (phút)</value></data>
   <data name="Routes_BasePrice" xml:space="preserve"><value>Giá cơ bản</value></data>
   <data name="Routes_ExportTitle" xml:space="preserve"><value>Danh sách tuyến xe</value></data>
+  <data name="Menu_Vehicles" xml:space="preserve"><value>Phương tiện</value></data>
+  <data name="Vehicles_Plate" xml:space="preserve"><value>Biển số</value></data>
+  <data name="Vehicles_Type" xml:space="preserve"><value>Loại xe</value></data>
+  <data name="Vehicles_Seats" xml:space="preserve"><value>Số ghế</value></data>
+  <data name="Vehicles_Status" xml:space="preserve"><value>Trạng thái</value></data>
+  <data name="Vehicles_ExportTitle" xml:space="preserve"><value>Danh sách phương tiện</value></data>
+  <data name="VehicleStatus_Active" xml:space="preserve"><value>Đang hoạt động</value></data>
+  <data name="VehicleStatus_Maintenance" xml:space="preserve"><value>Bảo trì</value></data>
+  <data name="VehicleStatus_Retired" xml:space="preserve"><value>Ngừng sử dụng</value></data>
+  <data name="Val_Plate" xml:space="preserve"><value>Định dạng như 29B-196.88 hoặc 29B-12345.</value></data>
+  <data name="Val_SeatRange" xml:space="preserve"><value>Từ 1 đến 60 ghế.</value></data>
 </root>
