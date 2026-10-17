@@ -1,0 +1,27 @@
+<UserControl x:Class="Transport.Presentation.Wpf.Views.Controls.CrudToolbar"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:l="clr-namespace:Transport.Presentation.Wpf.Localization"
+             xmlns:c="clr-namespace:Transport.Presentation.Wpf.Controls">
+    <DockPanel Margin="0,0,0,12">
+        <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+            <Button Command="{Binding RefreshCommand}" c:Shortcut.Gesture="F5" Margin="8,0,0,0"
+                    ToolTip="{l:Loc Btn_Refresh}" AutomationProperties.Name="{l:Loc Btn_Refresh}">
+                <TextBlock Text="&#xE72C;" FontFamily="{StaticResource SymbolFont}" />
+            </Button>
+            <Button Command="{Binding ExportToExcelCommand}" Content="{l:Loc Btn_ExportExcel}" c:Shortcut.Gesture="Ctrl+E" Margin="8,0,0,0" />
+            <Button Command="{Binding DeleteCommand}" Content="{l:Loc Btn_Delete}" Margin="8,0,0,0"
+                    Visibility="{Binding CanDeleteItems, Converter={StaticResource BoolToVisibility}}" />
+            <Button Command="{Binding EditCommand}" Content="{l:Loc Btn_Edit}" Margin="8,0,0,0"
+                    Visibility="{Binding CanEditItems, Converter={StaticResource BoolToVisibility}}" />
+            <Button Command="{Binding NewCommand}" Content="{l:Loc Btn_New}" c:Shortcut.Gesture="Ctrl+N" Margin="8,0,0,0"
+                    Style="{StaticResource PrimaryButtonStyle}"
+                    Visibility="{Binding CanCreate, Converter={StaticResource BoolToVisibility}}" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <TextBlock Text="&#xE721;" FontFamily="{StaticResource SymbolFont}" VerticalAlignment="Center" Margin="0,0,8,0" />
+            <TextBox Width="320" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" c:Shortcut.Gesture="Ctrl+F"
+                     ToolTip="{l:Loc Lbl_Search}" AutomationProperties.Name="{l:Loc Lbl_Search}" />
+        </StackPanel>
+    </DockPanel>
+</UserControl>

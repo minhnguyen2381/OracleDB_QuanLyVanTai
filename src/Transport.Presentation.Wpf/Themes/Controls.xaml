@@ -163,4 +163,47 @@
             </Trigger>
         </Style.Triggers>
     </Style>
+    <!-- Bảng danh sách chỉ đọc -->
+    <Style x:Key="ListGridStyle" TargetType="DataGrid" BasedOn="{StaticResource {x:Type DataGrid}}">
+        <Setter Property="AutoGenerateColumns" Value="False" />
+        <Setter Property="IsReadOnly" Value="True" />
+        <Setter Property="SelectionMode" Value="Single" />
+        <Setter Property="SelectionUnit" Value="FullRow" />
+        <Setter Property="HeadersVisibility" Value="Column" />
+        <Setter Property="CanUserAddRows" Value="False" />
+        <Setter Property="CanUserDeleteRows" Value="False" />
+        <Setter Property="GridLinesVisibility" Value="Horizontal" />
+    </Style>
+
+    <!-- Thẻ form thêm/sửa bên phải trang danh mục; DataContext = CrudPageViewModel -->
+    <Style x:Key="FormCardStyle" TargetType="Border" BasedOn="{StaticResource CardStyle}">
+        <Setter Property="Width" Value="360" />
+        <Setter Property="Margin" Value="16,0,0,0" />
+        <Setter Property="Visibility" Value="{Binding IsFormOpen, Converter={StaticResource BoolToVisibility}}" />
+    </Style>
+
+    <!-- Biểu đồ cột; ItemsSource = danh sách ChartBar -->
+    <Style x:Key="BarChartStyle" TargetType="ItemsControl">
+        <Setter Property="Height" Value="210" />
+        <Setter Property="ItemsPanel">
+            <Setter.Value>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal" />
+                </ItemsPanelTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="ItemTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <StackPanel Width="96" Margin="4,0" VerticalAlignment="Bottom">
+                        <TextBlock Text="{Binding Value, StringFormat={}{0:N0}}" FontSize="11" HorizontalAlignment="Center"
+                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                        <Border Height="{Binding Height}" Margin="18,4,18,0" CornerRadius="4,4,0,0"
+                                Background="{StaticResource HaUiNavyBrush}" ToolTip="{Binding Value, StringFormat={}{0:N0} ₫}" />
+                        <TextBlock Text="{Binding Label}" FontSize="11" TextAlignment="Center" TextWrapping="Wrap" Margin="0,4,0,0" />
+                    </StackPanel>
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 </ResourceDictionary>

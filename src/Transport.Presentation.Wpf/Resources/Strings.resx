@@ -70,4 +70,26 @@
   <data name="Err_90004" xml:space="preserve"><value>Arrival time must be after departure time.</value></data>
   <data name="Err_90005" xml:space="preserve"><value>Price must be greater than 0.</value></data>
   <data name="Err_90006" xml:space="preserve"><value>Only operators can perform this action.</value></data>
+  <data name="Btn_New" xml:space="preserve"><value>New</value></data>
+  <data name="Btn_Edit" xml:space="preserve"><value>Edit</value></data>
+  <data name="Btn_Delete" xml:space="preserve"><value>Delete</value></data>
+  <data name="Btn_Save" xml:space="preserve"><value>Save</value></data>
+  <data name="Btn_Refresh" xml:space="preserve"><value>Refresh (F5)</value></data>
+  <data name="Btn_ExportExcel" xml:space="preserve"><value>Export Excel</value></data>
+  <data name="Btn_Search" xml:space="preserve"><value>Search</value></data>
+  <data name="Lbl_Search" xml:space="preserve"><value>Search (Ctrl+F)</value></data>
+  <data name="Lbl_All" xml:space="preserve"><value>All</value></data>
+  <data name="Lbl_From" xml:space="preserve"><value>From</value></data>
+  <data name="Lbl_To" xml:space="preserve"><value>To</value></data>
+  <data name="Form_NewTitle" xml:space="preserve"><value>Add new</value></data>
+  <data name="Form_EditTitle" xml:space="preserve"><value>Edit</value></data>
+  <data name="Val_TooLong" xml:space="preserve"><value>Too long.</value></data>
+  <data name="Menu_Routes" xml:space="preserve"><value>Routes</value></data>
+  <data name="Routes_Name" xml:space="preserve"><value>Route name</value></data>
+  <data name="Routes_Origin" xml:space="preserve"><value>Origin</value></data>
+  <data name="Routes_Destination" xml:space="preserve"><value>Destination</value></data>
+  <data name="Routes_Distance" xml:space="preserve"><value>Distance (km)</value></data>
+  <data name="Routes_Duration" xml:space="preserve"><value>Duration (min)</value></data>
+  <data name="Routes_BasePrice" xml:space="preserve"><value>Base price</value></data>
+  <data name="Routes_ExportTitle" xml:space="preserve"><value>Route list</value></data>
 </root>

@@ -2,6 +2,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Transport.Presentation.Wpf.Localization;
 using Transport.Presentation.Wpf.Services;
 using Transport.Presentation.Wpf.ViewModels;
+using Transport.Presentation.Wpf.ViewModels.Pages;
 using Transport.Presentation.Wpf.Views;
 
 namespace Transport.Presentation.Wpf;
@@ -39,6 +40,7 @@ public static class PresentationServices
     // Danh sách trang của ứng dụng (Plan 3 thêm từng dòng services.AddPage<...>(...) trước return)
     private static IServiceCollection AddPages(this IServiceCollection services)
     {
+        services.AddPage<RoutesViewModel>("Menu_Routes", "\uE707", 50);
         return services;
     }
 }

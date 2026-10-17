@@ -1,0 +1,56 @@
+<UserControl x:Class="Transport.Presentation.Wpf.Views.Pages.RoutesPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:l="clr-namespace:Transport.Presentation.Wpf.Localization"
+             xmlns:ctl="clr-namespace:Transport.Presentation.Wpf.Views.Controls"
+             xmlns:vm="clr-namespace:Transport.Presentation.Wpf.ViewModels.Pages"
+             mc:Ignorable="d" d:DesignWidth="1100" d:DesignHeight="680"
+             d:DataContext="{d:DesignInstance Type=vm:RoutesViewModel}">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+
+        <Border Style="{StaticResource CardStyle}">
+            <DockPanel>
+                <ctl:CrudToolbar DockPanel.Dock="Top" />
+                <DataGrid Style="{StaticResource ListGridStyle}" ItemsSource="{Binding Items}" SelectedItem="{Binding SelectedItem}"
+                          AutomationProperties.Name="{l:Loc Menu_Routes}">
+                    <DataGrid.InputBindings>
+                        <MouseBinding Gesture="LeftDoubleClick" Command="{Binding EditCommand}" />
+                    </DataGrid.InputBindings>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="{l:Loc Routes_Name}" Binding="{Binding Name}" Width="2*" />
+                        <DataGridTextColumn Header="{l:Loc Routes_Origin}" Binding="{Binding Origin}" Width="*" />
+                        <DataGridTextColumn Header="{l:Loc Routes_Destination}" Binding="{Binding Destination}" Width="*" />
+                        <DataGridTextColumn Header="{l:Loc Routes_Distance}" Binding="{Binding DistanceKm}" Width="Auto" />
+                        <DataGridTextColumn Header="{l:Loc Routes_Duration}" Binding="{Binding DurationMin}" Width="Auto" />
+                        <DataGridTextColumn Header="{l:Loc Routes_BasePrice}" Binding="{Binding BasePrice, StringFormat={}{0:N0} ₫}" Width="Auto" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </DockPanel>
+        </Border>
+
+        <Border Grid.Column="1" Style="{StaticResource FormCardStyle}">
+            <StackPanel>
+                <ctl:FormHeader />
+                <TextBlock Text="{l:Loc Routes_Name}" Style="{StaticResource FieldLabelStyle}" />
+                <TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" AutomationProperties.Name="{l:Loc Routes_Name}" />
+                <TextBlock Text="{l:Loc Routes_Origin}" Style="{StaticResource FieldLabelStyle}" />
+                <TextBox Text="{Binding Origin, UpdateSourceTrigger=PropertyChanged}" AutomationProperties.Name="{l:Loc Routes_Origin}" />
+                <TextBlock Text="{l:Loc Routes_Destination}" Style="{StaticResource FieldLabelStyle}" />
+                <TextBox Text="{Binding Destination, UpdateSourceTrigger=PropertyChanged}" AutomationProperties.Name="{l:Loc Routes_Destination}" />
+                <TextBlock Text="{l:Loc Routes_Distance}" Style="{StaticResource FieldLabelStyle}" />
+                <TextBox Text="{Binding DistanceKm, UpdateSourceTrigger=PropertyChanged, TargetNullValue=''}" AutomationProperties.Name="{l:Loc Routes_Distance}" />
+                <TextBlock Text="{l:Loc Routes_Duration}" Style="{StaticResource FieldLabelStyle}" />
+                <TextBox Text="{Binding DurationMin, UpdateSourceTrigger=PropertyChanged, TargetNullValue=''}" AutomationProperties.Name="{l:Loc Routes_Duration}" />
+                <TextBlock Text="{l:Loc Routes_BasePrice}" Style="{StaticResource FieldLabelStyle}" />
+                <TextBox Text="{Binding BasePrice, UpdateSourceTrigger=PropertyChanged}" AutomationProperties.Name="{l:Loc Routes_BasePrice}" />
+                <ctl:FormButtons />
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>
