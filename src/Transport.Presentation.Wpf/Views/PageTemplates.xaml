@@ -10,4 +10,5 @@
     <DataTemplate DataType="{x:Type vm:SchedulesViewModel}"><pages:SchedulesPage /></DataTemplate>
     <DataTemplate DataType="{x:Type vm:SellTicketViewModel}"><pages:SellTicketPage /></DataTemplate>
     <DataTemplate DataType="{x:Type vm:TicketsViewModel}"><pages:TicketsPage /></DataTemplate>
+    <DataTemplate DataType="{x:Type vm:StatisticsViewModel}"><pages:StatisticsPage /></DataTemplate>
 </ResourceDictionary>

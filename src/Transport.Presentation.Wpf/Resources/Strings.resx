@@ -211,4 +211,15 @@
   <data name="Tickets_Cancelled" xml:space="preserve"><value>Ticket cancelled.</value></data>
   <data name="Tickets_CancelledRefund" xml:space="preserve"><value>Ticket cancelled; {0:N0} ₫ refunded.</value></data>
   <data name="Tickets_ExportTitle" xml:space="preserve"><value>Ticket list</value></data>
+  <data name="Menu_Statistics" xml:space="preserve"><value>Statistics</value></data>
+  <data name="Stats_Route" xml:space="preserve"><value>Route</value></data>
+  <data name="Stats_AllRoutes" xml:space="preserve"><value>All routes</value></data>
+  <data name="Stats_TotalTrips" xml:space="preserve"><value>Trips</value></data>
+  <data name="Stats_TicketsSold" xml:space="preserve"><value>Tickets sold</value></data>
+  <data name="Stats_Revenue" xml:space="preserve"><value>Net revenue</value></data>
+  <data name="Stats_AvgOccupancy" xml:space="preserve"><value>Average occupancy</value></data>
+  <data name="Stats_Occupancy" xml:space="preserve"><value>Occupancy (%)</value></data>
+  <data name="Stats_Cancelled" xml:space="preserve"><value>Cancelled tickets</value></data>
+  <data name="Stats_RevenueByRoute" xml:space="preserve"><value>Net revenue by route</value></data>
+  <data name="Stats_ExportTitle" xml:space="preserve"><value>Trip statistics</value></data>
 </root>
