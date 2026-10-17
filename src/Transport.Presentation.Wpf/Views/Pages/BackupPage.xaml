@@ -1,0 +1,80 @@
+<UserControl x:Class="Transport.Presentation.Wpf.Views.Pages.BackupPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:l="clr-namespace:Transport.Presentation.Wpf.Localization"
+             xmlns:c="clr-namespace:Transport.Presentation.Wpf.Controls"
+             xmlns:vm="clr-namespace:Transport.Presentation.Wpf.ViewModels.Pages"
+             mc:Ignorable="d" d:DesignWidth="1100" d:DesignHeight="680"
+             d:DataContext="{d:DesignInstance Type=vm:BackupViewModel}">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <UniformGrid Columns="2" Margin="0,0,0,16">
+            <!-- Sao lưu ngay -->
+            <Border Style="{StaticResource CardStyle}" Margin="0,0,12,0">
+                <StackPanel>
+                    <TextBlock Text="{l:Loc Backup_Now}" Style="{StaticResource SectionTitleStyle}" />
+                    <TextBlock Text="{l:Loc Backup_NowHint}" Style="{StaticResource StatLabelStyle}" />
+                    <Button Content="{l:Loc Backup_Now}" Command="{Binding BackupNowCommand}" Style="{StaticResource PrimaryButtonStyle}"
+                            HorizontalAlignment="Left" Margin="0,16,0,0" />
+                    <TextBlock Text="{l:Loc Backup_DataPumpHint}" Style="{StaticResource StatLabelStyle}" Margin="0,16,0,0" />
+                </StackPanel>
+            </Border>
+
+            <!-- Job sao lưu đêm -->
+            <Border Style="{StaticResource CardStyle}">
+                <StackPanel>
+                    <TextBlock Text="{l:Loc Backup_Job}" Style="{StaticResource SectionTitleStyle}" />
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="180" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Text="{l:Loc Backup_JobState}" Style="{StaticResource StatLabelStyle}" />
+                        <TextBlock Grid.Column="1" Text="{Binding JobStateText}" FontWeight="SemiBold" />
+                        <TextBlock Grid.Row="1" Text="{l:Loc Backup_LastRun}" Style="{StaticResource StatLabelStyle}" Margin="0,6,0,0" />
+                        <TextBlock Grid.Row="1" Grid.Column="1" Margin="0,6,0,0"
+                                   Text="{Binding JobStatus.LastStartDate, StringFormat={}{0:dd/MM/yyyy HH:mm}, TargetNullValue=–, FallbackValue=–}" />
+                        <TextBlock Grid.Row="2" Text="{l:Loc Backup_NextRun}" Style="{StaticResource StatLabelStyle}" Margin="0,6,0,0" />
+                        <TextBlock Grid.Row="2" Grid.Column="1" Margin="0,6,0,0"
+                                   Text="{Binding JobStatus.NextRunDate, StringFormat={}{0:dd/MM/yyyy HH:mm}, TargetNullValue=–, FallbackValue=–}" />
+                        <TextBlock Grid.Row="3" Text="{l:Loc Backup_Failures}" Style="{StaticResource StatLabelStyle}" Margin="0,6,0,0" />
+                        <TextBlock Grid.Row="3" Grid.Column="1" Margin="0,6,0,0"
+                                   Text="{Binding JobStatus.FailureCount, TargetNullValue=0, FallbackValue=–}" />
+                    </Grid>
+                </StackPanel>
+            </Border>
+        </UniformGrid>
+
+        <!-- Lịch sử sao lưu -->
+        <Border Grid.Row="1" Style="{StaticResource CardStyle}">
+            <DockPanel>
+                <DockPanel DockPanel.Dock="Top" Margin="0,0,0,8">
+                    <Button DockPanel.Dock="Right" Content="{l:Loc Btn_ExportExcel}" Command="{Binding ExportToExcelCommand}" c:Shortcut.Gesture="Ctrl+E" />
+                    <TextBlock Text="{l:Loc Backup_History}" Style="{StaticResource SectionTitleStyle}" VerticalAlignment="Center" />
+                </DockPanel>
+                <DataGrid Style="{StaticResource ListGridStyle}" ItemsSource="{Binding Logs}" AutomationProperties.Name="{l:Loc Backup_History}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="{l:Loc Backup_LogId}" Binding="{Binding LogId}" Width="Auto" />
+                        <DataGridTextColumn Header="{l:Loc Backup_At}" Binding="{Binding BackupAt, StringFormat={}{0:dd/MM/yyyy HH:mm:ss}}" Width="*" />
+                        <DataGridTextColumn Header="{l:Loc Backup_By}" Binding="{Binding PerformedBy}" Width="*" />
+                        <DataGridTextColumn Header="{l:Loc Backup_Schedules}" Binding="{Binding ScheduleRows}" Width="Auto" />
+                        <DataGridTextColumn Header="{l:Loc Backup_Tickets}" Binding="{Binding TicketRows}" Width="Auto" />
+                        <DataGridTextColumn Header="{l:Loc Backup_Payments}" Binding="{Binding PaymentRows}" Width="Auto" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </DockPanel>
+        </Border>
+    </Grid>
+</UserControl>

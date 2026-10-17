@@ -51,6 +51,7 @@ public static class PresentationServices
         services.AddPage<SchedulesViewModel>("Menu_Schedules", "\uE787", 80);
         services.AddPage<StatisticsViewModel>("Menu_Statistics", "\uE9D2", 90);
         services.AddPage<StaffViewModel>("Menu_Staff", "\uE7EF", 100, operatorOnly: true);
+        services.AddPage<BackupViewModel>("Menu_Backup", "\uE74E", 110, operatorOnly: true);
         return services;
     }
 }

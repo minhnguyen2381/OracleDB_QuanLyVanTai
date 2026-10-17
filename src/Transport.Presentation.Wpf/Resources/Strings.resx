@@ -251,4 +251,24 @@
   <data name="StaffRole_TicketSeller" xml:space="preserve"><value>Ticket seller</value></data>
   <data name="StaffStatus_Active" xml:space="preserve"><value>Active</value></data>
   <data name="StaffStatus_Locked" xml:space="preserve"><value>Locked</value></data>
+  <data name="Menu_Backup" xml:space="preserve"><value>Backup</value></data>
+  <data name="Backup_Now" xml:space="preserve"><value>Back up now</value></data>
+  <data name="Backup_NowHint" xml:space="preserve"><value>Copies all schedules, tickets and payments into the backup tables (the 7 latest copies are kept).</value></data>
+  <data name="Backup_Done" xml:space="preserve"><value>Backup #{0} completed: {1} schedules, {2} tickets, {3} payments.</value></data>
+  <data name="Backup_DataPumpHint" xml:space="preserve"><value>Full export / restore of the whole schema: run database\backup.bat or database\restore.bat &lt;file.dmp&gt; (Data Pump, folder D:\OracleBackup).</value></data>
+  <data name="Backup_Job" xml:space="preserve"><value>Nightly backup job (02:00)</value></data>
+  <data name="Backup_JobState" xml:space="preserve"><value>Status</value></data>
+  <data name="Backup_JobEnabled" xml:space="preserve"><value>Enabled</value></data>
+  <data name="Backup_JobDisabled" xml:space="preserve"><value>Disabled</value></data>
+  <data name="Backup_LastRun" xml:space="preserve"><value>Last run</value></data>
+  <data name="Backup_NextRun" xml:space="preserve"><value>Next run</value></data>
+  <data name="Backup_Failures" xml:space="preserve"><value>Failures</value></data>
+  <data name="Backup_History" xml:space="preserve"><value>Backup history</value></data>
+  <data name="Backup_LogId" xml:space="preserve"><value>#</value></data>
+  <data name="Backup_At" xml:space="preserve"><value>Time</value></data>
+  <data name="Backup_By" xml:space="preserve"><value>Performed by</value></data>
+  <data name="Backup_Schedules" xml:space="preserve"><value>Schedules</value></data>
+  <data name="Backup_Tickets" xml:space="preserve"><value>Tickets</value></data>
+  <data name="Backup_Payments" xml:space="preserve"><value>Payments</value></data>
+  <data name="Backup_ExportTitle" xml:space="preserve"><value>Backup history</value></data>
 </root>

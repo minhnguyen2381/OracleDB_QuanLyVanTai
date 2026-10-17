@@ -251,4 +251,24 @@
   <data name="StaffRole_TicketSeller" xml:space="preserve"><value>Nhân viên bán vé</value></data>
   <data name="StaffStatus_Active" xml:space="preserve"><value>Hoạt động</value></data>
   <data name="StaffStatus_Locked" xml:space="preserve"><value>Đã khóa</value></data>
+  <data name="Menu_Backup" xml:space="preserve"><value>Sao lưu</value></data>
+  <data name="Backup_Now" xml:space="preserve"><value>Sao lưu ngay</value></data>
+  <data name="Backup_NowHint" xml:space="preserve"><value>Chép toàn bộ lịch chạy, vé và thanh toán sang các bảng sao lưu (giữ 7 bản gần nhất).</value></data>
+  <data name="Backup_Done" xml:space="preserve"><value>Đã sao lưu lần #{0}: {1} lịch chạy, {2} vé, {3} thanh toán.</value></data>
+  <data name="Backup_DataPumpHint" xml:space="preserve"><value>Sao lưu / khôi phục toàn bộ schema: chạy database\backup.bat hoặc database\restore.bat &lt;file.dmp&gt; (Data Pump, thư mục D:\OracleBackup).</value></data>
+  <data name="Backup_Job" xml:space="preserve"><value>Job sao lưu hằng đêm (02:00)</value></data>
+  <data name="Backup_JobState" xml:space="preserve"><value>Trạng thái</value></data>
+  <data name="Backup_JobEnabled" xml:space="preserve"><value>Đang bật</value></data>
+  <data name="Backup_JobDisabled" xml:space="preserve"><value>Đang tắt</value></data>
+  <data name="Backup_LastRun" xml:space="preserve"><value>Lần chạy gần nhất</value></data>
+  <data name="Backup_NextRun" xml:space="preserve"><value>Lần chạy tiếp theo</value></data>
+  <data name="Backup_Failures" xml:space="preserve"><value>Số lần lỗi</value></data>
+  <data name="Backup_History" xml:space="preserve"><value>Lịch sử sao lưu</value></data>
+  <data name="Backup_LogId" xml:space="preserve"><value>Lần</value></data>
+  <data name="Backup_At" xml:space="preserve"><value>Thời điểm</value></data>
+  <data name="Backup_By" xml:space="preserve"><value>Người thực hiện</value></data>
+  <data name="Backup_Schedules" xml:space="preserve"><value>Lịch chạy</value></data>
+  <data name="Backup_Tickets" xml:space="preserve"><value>Vé</value></data>
+  <data name="Backup_Payments" xml:space="preserve"><value>Thanh toán</value></data>
+  <data name="Backup_ExportTitle" xml:space="preserve"><value>Lịch sử sao lưu</value></data>
 </root>
