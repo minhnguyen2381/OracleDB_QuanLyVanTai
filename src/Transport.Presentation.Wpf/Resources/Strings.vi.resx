@@ -116,4 +116,27 @@
   <data name="DriverStatus_Active" xml:space="preserve"><value>Đang làm việc</value></data>
   <data name="DriverStatus_Inactive" xml:space="preserve"><value>Nghỉ việc</value></data>
   <data name="Val_IdCard" xml:space="preserve"><value>Gồm 12 chữ số.</value></data>
+  <data name="Menu_Passengers" xml:space="preserve"><value>Hành khách</value></data>
+  <data name="Passengers_Name" xml:space="preserve"><value>Họ tên</value></data>
+  <data name="Passengers_Phone" xml:space="preserve"><value>Số điện thoại</value></data>
+  <data name="Passengers_IdCard" xml:space="preserve"><value>CCCD</value></data>
+  <data name="Passengers_Email" xml:space="preserve"><value>Email</value></data>
+  <data name="Passengers_History" xml:space="preserve"><value>Lịch sử vé của khách đang chọn</value></data>
+  <data name="Passengers_ExportTitle" xml:space="preserve"><value>Danh sách hành khách</value></data>
+  <data name="Val_Email" xml:space="preserve"><value>Email không hợp lệ.</value></data>
+  <data name="Tickets_Id" xml:space="preserve"><value>Mã vé</value></data>
+  <data name="Tickets_Route" xml:space="preserve"><value>Tuyến</value></data>
+  <data name="Tickets_Departure" xml:space="preserve"><value>Khởi hành</value></data>
+  <data name="Tickets_Vehicle" xml:space="preserve"><value>Xe</value></data>
+  <data name="Tickets_Seat" xml:space="preserve"><value>Ghế</value></data>
+  <data name="Tickets_Passenger" xml:space="preserve"><value>Hành khách</value></data>
+  <data name="Tickets_Phone" xml:space="preserve"><value>SĐT</value></data>
+  <data name="Tickets_Price" xml:space="preserve"><value>Giá vé</value></data>
+  <data name="Tickets_Status" xml:space="preserve"><value>Trạng thái</value></data>
+  <data name="Tickets_BookedAt" xml:space="preserve"><value>Thời điểm đặt</value></data>
+  <data name="Tickets_SoldBy" xml:space="preserve"><value>Người bán</value></data>
+  <data name="Tickets_CancelReason" xml:space="preserve"><value>Lý do hủy</value></data>
+  <data name="TicketStatus_Booked" xml:space="preserve"><value>Chờ thanh toán</value></data>
+  <data name="TicketStatus_Paid" xml:space="preserve"><value>Đã thanh toán</value></data>
+  <data name="TicketStatus_Cancelled" xml:space="preserve"><value>Đã hủy</value></data>
 </root>

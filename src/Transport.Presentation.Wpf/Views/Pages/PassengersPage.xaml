@@ -1,0 +1,72 @@
+<UserControl x:Class="Transport.Presentation.Wpf.Views.Pages.PassengersPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:l="clr-namespace:Transport.Presentation.Wpf.Localization"
+             xmlns:ctl="clr-namespace:Transport.Presentation.Wpf.Views.Controls"
+             xmlns:vm="clr-namespace:Transport.Presentation.Wpf.ViewModels.Pages"
+             mc:Ignorable="d" d:DesignWidth="1100" d:DesignHeight="680"
+             d:DataContext="{d:DesignInstance Type=vm:PassengersViewModel}">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="3*" />
+            <RowDefinition Height="2*" />
+        </Grid.RowDefinitions>
+
+        <Border Style="{StaticResource CardStyle}">
+            <DockPanel>
+                <ctl:CrudToolbar DockPanel.Dock="Top" />
+                <DataGrid Style="{StaticResource ListGridStyle}" ItemsSource="{Binding Items}" SelectedItem="{Binding SelectedItem}"
+                          AutomationProperties.Name="{l:Loc Menu_Passengers}">
+                    <DataGrid.InputBindings>
+                        <MouseBinding Gesture="LeftDoubleClick" Command="{Binding EditCommand}" />
+                    </DataGrid.InputBindings>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="{l:Loc Passengers_Name}" Binding="{Binding FullName}" Width="2*" />
+                        <DataGridTextColumn Header="{l:Loc Passengers_Phone}" Binding="{Binding Phone}" Width="*" />
+                        <DataGridTextColumn Header="{l:Loc Passengers_IdCard}" Binding="{Binding IdCard}" Width="*" />
+                        <DataGridTextColumn Header="{l:Loc Passengers_Email}" Binding="{Binding Email}" Width="2*" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </DockPanel>
+        </Border>
+
+        <Border Grid.Row="1" Style="{StaticResource CardStyle}" Margin="0,16,0,0">
+            <DockPanel>
+                <TextBlock DockPanel.Dock="Top" Text="{l:Loc Passengers_History}" Style="{StaticResource SectionTitleStyle}" />
+                <DataGrid Style="{StaticResource ListGridStyle}" ItemsSource="{Binding History}"
+                          AutomationProperties.Name="{l:Loc Passengers_History}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="{l:Loc Tickets_Id}" Binding="{Binding TicketId}" Width="Auto" />
+                        <DataGridTextColumn Header="{l:Loc Tickets_Route}" Binding="{Binding RouteName}" Width="2*" />
+                        <DataGridTextColumn Header="{l:Loc Tickets_Departure}" Binding="{Binding DepartureTime, StringFormat={}{0:dd/MM/yyyy HH:mm}}" Width="*" />
+                        <DataGridTextColumn Header="{l:Loc Tickets_Seat}" Binding="{Binding SeatNo}" Width="Auto" />
+                        <DataGridTextColumn Header="{l:Loc Tickets_Price}" Binding="{Binding Price, StringFormat={}{0:N0} ₫}" Width="Auto" />
+                        <DataGridTextColumn Header="{l:Loc Tickets_Status}" Width="*"
+                                            Binding="{Binding Status, Converter={StaticResource Localize}, ConverterParameter=TicketStatus_}" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </DockPanel>
+        </Border>
+
+        <Border Grid.Column="1" Grid.RowSpan="2" Style="{StaticResource FormCardStyle}">
+            <StackPanel>
+                <ctl:FormHeader />
+                <TextBlock Text="{l:Loc Passengers_Name}" Style="{StaticResource FieldLabelStyle}" />
+                <TextBox Text="{Binding FullName, UpdateSourceTrigger=PropertyChanged}" AutomationProperties.Name="{l:Loc Passengers_Name}" />
+                <TextBlock Text="{l:Loc Passengers_Phone}" Style="{StaticResource FieldLabelStyle}" />
+                <TextBox Text="{Binding Phone, UpdateSourceTrigger=PropertyChanged}" MaxLength="10" AutomationProperties.Name="{l:Loc Passengers_Phone}" />
+                <TextBlock Text="{l:Loc Passengers_IdCard}" Style="{StaticResource FieldLabelStyle}" />
+                <TextBox Text="{Binding IdCard, UpdateSourceTrigger=PropertyChanged}" MaxLength="12" AutomationProperties.Name="{l:Loc Passengers_IdCard}" />
+                <TextBlock Text="{l:Loc Passengers_Email}" Style="{StaticResource FieldLabelStyle}" />
+                <TextBox Text="{Binding Email, UpdateSourceTrigger=PropertyChanged}" AutomationProperties.Name="{l:Loc Passengers_Email}" />
+                <ctl:FormButtons />
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>

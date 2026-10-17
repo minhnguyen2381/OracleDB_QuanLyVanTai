@@ -116,4 +116,27 @@
   <data name="DriverStatus_Active" xml:space="preserve"><value>Working</value></data>
   <data name="DriverStatus_Inactive" xml:space="preserve"><value>Inactive</value></data>
   <data name="Val_IdCard" xml:space="preserve"><value>12 digits.</value></data>
+  <data name="Menu_Passengers" xml:space="preserve"><value>Passengers</value></data>
+  <data name="Passengers_Name" xml:space="preserve"><value>Full name</value></data>
+  <data name="Passengers_Phone" xml:space="preserve"><value>Phone</value></data>
+  <data name="Passengers_IdCard" xml:space="preserve"><value>ID card</value></data>
+  <data name="Passengers_Email" xml:space="preserve"><value>Email</value></data>
+  <data name="Passengers_History" xml:space="preserve"><value>Ticket history of the selected passenger</value></data>
+  <data name="Passengers_ExportTitle" xml:space="preserve"><value>Passenger list</value></data>
+  <data name="Val_Email" xml:space="preserve"><value>Invalid email address.</value></data>
+  <data name="Tickets_Id" xml:space="preserve"><value>Ticket #</value></data>
+  <data name="Tickets_Route" xml:space="preserve"><value>Route</value></data>
+  <data name="Tickets_Departure" xml:space="preserve"><value>Departure</value></data>
+  <data name="Tickets_Vehicle" xml:space="preserve"><value>Vehicle</value></data>
+  <data name="Tickets_Seat" xml:space="preserve"><value>Seat</value></data>
+  <data name="Tickets_Passenger" xml:space="preserve"><value>Passenger</value></data>
+  <data name="Tickets_Phone" xml:space="preserve"><value>Phone</value></data>
+  <data name="Tickets_Price" xml:space="preserve"><value>Price</value></data>
+  <data name="Tickets_Status" xml:space="preserve"><value>Status</value></data>
+  <data name="Tickets_BookedAt" xml:space="preserve"><value>Booked at</value></data>
+  <data name="Tickets_SoldBy" xml:space="preserve"><value>Sold by</value></data>
+  <data name="Tickets_CancelReason" xml:space="preserve"><value>Cancel reason</value></data>
+  <data name="TicketStatus_Booked" xml:space="preserve"><value>Unpaid</value></data>
+  <data name="TicketStatus_Paid" xml:space="preserve"><value>Paid</value></data>
+  <data name="TicketStatus_Cancelled" xml:space="preserve"><value>Cancelled</value></data>
 </root>
