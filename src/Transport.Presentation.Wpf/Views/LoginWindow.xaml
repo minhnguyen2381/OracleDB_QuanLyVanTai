@@ -1,0 +1,62 @@
+<Window x:Class="Transport.Presentation.Wpf.Views.LoginWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:l="clr-namespace:Transport.Presentation.Wpf.Localization"
+        xmlns:c="clr-namespace:Transport.Presentation.Wpf.Controls"
+        xmlns:vm="clr-namespace:Transport.Presentation.Wpf.ViewModels"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance Type=vm:LoginViewModel}"
+        Title="{l:Loc App_Title}" Width="900" Height="540" ResizeMode="CanMinimize"
+        WindowStartupLocation="CenterScreen"
+        Background="{DynamicResource ApplicationBackgroundBrush}">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="380" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+
+        <!-- Cột thương hiệu -->
+        <Border Background="{StaticResource HaUiNavyBrush}">
+            <StackPanel VerticalAlignment="Center" Margin="40">
+                <TextBlock Text="HaUI" FontSize="44" FontWeight="Bold" Foreground="White" />
+                <Rectangle Height="4" Width="64" Fill="{StaticResource HaUiGoldBrush}" HorizontalAlignment="Left" Margin="0,8,0,16" />
+                <TextBlock Text="{l:Loc App_Title}" FontSize="22" Foreground="White" TextWrapping="Wrap" />
+                <TextBlock Text="{l:Loc Login_Hint}" Foreground="#CCFFFFFF" Margin="0,12,0,0" TextWrapping="Wrap" />
+            </StackPanel>
+        </Border>
+
+        <!-- Form đăng nhập -->
+        <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="64,0"
+                    FocusManager.FocusedElement="{Binding ElementName=UsernameBox}">
+            <TextBlock Text="{l:Loc Login_Title}" Style="{StaticResource PageTitleStyle}" Margin="0,0,0,16" />
+
+            <TextBlock Text="{l:Loc Login_Username}" Style="{StaticResource FieldLabelStyle}" />
+            <TextBox x:Name="UsernameBox" Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}"
+                     AutomationProperties.Name="{l:Loc Login_Username}" />
+
+            <TextBlock Text="{l:Loc Login_Password}" Style="{StaticResource FieldLabelStyle}" />
+            <PasswordBox c:PasswordBoxAssistant.BoundPassword="{Binding Password}"
+                         AutomationProperties.Name="{l:Loc Login_Password}" />
+
+            <TextBlock Text="{l:Loc Login_Language}" Style="{StaticResource FieldLabelStyle}" />
+            <ComboBox ItemsSource="{Binding Languages}" SelectedItem="{Binding Language}"
+                      AutomationProperties.Name="{l:Loc Login_Language}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource Localize}, ConverterParameter=Lang_}" />
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+
+            <TextBlock Text="{Binding ErrorMessage}" Foreground="{StaticResource ErrorBrush}" TextWrapping="Wrap"
+                       Margin="0,12,0,0" Visibility="{Binding ErrorMessage, Converter={StaticResource NullToCollapsed}}" />
+
+            <Button Content="{l:Loc Login_Button}" Command="{Binding LoginCommand}" IsDefault="True"
+                    Style="{StaticResource PrimaryButtonStyle}" HorizontalAlignment="Stretch" Margin="0,24,0,0" />
+            <ProgressBar IsIndeterminate="True" Height="3" Margin="0,8,0,0"
+                         Visibility="{Binding LoginCommand.IsRunning, Converter={StaticResource BoolToVisibility}}" />
+        </StackPanel>
+    </Grid>
+</Window>

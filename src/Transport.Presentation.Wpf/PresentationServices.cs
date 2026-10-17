@@ -1,0 +1,44 @@
+using Microsoft.Extensions.DependencyInjection;
+using Transport.Presentation.Wpf.Localization;
+using Transport.Presentation.Wpf.Services;
+using Transport.Presentation.Wpf.ViewModels;
+using Transport.Presentation.Wpf.Views;
+
+namespace Transport.Presentation.Wpf;
+
+public static class PresentationServices
+{
+    public static IServiceCollection AddPresentation(this IServiceCollection services)
+    {
+        services.AddSingleton<ILocalizationService>(LocalizationService.Instance);
+        services.AddSingleton<NotificationService>();
+        services.AddSingleton<INotificationService>(sp => sp.GetRequiredService<NotificationService>());
+        services.AddSingleton<IDialogService, DialogService>();
+        services.AddSingleton<IWindowService, WindowService>();
+        services.AddSingleton<PageServices>();
+        // Mỗi cửa sổ chính có bộ điều hướng riêng
+        services.AddTransient<INavigationService, NavigationService>();
+
+        services.AddTransient<LoginViewModel>();
+        services.AddTransient<LoginWindow>();
+        services.AddTransient<MainViewModel>();
+        services.AddTransient<MainWindow>();
+        return services.AddPages();
+    }
+
+    // Đăng ký một trang: ViewModel (mới mỗi lần mở) + mục menu
+    public static IServiceCollection AddPage<TViewModel>(this IServiceCollection services, string titleKey, string glyph,
+        int order, bool operatorOnly = false)
+        where TViewModel : PageViewModel
+    {
+        services.AddTransient<TViewModel>();
+        services.AddSingleton(new PageDescriptor(titleKey, glyph, typeof(TViewModel), operatorOnly, order));
+        return services;
+    }
+
+    // Danh sách trang của ứng dụng (Plan 3 thêm từng dòng services.AddPage<...>(...) trước return)
+    private static IServiceCollection AddPages(this IServiceCollection services)
+    {
+        return services;
+    }
+}
