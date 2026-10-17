@@ -121,7 +121,23 @@ BEGIN
   expect_error('8e. cancelling a cancelled schedule is rejected', -20051,
     'BEGIN pkg_schedule.cancel_schedule(' || v_sched || ', ''again''); END;');
 
-  -- @@BACKUP_TESTS@@
+  -- 9. Sao lưu: số dòng bản sao lưu mới nhất khớp bảng gốc
+  backup_operational_data;
+  SELECT MAX(log_id) INTO v_log FROM backup_logs;
+  SELECT COUNT(*) INTO v_n FROM tickets_bk WHERE backup_id = v_log;
+  SELECT COUNT(*) INTO v_m FROM tickets;
+  ok('9a. tickets snapshot matches', v_n = v_m);
+  SELECT COUNT(*) INTO v_n FROM schedules_bk WHERE backup_id = v_log;
+  SELECT COUNT(*) INTO v_m FROM schedules;
+  ok('9b. schedules snapshot matches', v_n = v_m);
+  SELECT COUNT(*) INTO v_n FROM payments_bk WHERE backup_id = v_log;
+  SELECT COUNT(*) INTO v_m FROM payments;
+  ok('9c. payments snapshot matches', v_n = v_m);
+  SELECT ticket_rows INTO v_n FROM backup_logs WHERE log_id = v_log;
+  SELECT COUNT(*) INTO v_m FROM tickets;
+  ok('9d. backup log row counts recorded', v_n = v_m);
+  SELECT COUNT(*) INTO v_n FROM v_backup_job_status WHERE enabled = 'TRUE';
+  ok('9e. nightly job exists and is enabled', v_n = 1);
 
   -- @@STAFF_TESTS@@
 
