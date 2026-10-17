@@ -103,4 +103,17 @@
   <data name="VehicleStatus_Retired" xml:space="preserve"><value>Retired</value></data>
   <data name="Val_Plate" xml:space="preserve"><value>Format like 29B-196.88 or 29B-12345.</value></data>
   <data name="Val_SeatRange" xml:space="preserve"><value>From 1 to 60 seats.</value></data>
+  <data name="Menu_Drivers" xml:space="preserve"><value>Drivers</value></data>
+  <data name="Drivers_Name" xml:space="preserve"><value>Full name</value></data>
+  <data name="Drivers_IdCard" xml:space="preserve"><value>ID card</value></data>
+  <data name="Drivers_Phone" xml:space="preserve"><value>Phone</value></data>
+  <data name="Drivers_LicenseNo" xml:space="preserve"><value>Licence number</value></data>
+  <data name="Drivers_LicenseClass" xml:space="preserve"><value>Licence class</value></data>
+  <data name="Drivers_LicenseExpiry" xml:space="preserve"><value>Licence expiry</value></data>
+  <data name="Drivers_Status" xml:space="preserve"><value>Status</value></data>
+  <data name="Drivers_ExportTitle" xml:space="preserve"><value>Driver list</value></data>
+  <data name="Drivers_ExpiryWarning" xml:space="preserve"><value>{0} driver(s) have a licence expiring within 30 days or already expired (highlighted).</value></data>
+  <data name="DriverStatus_Active" xml:space="preserve"><value>Working</value></data>
+  <data name="DriverStatus_Inactive" xml:space="preserve"><value>Inactive</value></data>
+  <data name="Val_IdCard" xml:space="preserve"><value>12 digits.</value></data>
 </root>

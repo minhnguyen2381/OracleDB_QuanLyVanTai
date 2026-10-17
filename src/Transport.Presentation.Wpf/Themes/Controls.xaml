@@ -10,6 +10,7 @@
     <conv:InverseBooleanToVisibilityConverter x:Key="InverseBoolToVisibility" />
     <conv:NullToVisibilityConverter x:Key="NullToCollapsed" />
     <l:LocalizeConverter x:Key="Localize" />
+    <conv:LicenseStateConverter x:Key="LicenseState" />
 
     <!-- Chữ -->
     <Style x:Key="PageTitleStyle" TargetType="TextBlock">

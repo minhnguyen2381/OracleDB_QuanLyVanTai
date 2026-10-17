@@ -1,0 +1,85 @@
+<UserControl x:Class="Transport.Presentation.Wpf.Views.Pages.DriversPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:l="clr-namespace:Transport.Presentation.Wpf.Localization"
+             xmlns:ctl="clr-namespace:Transport.Presentation.Wpf.Views.Controls"
+             xmlns:enums="clr-namespace:Transport.Domain.Enums;assembly=Transport.Domain"
+             xmlns:vm="clr-namespace:Transport.Presentation.Wpf.ViewModels.Pages"
+             mc:Ignorable="d" d:DesignWidth="1100" d:DesignHeight="680"
+             d:DataContext="{d:DesignInstance Type=vm:DriversViewModel}">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+
+        <Border Style="{StaticResource CardStyle}">
+            <DockPanel>
+                <ctl:CrudToolbar DockPanel.Dock="Top" />
+                <Border DockPanel.Dock="Top" Background="{StaticResource WarningBackgroundBrush}" BorderBrush="{StaticResource WarningBrush}"
+                        BorderThickness="1" CornerRadius="6" Padding="12,8" Margin="0,0,0,12"
+                        Visibility="{Binding ExpiryWarning, Converter={StaticResource NullToCollapsed}}">
+                    <TextBlock Text="{Binding ExpiryWarning}" Foreground="{StaticResource WarningBrush}" TextWrapping="Wrap" />
+                </Border>
+                <DataGrid Style="{StaticResource ListGridStyle}" ItemsSource="{Binding Items}" SelectedItem="{Binding SelectedItem}"
+                          AutomationProperties.Name="{l:Loc Menu_Drivers}">
+                    <DataGrid.RowStyle>
+                        <Style TargetType="DataGridRow" BasedOn="{StaticResource {x:Type DataGridRow}}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Converter={StaticResource LicenseState}}" Value="{x:Static enums:LicenseState.ExpiringSoon}">
+                                    <Setter Property="Background" Value="{StaticResource WarningBackgroundBrush}" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Converter={StaticResource LicenseState}}" Value="{x:Static enums:LicenseState.Expired}">
+                                    <Setter Property="Background" Value="{StaticResource ErrorBackgroundBrush}" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.RowStyle>
+                    <DataGrid.InputBindings>
+                        <MouseBinding Gesture="LeftDoubleClick" Command="{Binding EditCommand}" />
+                    </DataGrid.InputBindings>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="{l:Loc Drivers_Name}" Binding="{Binding FullName}" Width="2*" />
+                        <DataGridTextColumn Header="{l:Loc Drivers_Phone}" Binding="{Binding Phone}" Width="*" />
+                        <DataGridTextColumn Header="{l:Loc Drivers_LicenseNo}" Binding="{Binding LicenseNo}" Width="*" />
+                        <DataGridTextColumn Header="{l:Loc Drivers_LicenseClass}" Binding="{Binding LicenseClass}" Width="Auto" />
+                        <DataGridTextColumn Header="{l:Loc Drivers_LicenseExpiry}" Binding="{Binding LicenseExpiry, StringFormat={}{0:dd/MM/yyyy}}" Width="Auto" />
+                        <DataGridTextColumn Header="{l:Loc Drivers_Status}" Width="*"
+                                            Binding="{Binding Status, Converter={StaticResource Localize}, ConverterParameter=DriverStatus_}" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </DockPanel>
+        </Border>
+
+        <Border Grid.Column="1" Style="{StaticResource FormCardStyle}">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel>
+                    <ctl:FormHeader />
+                    <TextBlock Text="{l:Loc Drivers_Name}" Style="{StaticResource FieldLabelStyle}" />
+                    <TextBox Text="{Binding FullName, UpdateSourceTrigger=PropertyChanged}" AutomationProperties.Name="{l:Loc Drivers_Name}" />
+                    <TextBlock Text="{l:Loc Drivers_IdCard}" Style="{StaticResource FieldLabelStyle}" />
+                    <TextBox Text="{Binding IdCard, UpdateSourceTrigger=PropertyChanged}" MaxLength="12" AutomationProperties.Name="{l:Loc Drivers_IdCard}" />
+                    <TextBlock Text="{l:Loc Drivers_Phone}" Style="{StaticResource FieldLabelStyle}" />
+                    <TextBox Text="{Binding Phone, UpdateSourceTrigger=PropertyChanged}" MaxLength="10" AutomationProperties.Name="{l:Loc Drivers_Phone}" />
+                    <TextBlock Text="{l:Loc Drivers_LicenseNo}" Style="{StaticResource FieldLabelStyle}" />
+                    <TextBox Text="{Binding LicenseNo, UpdateSourceTrigger=PropertyChanged}" AutomationProperties.Name="{l:Loc Drivers_LicenseNo}" />
+                    <TextBlock Text="{l:Loc Drivers_LicenseClass}" Style="{StaticResource FieldLabelStyle}" />
+                    <ComboBox ItemsSource="{Binding LicenseClasses}" SelectedItem="{Binding LicenseClass}" AutomationProperties.Name="{l:Loc Drivers_LicenseClass}" />
+                    <TextBlock Text="{l:Loc Drivers_LicenseExpiry}" Style="{StaticResource FieldLabelStyle}" />
+                    <DatePicker SelectedDate="{Binding LicenseExpiry}" AutomationProperties.Name="{l:Loc Drivers_LicenseExpiry}" />
+                    <TextBlock Text="{l:Loc Drivers_Status}" Style="{StaticResource FieldLabelStyle}" />
+                    <ComboBox ItemsSource="{Binding Statuses}" SelectedItem="{Binding Status}" AutomationProperties.Name="{l:Loc Drivers_Status}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Converter={StaticResource Localize}, ConverterParameter=DriverStatus_}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                    <ctl:FormButtons />
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
+    </Grid>
+</UserControl>
