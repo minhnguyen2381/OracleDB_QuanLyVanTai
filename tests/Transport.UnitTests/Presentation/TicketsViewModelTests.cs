@@ -118,4 +118,34 @@ public class TicketsViewModelTests
         Assert.Equal(10, _context.Exporter.Headers.Count);
         Assert.Equal(3, _context.Exporter.RowCount);
     }
+
+    [Fact]
+    public async Task CancelTicket_WhenReasonIsWhitespace_FailsWithRequiredField()
+    {
+        var vm = Create();
+        await vm.LoadAsync();
+        vm.SelectedTicket = vm.Tickets[0];
+        _context.Dialogs.PromptTextResult = "   ";
+
+        await vm.CancelTicketCommand.ExecuteAsync(null);
+
+        Assert.Equal(new[] { "Err_90001" }, _context.Notifications.Errors);
+        Assert.Empty(_tickets.Cancellations);
+    }
+
+    [Fact]
+    public async Task CancelTicket_WhenCancelledInPrompt_Aborts()
+    {
+        var vm = Create();
+        await vm.LoadAsync();
+        vm.SelectedTicket = vm.Tickets[0];
+        _context.Dialogs.PromptTextResult = null;
+
+        await vm.CancelTicketCommand.ExecuteAsync(null);
+
+        Assert.Empty(_context.Notifications.Errors);
+        Assert.Empty(_context.Notifications.Successes);
+        Assert.Empty(_tickets.Cancellations);
+    }
 }
+

@@ -34,6 +34,32 @@ public class DriversViewModelTests
         Assert.Null(vm.ExpiryWarning);
     }
 
+    [Theory]
+    [InlineData(31, false)]
+    [InlineData(30, false)]
+    [InlineData(29, true)]
+    [InlineData(0, true)]
+    [InlineData(-1, true)]
+    public async Task Load_LicenceExpiryBoundaries(int daysFromToday, bool shouldWarn)
+    {
+        var drivers = new FakeDriverRepository();
+        var baseDate = Time.GetLocalNow().Date;
+        drivers.Items.Add(TestData.Driver(1, expiry: baseDate.AddDays(daysFromToday)));
+        var vm = new DriversViewModel(new PageTestContext().Services, drivers, Time);
+
+        await vm.LoadAsync();
+
+        if (shouldWarn)
+        {
+            Assert.Equal("Drivers_ExpiryWarning|1", vm.ExpiryWarning);
+        }
+        else
+        {
+            Assert.Null(vm.ExpiryWarning);
+        }
+    }
+
+
     [Fact]
     public async Task Save_ValidatesIdCardAndPhone_ThenAdds()
     {

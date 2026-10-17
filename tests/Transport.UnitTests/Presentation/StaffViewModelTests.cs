@@ -98,8 +98,36 @@ public class StaffViewModelTests
     }
 
     [Fact]
+    public async Task ToggleLock_Self_FailsWithCannotChangeOwnAccount()
+    {
+        var vm = Create();
+        await vm.LoadAsync();
+        vm.SelectedItem = vm.Items.Single(s => s.Username == "OPERATOR01");
+
+        await vm.ToggleLockCommand.ExecuteAsync(null);
+
+        Assert.Equal(new[] { "Err_20043" }, _context.Notifications.Errors);
+        Assert.DoesNotContain("lock:OPERATOR01:True", _repository.Calls);
+    }
+
+    [Fact]
+    public async Task Edit_ChangeOwnRole_FailsWithCannotChangeOwnAccount()
+    {
+        var vm = Create();
+        await vm.LoadAsync();
+        vm.SelectedItem = vm.Items.Single(s => s.Username == "OPERATOR01");
+
+        vm.EditCommand.Execute(null);
+        vm.Role = StaffRole.TicketSeller;
+        await vm.SaveCommand.ExecuteAsync(null);
+
+        Assert.Equal(new[] { "Err_20043" }, _context.Notifications.Errors);
+    }
+
+    [Fact]
     public void StaffCannotBeDeleted()
     {
         Assert.False(Create().CanDeleteItems);
     }
 }
+

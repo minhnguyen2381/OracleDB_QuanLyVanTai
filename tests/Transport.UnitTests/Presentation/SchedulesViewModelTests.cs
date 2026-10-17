@@ -121,4 +121,42 @@ public class SchedulesViewModelTests
         Assert.Equal(new[] { "cancel:5:Xe hỏng" }, _scheduleRepository.Calls);
         Assert.Equal(new[] { "Schedules_Cancelled" }, context.Notifications.Successes);
     }
+
+    [Fact]
+    public async Task Save_WhenArrivalBeforeDeparture_ShowsErrorNotification()
+    {
+        var context = new PageTestContext();
+        var vm = Create(context);
+        await vm.LoadAsync();
+        vm.NewCommand.Execute(null);
+        vm.SelectedRoute = vm.Routes[0];
+        vm.SelectedVehicle = vm.Vehicles[0];
+        vm.DepartureDate = new DateTime(2026, 10, 20);
+        vm.DepartureTimeText = "13:15";
+        vm.ArrivalDate = new DateTime(2026, 10, 20);
+        vm.ArrivalTimeText = "10:00";
+        vm.SelectedDriver = vm.AvailableDrivers[0];
+
+        await vm.SaveCommand.ExecuteAsync(null);
+
+        Assert.Equal(new[] { "Err_90004" }, context.Notifications.Errors);
+        Assert.True(vm.IsFormOpen);
+        Assert.Empty(_scheduleRepository.Calls);
+    }
+
+    [Fact]
+    public async Task CancelTrip_WhenReasonIsWhitespace_FailsWithRequiredField()
+    {
+        var context = new PageTestContext();
+        var vm = Create(context);
+        await vm.LoadAsync();
+        vm.SelectedItem = vm.Items[0];
+
+        context.Dialogs.PromptTextResult = "   ";
+        await vm.CancelTripCommand.ExecuteAsync(null);
+
+        Assert.Equal(new[] { "Err_90001" }, context.Notifications.Errors);
+        Assert.Empty(_scheduleRepository.Calls);
+    }
 }
+
