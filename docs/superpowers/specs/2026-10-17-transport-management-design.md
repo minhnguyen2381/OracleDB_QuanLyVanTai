@@ -542,10 +542,13 @@ END pkg_staff;
 
 ```sql
 -- Thống kê từng chuyến: ghế đã bán, ghế trống, tỷ lệ lấp đầy, vé hủy, doanh thu thực (đã trừ hoàn tiền).
--- Có thêm route_id, origin, destination, ticket_price để màn Bán vé lọc theo tuyến và khoảng giá.
+-- Có thêm route_id, origin, destination, ticket_price để màn Bán vé lọc theo tuyến và khoảng giá;
+-- vehicle_id, driver_id để màn Lịch chạy đọc từ view (seller không có quyền đọc bảng DRIVERS).
 CREATE OR REPLACE VIEW v_trip_statistics AS
 SELECT s.schedule_id,
        s.route_id,
+       s.vehicle_id,
+       s.driver_id,
        r.route_name,
        r.origin,
        r.destination,
@@ -572,7 +575,7 @@ SELECT s.schedule_id,
                     SUM(CASE payment_type WHEN 'PAYMENT' THEN amount ELSE -amount END) AS net_amount
                FROM payments
               GROUP BY ticket_id) p ON p.ticket_id = t.ticket_id
- GROUP BY s.schedule_id, s.route_id, r.route_name, r.origin, r.destination,
+ GROUP BY s.schedule_id, s.route_id, s.vehicle_id, s.driver_id, r.route_name, r.origin, r.destination,
           s.departure_time, s.arrival_time, s.ticket_price, s.status,
           v.plate_number, v.vehicle_type, d.full_name, v.seat_count;
 ```
@@ -773,6 +776,7 @@ Lỗi Oracle hệ thống được frontend dịch thêm:
 | 1 | Dữ liệu bị trùng (biển số, SĐT, CCCD, số bằng lái…) |
 | 2292 | Không xóa được vì đang có dữ liệu liên quan |
 | 1920 | Tên đăng nhập đã tồn tại |
+| 2290 | Dữ liệu không hợp lệ (vi phạm CHECK, VD điểm đi trùng điểm đến) |
 | 12541, 12514 | Không kết nối được Oracle, kiểm tra service |
 
 ## 10. Dữ liệu mẫu – `08_seed_data.sql` (chạy bằng TRANSPORT)
@@ -809,11 +813,11 @@ END;
 - Solution dạng `.slnx`.
 - MVVM bằng **CommunityToolkit.Mvvm 8.4**: `[ObservableProperty]` trên partial property, `[RelayCommand]` async (tự chống bấm lặp khi đang chạy), `ObservableValidator` + Data Annotations cho form.
 - DI + cấu hình bằng **Generic Host** (`Host.CreateApplicationBuilder()`), `appsettings.json` đọc qua `IOptions<DatabaseOptions>`.
-- Giao diện: **Fluent theme có sẵn của WPF** – tham chiếu ResourceDictionary `pack://application:,,,/PresentationFramework.Fluent;component/Themes/Fluent.xaml` trong `App.xaml` (không dùng `ThemeMode` thử nghiệm để tránh cảnh báo WPF0001); ghi đè màu nhấn navy HaUI `#0B3D91`, điểm nhấn vàng `#F5B700`.
+- Giao diện: **Fluent theme có sẵn của WPF** – tham chiếu ResourceDictionary `pack://application:,,,/PresentationFramework.Fluent;component/Themes/Fluent.xaml` trong `App.xaml` (không dùng `ThemeMode` thử nghiệm để tránh cảnh báo WPF0001); theme theo sáng/tối của hệ thống; sidebar, nút chính và các điểm nhấn dùng style riêng màu navy HaUI `#0B3D91`, vàng `#F5B700` (không ghi đè resource nội bộ của Fluent vì Microsoft ghi rõ các key còn có thể thay đổi).
 - View: code-behind chỉ có `InitializeComponent()`; có `d:DataContext` cho design-time; `AutomationProperties.Name`, thứ tự Tab, phím tắt (Ctrl+F tìm, Ctrl+E xuất Excel, Ctrl+P in vé).
 - ViewModel không tham chiếu `System.Windows` (test được bằng xUnit).
 - Mọi thao tác DB async + `CancellationToken`, ViewModel có `IsBusy` để hiện trạng thái chờ.
-- NuGet: `CommunityToolkit.Mvvm`, `Microsoft.Extensions.Hosting`, `Oracle.ManagedDataAccess.Core`, `Dapper`, `ClosedXML`, `ScottPlot.WPF`; test: `xunit`, `xunit.runner.visualstudio`, `Microsoft.NET.Test.Sdk`.
+- NuGet: `CommunityToolkit.Mvvm`, `Microsoft.Extensions.Hosting`, `Oracle.ManagedDataAccess.Core`, `Dapper`, `ClosedXML`; test: `xunit.v3` chạy bằng Microsoft Testing Platform (`global.json`). Biểu đồ cột vẽ bằng `ItemsControl` + style (thuần MVVM, không cần thư viện biểu đồ).
 - Cố ý không dùng: MediatR, AutoMapper, Entity Framework, thư viện mock, service chỉ chuyển tiếp CRUD.
 
 ### 12.2 Các tầng
@@ -824,38 +828,45 @@ Chiều phụ thuộc: **Presentation.Wpf → Application → Domain ← Infrast
 TransportManagement.slnx
 ├── src/
 │   ├── Transport.Domain/                 -- net10.0, không phụ thuộc gì
-│   │   ├── Entities/      Route, Vehicle, Driver, Schedule, Passenger, Ticket, Payment, StaffMember
-│   │   ├── Enums/         VehicleStatus, DriverStatus, LicenseClass, ScheduleStatus, TicketStatus,
-│   │   │                  PaymentMethod, PaymentType, StaffRole, StaffStatus
+│   │   ├── Entities/      Route, Vehicle, Driver (GetLicenseState, CanDrive), Schedule, Passenger, StaffMember
+│   │   ├── Enums/         VehicleStatus, DriverStatus, LicenseClass, LicenseState, ScheduleStatus, TicketStatus,
+│   │   │                  PaymentMethod, StaffRole, StaffStatus
 │   │   └── Errors/        BusinessErrorCode (enum, giá trị = mã Oracle dương: SeatNotFound = 20001…),
 │   │                      BusinessRuleException(code, message)
 │   ├── Transport.Application/            -- net10.0 → Domain
 │   │   ├── Abstractions/  IRouteRepository, IVehicleRepository, IDriverRepository, IScheduleRepository,
 │   │   │                  IPassengerRepository, ITicketRepository, IStaffRepository, IStatisticsQueries,
 │   │   │                  IBackupRepository, IAuthService, IUserSession, IExcelExporter
-│   │   ├── Models/        TripStatistic, TripSearchCriteria, SeatInfo, TicketListItem, TicketPrintModel,
-│   │   │                  DashboardSummary, DailyRevenue, BackupLog, BackupJobStatus, ExportColumn
-│   │   ├── Services/      TicketService, ScheduleService, StaffService, DashboardService, BackupService
+│   │   ├── Models/        TripStatistic, TripSearchCriteria, BookingRequest, TicketSearchCriteria, TicketListItem,
+│   │   │                  TicketPrintModel, DashboardSummary, DailyRevenue, BackupLog, BackupJobStatus,
+│   │   │                  NewStaffRequest, ExportColumn<T>
+│   │   ├── Services/      Rules (kiểm tra phía client), TicketService, ScheduleService, StaffService,
+│   │   │                  DashboardService, BackupService
 │   │   └── DependencyInjection.cs   -- AddApplication()
 │   ├── Transport.Infrastructure/         -- net10.0 → Application
-│   │   ├── Oracle/        DatabaseOptions, OracleConnectionFactory, OracleErrorMapper,
-│   │   │                  OracleAuthService, UserSession
+│   │   ├── Persistence/   DatabaseOptions, OracleConnectionFactory, OracleRepository (lớp nền), OracleErrorMapper,
+│   │   │                  DbEnum, OracleAuthService, UserSession   (không đặt tên "Oracle" để tránh trùng namespace ODP.NET)
 │   │   ├── Repositories/  (mỗi interface ở Application một lớp, dùng Dapper)
 │   │   ├── Export/        ClosedXmlExcelExporter
 │   │   └── DependencyInjection.cs   -- AddInfrastructure(IConfiguration)
 │   └── Transport.Presentation.Wpf/       -- net10.0-windows → Application (+ Infrastructure ở composition root)
 │       ├── App.xaml / App.xaml.cs        -- Fluent theme, dựng Generic Host, mở LoginWindow
 │       ├── appsettings.json              -- { "Database": { "DataSource": "localhost:1521/XEPDB1" }, "Language": "vi" }
-│       ├── Themes/        Colors.xaml (ghi đè accent), Controls.xaml (Card, InfoBar, SeatButton, SidebarItem)
+│       ├── PresentationServices.cs       -- AddPresentation(), AddPage<T>() (đăng ký trang + mục menu)
+│       ├── Themes/        Colors.xaml (màu HaUI), Controls.xaml (Card, InfoBar, PrimaryButton, SeatButton,
+│       │                  Sidebar, ListGrid, FormCard, BarChart, StatValue)
 │       ├── Resources/     Strings.resx (en), Strings.vi.resx (vi)
-│       ├── Services/      NavigationService, DialogService, NotificationService,
-│       │                  LocalizationService, TicketPrintService
-│       ├── ViewModels/    LoginViewModel, MainViewModel, DashboardViewModel, SellTicketViewModel,
-│       │                  TicketsViewModel, PassengersViewModel, RoutesViewModel, VehiclesViewModel,
-│       │                  DriversViewModel, SchedulesViewModel, StatisticsViewModel, StaffViewModel,
-│       │                  BackupViewModel, (dialog VMs: PaymentDialogViewModel, CancelDialogViewModel,
-│       │                  StaffEditorViewModel…)
-│       └── Views/         LoginWindow, MainWindow, Pages/*Page.xaml, Dialogs/*Dialog.xaml
+│       ├── Localization/  ILocalizationService, LocalizationService, LocExtension ({l:Loc Key}), LocalizeConverter
+│       ├── Services/      NavigationService, DialogService, NotificationService, WindowService,
+│       │                  TicketPrintService, PageDescriptor
+│       ├── Controls/      PasswordBoxAssistant, Shortcut (phím tắt cấp cửa sổ)
+│       ├── Converters/    NullToVisibility, InverseBooleanToVisibility, LicenseState
+│       ├── ViewModels/    PageViewModel, CrudPageViewModel<T>, PageServices, LoginViewModel, MainViewModel,
+│       │                  FilterOption<T>, ChartBar, Dialogs/ (TextPrompt, PasswordPrompt, PaymentDialog),
+│       │                  Pages/ (Dashboard, SellTicket + Seat/SeatRow, Tickets, Passengers, Routes, Vehicles,
+│       │                  Drivers, Schedules, Statistics, Staff, Backup)
+│       └── Views/         LoginWindow, MainWindow, PageTemplates.xaml, Pages/*Page.xaml, Dialogs/*Dialog.xaml,
+│                          Controls/ (CrudToolbar, FormHeader, FormButtons)
 └── tests/
     └── Transport.UnitTests/              -- xUnit, fake repositories viết tay
 ```
@@ -867,7 +878,7 @@ Trách nhiệm chính:
 | `OracleConnectionFactory` | Tạo `OracleConnection` từ pool bằng thông tin đăng nhập của phiên; sau khi mở chạy `ALTER SESSION SET CURRENT_SCHEMA = TRANSPORT`. Mỗi thao tác mở/đóng một kết nối (pool tái sử dụng), tránh dùng chung một kết nối giữa các lời gọi async |
 | `OracleAuthService` | Thử đăng nhập; đọc `session_roles` và `staff.full_name`; lưu vào `IUserSession` (Username, FullName, Roles, IsOperator) |
 | Repositories | SQL có bind parameter (`:p_name`), không nối chuỗi; gọi `PKG_TICKET`, `PKG_SCHEDULE`, `PKG_STAFF`, `BACKUP_OPERATIONAL_DATA` bằng `CommandType.StoredProcedure`; đọc `V_TRIP_STATISTICS`, `V_BACKUP_JOB_STATUS` |
-| `OracleErrorMapper` | `Map(int number, string message)`: 20001–20052 → `BusinessRuleException(BusinessErrorCode, englishMessage)`; 1017, 28000, 1031, 1, 2292, 1920, 12541, 12514 → `BusinessRuleException` với mã hệ thống tương ứng (enum có thêm `InvalidCredentials`, `AccountLocked`, `InsufficientPrivileges`, `DuplicateValue`, `ChildRecordExists`, `UsernameExists`, `DatabaseUnavailable`); còn lại giữ nguyên exception |
+| `OracleErrorMapper` | `Map(int number, string message)`: 20001–20052 → `BusinessRuleException(BusinessErrorCode, englishMessage)`; 1017, 28000, 1031, 1, 2292, 2290, 1920, 12541, 12514 → `BusinessRuleException` với mã hệ thống tương ứng (enum có thêm `InvalidCredentials`, `AccountLocked`, `InsufficientPrivileges`, `DuplicateValue`, `ChildRecordExists`, `CheckConstraintViolated`, `UsernameAlreadyExists`, `DatabaseUnavailable`); còn lại giữ nguyên exception |
 | Application services | Kiểm tra đầu vào trước khi gọi DB (SĐT 10 số, ghế > 0, lý do hủy không rỗng, username/mật khẩu theo đúng luật của `PKG_STAFF`…), điều phối nhiều repository, kiểm tra `IUserSession.IsOperator` cho thao tác của điều hành |
 | ViewModels danh mục (Routes, Vehicles, Drivers, Passengers) | Gọi trực tiếp repository interface (CRUD thuần, không cần service trung gian) |
 | `NavigationService` | Giữ `CurrentPage` (ViewModel) cho `MainViewModel`; `DataTemplate` ánh xạ ViewModel → Page |
@@ -924,7 +935,7 @@ ViewModel gọi `IDialogService.ShowSaveFile(...)` lấy đường dẫn, rồi 
   8. UPDATE trực tiếp chuyến còn vé sang `CANCELLED` → -20052; `cancel_schedule` → mọi vé `CANCELLED`, có `REFUND`.
   9. `backup_operational_data` → số dòng `*_bk` của lần sao lưu mới bằng số dòng bảng gốc; `backup_logs` có dòng mới.
   10. `pkg_staff.create_staff` với username `'x; drop'` → -20040; role sai → -20041; mật khẩu ngắn → -20044.
-- Cuối file: hướng dẫn kiểm tra phân quyền thủ công – đăng nhập `seller01`, chạy `INSERT INTO transport.tickets ...` → ORA-01031; `EXEC transport.pkg_staff.set_locked('SELLER02',1)` → ORA-01031 (seller không có quyền).
+- Cuối file: hướng dẫn kiểm tra phân quyền thủ công – đăng nhập `seller01`, chạy `INSERT INTO transport.tickets ...` → ORA-01031; `EXEC transport.pkg_staff.set_locked('SELLER02',1)` → PLS-00201 identifier must be declared (seller không có quyền EXECUTE).
 - `tests/Transport.UnitTests` (xUnit, fake repositories viết tay):
   - `OracleErrorMapper` dịch đúng toàn bộ mã trong mục 9.
   - `TicketService`: chặn SĐT sai, ghế ≤ 0, lý do hủy rỗng trước khi gọi repository.
