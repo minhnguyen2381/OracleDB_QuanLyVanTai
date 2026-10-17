@@ -1,0 +1,24 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!-- Màu nhận diện HaUI -->
+    <Color x:Key="HaUiNavyColor">#0B3D91</Color>
+    <Color x:Key="HaUiNavyDarkColor">#082C69</Color>
+    <Color x:Key="HaUiGoldColor">#F5B700</Color>
+
+    <SolidColorBrush x:Key="HaUiNavyBrush" Color="{StaticResource HaUiNavyColor}" />
+    <SolidColorBrush x:Key="HaUiNavyDarkBrush" Color="{StaticResource HaUiNavyDarkColor}" />
+    <SolidColorBrush x:Key="HaUiGoldBrush" Color="{StaticResource HaUiGoldColor}" />
+
+    <!-- Sơ đồ ghế -->
+    <SolidColorBrush x:Key="SeatFreeBrush" Color="#2E7D32" />
+    <SolidColorBrush x:Key="SeatBookedBrush" Color="#C62828" />
+    <SolidColorBrush x:Key="SeatSelectedBrush" Color="#1565C0" />
+
+    <!-- Thanh thông báo -->
+    <SolidColorBrush x:Key="SuccessBrush" Color="#2E7D32" />
+    <SolidColorBrush x:Key="WarningBrush" Color="#B26A00" />
+    <SolidColorBrush x:Key="ErrorBrush" Color="#C62828" />
+    <SolidColorBrush x:Key="SuccessBackgroundBrush" Color="#E8F5E9" />
+    <SolidColorBrush x:Key="WarningBackgroundBrush" Color="#FFF4E5" />
+    <SolidColorBrush x:Key="ErrorBackgroundBrush" Color="#FDECEA" />
+</ResourceDictionary>

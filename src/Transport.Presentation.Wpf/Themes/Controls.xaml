@@ -1,0 +1,166 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:l="clr-namespace:Transport.Presentation.Wpf.Localization"
+                    xmlns:conv="clr-namespace:Transport.Presentation.Wpf.Converters"
+                    xmlns:svc="clr-namespace:Transport.Presentation.Wpf.Services">
+
+    <FontFamily x:Key="SymbolFont">Segoe Fluent Icons, Segoe MDL2 Assets</FontFamily>
+
+    <BooleanToVisibilityConverter x:Key="BoolToVisibility" />
+    <conv:InverseBooleanToVisibilityConverter x:Key="InverseBoolToVisibility" />
+    <conv:NullToVisibilityConverter x:Key="NullToCollapsed" />
+    <l:LocalizeConverter x:Key="Localize" />
+
+    <!-- Chữ -->
+    <Style x:Key="PageTitleStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="26" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+    </Style>
+    <Style x:Key="SectionTitleStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Margin" Value="0,0,0,8" />
+        <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+    </Style>
+    <Style x:Key="FieldLabelStyle" TargetType="TextBlock">
+        <Setter Property="Margin" Value="0,12,0,4" />
+        <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
+    </Style>
+
+    <!-- Thẻ nội dung (nền/viền lấy từ Fluent theme nên đúng cả sáng lẫn tối) -->
+    <Style x:Key="CardStyle" TargetType="Border">
+        <Setter Property="Background" Value="{DynamicResource CardBackgroundFillColorDefaultBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource CardStrokeColorDefaultBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="Padding" Value="16" />
+    </Style>
+
+    <!-- Nút chính màu navy HaUI -->
+    <Style x:Key="PrimaryButtonStyle" TargetType="Button">
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="Background" Value="{StaticResource HaUiNavyBrush}" />
+        <Setter Property="Padding" Value="16,8" />
+        <Setter Property="MinHeight" Value="34" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="Root" Background="{TemplateBinding Background}" CornerRadius="4"
+                            BorderThickness="2" BorderBrush="Transparent" Padding="{TemplateBinding Padding}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" RecognizesAccessKey="True" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Root" Property="Background" Value="{StaticResource HaUiNavyDarkBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="Root" Property="Opacity" Value="0.85" />
+                        </Trigger>
+                        <Trigger Property="IsKeyboardFocused" Value="True">
+                            <Setter TargetName="Root" Property="BorderBrush" Value="{StaticResource HaUiGoldBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="Root" Property="Opacity" Value="0.45" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Sidebar -->
+    <Style x:Key="SidebarListBoxStyle" TargetType="ListBox">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
+    </Style>
+
+    <Style x:Key="SidebarItemStyle" TargetType="ListBoxItem">
+        <Setter Property="Margin" Value="8,2" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ListBoxItem">
+                    <Grid>
+                        <Border x:Name="Bg" Background="Transparent" CornerRadius="6" BorderThickness="1" BorderBrush="Transparent" />
+                        <Rectangle x:Name="Marker" Width="4" HorizontalAlignment="Left" Margin="0,8" RadiusX="2" RadiusY="2"
+                                   Fill="{StaticResource HaUiGoldBrush}" Visibility="Collapsed" />
+                        <ContentPresenter Margin="16,10,12,10" VerticalAlignment="Center" />
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Bg" Property="Background" Value="#22FFFFFF" />
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="Bg" Property="Background" Value="#33FFFFFF" />
+                            <Setter TargetName="Marker" Property="Visibility" Value="Visible" />
+                        </Trigger>
+                        <Trigger Property="IsKeyboardFocused" Value="True">
+                            <Setter TargetName="Bg" Property="BorderBrush" Value="{StaticResource HaUiGoldBrush}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="SidebarButtonStyle" TargetType="Button">
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Margin" Value="8,4,8,16" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="Root" Background="Transparent" CornerRadius="6" Padding="16,10" BorderThickness="1" BorderBrush="Transparent">
+                        <ContentPresenter VerticalAlignment="Center" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Root" Property="Background" Value="#22FFFFFF" />
+                        </Trigger>
+                        <Trigger Property="IsKeyboardFocused" Value="True">
+                            <Setter TargetName="Root" Property="BorderBrush" Value="{StaticResource HaUiGoldBrush}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Thanh thông báo kiểu InfoBar; DataContext = NotificationService -->
+    <Style x:Key="InfoBarStyle" TargetType="Border">
+        <Setter Property="Margin" Value="24,0,24,8" />
+        <Setter Property="Padding" Value="16,10" />
+        <Setter Property="CornerRadius" Value="6" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Background" Value="{StaticResource SuccessBackgroundBrush}" />
+        <Setter Property="BorderBrush" Value="{StaticResource SuccessBrush}" />
+        <Setter Property="TextElement.Foreground" Value="{StaticResource SuccessBrush}" />
+        <Setter Property="Visibility" Value="{Binding IsOpen, Converter={StaticResource BoolToVisibility}}" />
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Severity}" Value="{x:Static svc:NotificationSeverity.Warning}">
+                <Setter Property="Background" Value="{StaticResource WarningBackgroundBrush}" />
+                <Setter Property="BorderBrush" Value="{StaticResource WarningBrush}" />
+                <Setter Property="TextElement.Foreground" Value="{StaticResource WarningBrush}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Severity}" Value="{x:Static svc:NotificationSeverity.Error}">
+                <Setter Property="Background" Value="{StaticResource ErrorBackgroundBrush}" />
+                <Setter Property="BorderBrush" Value="{StaticResource ErrorBrush}" />
+                <Setter Property="TextElement.Foreground" Value="{StaticResource ErrorBrush}" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- Ô nhập: tooltip hiện lỗi kiểm tra dữ liệu đã dịch (ErrorMessage là khóa resource) -->
+    <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
+        <Style.Triggers>
+            <Trigger Property="Validation.HasError" Value="True">
+                <Setter Property="ToolTip"
+                        Value="{Binding RelativeSource={RelativeSource Self}, Path=(Validation.Errors)[0].ErrorContent, Converter={StaticResource Localize}}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+</ResourceDictionary>
