@@ -50,6 +50,7 @@ public static class PresentationServices
         services.AddPage<DriversViewModel>("Menu_Drivers", "\uE77B", 70, operatorOnly: true);
         services.AddPage<SchedulesViewModel>("Menu_Schedules", "\uE787", 80);
         services.AddPage<StatisticsViewModel>("Menu_Statistics", "\uE9D2", 90);
+        services.AddPage<StaffViewModel>("Menu_Staff", "\uE7EF", 100, operatorOnly: true);
         return services;
     }
 }

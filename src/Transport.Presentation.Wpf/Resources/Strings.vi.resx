@@ -229,4 +229,26 @@
   <data name="Dash_RevenueToday" xml:space="preserve"><value>Doanh thu thực hôm nay</value></data>
   <data name="Dash_Occupancy" xml:space="preserve"><value>Lấp đầy trung bình hôm nay</value></data>
   <data name="Dash_Last7Days" xml:space="preserve"><value>Doanh thu thực 7 ngày gần nhất (theo ngày khởi hành)</value></data>
+  <data name="Menu_Staff" xml:space="preserve"><value>Nhân viên</value></data>
+  <data name="Staff_Username" xml:space="preserve"><value>Tên đăng nhập</value></data>
+  <data name="Staff_Password" xml:space="preserve"><value>Mật khẩu ban đầu (tối thiểu 8 ký tự)</value></data>
+  <data name="Staff_FullName" xml:space="preserve"><value>Họ tên</value></data>
+  <data name="Staff_Phone" xml:space="preserve"><value>Số điện thoại</value></data>
+  <data name="Staff_Role" xml:space="preserve"><value>Vai trò</value></data>
+  <data name="Staff_Status" xml:space="preserve"><value>Trạng thái</value></data>
+  <data name="Staff_CreatedAt" xml:space="preserve"><value>Ngày tạo</value></data>
+  <data name="Staff_CreatedBy" xml:space="preserve"><value>Người tạo</value></data>
+  <data name="Staff_ExportTitle" xml:space="preserve"><value>Danh sách nhân viên</value></data>
+  <data name="Staff_ResetPassword" xml:space="preserve"><value>Đặt lại mật khẩu</value></data>
+  <data name="Staff_ResetTitle" xml:space="preserve"><value>Đặt lại mật khẩu cho {0}</value></data>
+  <data name="Staff_PasswordReset" xml:space="preserve"><value>Đã đổi mật khẩu.</value></data>
+  <data name="Staff_Lock" xml:space="preserve"><value>Khóa / mở khóa</value></data>
+  <data name="Staff_ConfirmLock" xml:space="preserve"><value>Khóa tài khoản {0}? Người này sẽ không đăng nhập được nữa.</value></data>
+  <data name="Staff_ConfirmUnlock" xml:space="preserve"><value>Mở khóa tài khoản {0}?</value></data>
+  <data name="Staff_Locked" xml:space="preserve"><value>Đã khóa tài khoản.</value></data>
+  <data name="Staff_Unlocked" xml:space="preserve"><value>Đã mở khóa tài khoản.</value></data>
+  <data name="StaffRole_Operator" xml:space="preserve"><value>Điều hành</value></data>
+  <data name="StaffRole_TicketSeller" xml:space="preserve"><value>Nhân viên bán vé</value></data>
+  <data name="StaffStatus_Active" xml:space="preserve"><value>Hoạt động</value></data>
+  <data name="StaffStatus_Locked" xml:space="preserve"><value>Đã khóa</value></data>
 </root>

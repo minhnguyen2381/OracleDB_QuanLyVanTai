@@ -229,4 +229,26 @@
   <data name="Dash_RevenueToday" xml:space="preserve"><value>Net revenue today</value></data>
   <data name="Dash_Occupancy" xml:space="preserve"><value>Average occupancy today</value></data>
   <data name="Dash_Last7Days" xml:space="preserve"><value>Net revenue – last 7 days (by departure date)</value></data>
+  <data name="Menu_Staff" xml:space="preserve"><value>Staff</value></data>
+  <data name="Staff_Username" xml:space="preserve"><value>Username</value></data>
+  <data name="Staff_Password" xml:space="preserve"><value>Initial password (at least 8 characters)</value></data>
+  <data name="Staff_FullName" xml:space="preserve"><value>Full name</value></data>
+  <data name="Staff_Phone" xml:space="preserve"><value>Phone</value></data>
+  <data name="Staff_Role" xml:space="preserve"><value>Role</value></data>
+  <data name="Staff_Status" xml:space="preserve"><value>Status</value></data>
+  <data name="Staff_CreatedAt" xml:space="preserve"><value>Created</value></data>
+  <data name="Staff_CreatedBy" xml:space="preserve"><value>Created by</value></data>
+  <data name="Staff_ExportTitle" xml:space="preserve"><value>Staff list</value></data>
+  <data name="Staff_ResetPassword" xml:space="preserve"><value>Reset password</value></data>
+  <data name="Staff_ResetTitle" xml:space="preserve"><value>Reset password for {0}</value></data>
+  <data name="Staff_PasswordReset" xml:space="preserve"><value>Password updated.</value></data>
+  <data name="Staff_Lock" xml:space="preserve"><value>Lock / unlock</value></data>
+  <data name="Staff_ConfirmLock" xml:space="preserve"><value>Lock account {0}? The user will no longer be able to sign in.</value></data>
+  <data name="Staff_ConfirmUnlock" xml:space="preserve"><value>Unlock account {0}?</value></data>
+  <data name="Staff_Locked" xml:space="preserve"><value>Account locked.</value></data>
+  <data name="Staff_Unlocked" xml:space="preserve"><value>Account unlocked.</value></data>
+  <data name="StaffRole_Operator" xml:space="preserve"><value>Operator</value></data>
+  <data name="StaffRole_TicketSeller" xml:space="preserve"><value>Ticket seller</value></data>
+  <data name="StaffStatus_Active" xml:space="preserve"><value>Active</value></data>
+  <data name="StaffStatus_Locked" xml:space="preserve"><value>Locked</value></data>
 </root>

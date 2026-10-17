@@ -1,0 +1,71 @@
+<UserControl x:Class="Transport.Presentation.Wpf.Views.Pages.StaffPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:l="clr-namespace:Transport.Presentation.Wpf.Localization"
+             xmlns:c="clr-namespace:Transport.Presentation.Wpf.Controls"
+             xmlns:ctl="clr-namespace:Transport.Presentation.Wpf.Views.Controls"
+             xmlns:vm="clr-namespace:Transport.Presentation.Wpf.ViewModels.Pages"
+             mc:Ignorable="d" d:DesignWidth="1100" d:DesignHeight="680"
+             d:DataContext="{d:DesignInstance Type=vm:StaffViewModel}">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+
+        <Border Style="{StaticResource CardStyle}">
+            <DockPanel>
+                <ctl:CrudToolbar DockPanel.Dock="Top" />
+                <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,12">
+                    <Button Content="{l:Loc Staff_ResetPassword}" Command="{Binding ResetPasswordCommand}" Margin="0,0,8,0" />
+                    <Button Content="{l:Loc Staff_Lock}" Command="{Binding ToggleLockCommand}" />
+                </StackPanel>
+                <DataGrid Style="{StaticResource ListGridStyle}" ItemsSource="{Binding Items}" SelectedItem="{Binding SelectedItem}"
+                          AutomationProperties.Name="{l:Loc Menu_Staff}">
+                    <DataGrid.InputBindings>
+                        <MouseBinding Gesture="LeftDoubleClick" Command="{Binding EditCommand}" />
+                    </DataGrid.InputBindings>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="{l:Loc Staff_Username}" Binding="{Binding Username}" Width="*" />
+                        <DataGridTextColumn Header="{l:Loc Staff_FullName}" Binding="{Binding FullName}" Width="2*" />
+                        <DataGridTextColumn Header="{l:Loc Staff_Phone}" Binding="{Binding Phone}" Width="*" />
+                        <DataGridTextColumn Header="{l:Loc Staff_Role}" Width="*"
+                                            Binding="{Binding Role, Converter={StaticResource Localize}, ConverterParameter=StaffRole_}" />
+                        <DataGridTextColumn Header="{l:Loc Staff_Status}" Width="Auto"
+                                            Binding="{Binding Status, Converter={StaticResource Localize}, ConverterParameter=StaffStatus_}" />
+                        <DataGridTextColumn Header="{l:Loc Staff_CreatedAt}" Binding="{Binding CreatedAt, StringFormat={}{0:dd/MM/yyyy}}" Width="Auto" />
+                        <DataGridTextColumn Header="{l:Loc Staff_CreatedBy}" Binding="{Binding CreatedBy}" Width="Auto" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </DockPanel>
+        </Border>
+
+        <Border Grid.Column="1" Style="{StaticResource FormCardStyle}">
+            <StackPanel>
+                <ctl:FormHeader />
+                <TextBlock Text="{l:Loc Staff_Username}" Style="{StaticResource FieldLabelStyle}" />
+                <TextBox Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsNewItem}"
+                         AutomationProperties.Name="{l:Loc Staff_Username}" />
+                <StackPanel Visibility="{Binding IsNewItem, Converter={StaticResource BoolToVisibility}}">
+                    <TextBlock Text="{l:Loc Staff_Password}" Style="{StaticResource FieldLabelStyle}" />
+                    <PasswordBox c:PasswordBoxAssistant.BoundPassword="{Binding Password}" AutomationProperties.Name="{l:Loc Staff_Password}" />
+                </StackPanel>
+                <TextBlock Text="{l:Loc Staff_FullName}" Style="{StaticResource FieldLabelStyle}" />
+                <TextBox Text="{Binding FullName, UpdateSourceTrigger=PropertyChanged}" AutomationProperties.Name="{l:Loc Staff_FullName}" />
+                <TextBlock Text="{l:Loc Staff_Phone}" Style="{StaticResource FieldLabelStyle}" />
+                <TextBox Text="{Binding Phone, UpdateSourceTrigger=PropertyChanged}" MaxLength="10" AutomationProperties.Name="{l:Loc Staff_Phone}" />
+                <TextBlock Text="{l:Loc Staff_Role}" Style="{StaticResource FieldLabelStyle}" />
+                <ComboBox ItemsSource="{Binding Roles}" SelectedItem="{Binding Role}" AutomationProperties.Name="{l:Loc Staff_Role}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Converter={StaticResource Localize}, ConverterParameter=StaffRole_}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+                <ctl:FormButtons />
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>
