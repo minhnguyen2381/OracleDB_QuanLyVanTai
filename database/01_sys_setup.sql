@@ -9,7 +9,7 @@ GRANT CREATE SESSION, CREATE TABLE, CREATE VIEW, CREATE PROCEDURE,
       CREATE TRIGGER, CREATE SEQUENCE, CREATE JOB TO transport;
 -- Quyền hệ thống cấp trực tiếp (không qua role) để PKG_STAFF dùng được trong definer rights
 GRANT CREATE USER, ALTER USER, DROP USER TO transport;
-GRANT SELECT ON sys.user_scheduler_jobs TO transport WITH GRANT OPTION;
+GRANT SELECT ON sys.dba_scheduler_jobs TO transport WITH GRANT OPTION;
 
 CREATE ROLE role_operator;
 CREATE ROLE role_ticket_seller;

@@ -59,10 +59,10 @@ END;
 /
 
 -- Trạng thái job sao lưu đêm (điều hành không có quyền đọc user_scheduler_jobs của TRANSPORT)
-CREATE OR REPLACE VIEW v_backup_job_status AS
+CREATE OR REPLACE VIEW v_backup_job_status BEQUEATH DEFINER AS
 SELECT job_name, enabled, state, last_start_date, next_run_date, failure_count
-  FROM user_scheduler_jobs
- WHERE job_name = 'JOB_NIGHTLY_BACKUP';
+  FROM sys.dba_scheduler_jobs
+ WHERE owner = 'TRANSPORT' AND job_name = 'JOB_NIGHTLY_BACKUP';
 
 -- Dừng nếu có object bị lỗi biên dịch
 SELECT name, type, line, text FROM user_errors ORDER BY name, sequence;
