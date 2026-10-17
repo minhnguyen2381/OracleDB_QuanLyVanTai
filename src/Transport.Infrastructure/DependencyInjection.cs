@@ -26,7 +26,9 @@ public static class DependencyInjection
         services.AddSingleton<IStatisticsQueries, StatisticsQueries>();
         services.AddSingleton<IBackupRepository, BackupRepository>();
 
-        services.AddSingleton<IExcelExporter, Export.ClosedXmlExcelExporter>();
+        services.AddSingleton<Export.ClosedXmlExcelExporter>();
+        services.AddSingleton<IExcelExporter>(sp => sp.GetRequiredService<Export.ClosedXmlExcelExporter>());
+        services.AddSingleton<IExportService>(sp => sp.GetRequiredService<Export.ClosedXmlExcelExporter>());
         return services;
     }
 }

@@ -23,7 +23,7 @@
         <!-- Sidebar -->
         <DockPanel Background="{StaticResource HaUiNavyBrush}">
             <StackPanel DockPanel.Dock="Top" Margin="24,24,24,20">
-                <TextBlock Text="HaUI" FontSize="30" FontWeight="Bold" Foreground="White" />
+                <TextBlock Text="{l:Loc App_Brand}" FontSize="30" FontWeight="Bold" Foreground="White" />
                 <Rectangle Height="3" Width="48" Fill="{StaticResource HaUiGoldBrush}" HorizontalAlignment="Left" Margin="0,6" />
                 <TextBlock Text="{l:Loc App_Subtitle}" Foreground="#CCFFFFFF" TextWrapping="Wrap" />
             </StackPanel>

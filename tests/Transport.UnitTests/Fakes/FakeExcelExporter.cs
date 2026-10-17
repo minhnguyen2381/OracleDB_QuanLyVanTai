@@ -3,7 +3,7 @@ using Transport.Application.Models;
 
 namespace Transport.UnitTests.Fakes;
 
-internal sealed class FakeExcelExporter : IExcelExporter
+internal sealed class FakeExcelExporter : IExcelExporter, IExportService
 {
     public string? Title { get; private set; }
     public string? FilePath { get; private set; }

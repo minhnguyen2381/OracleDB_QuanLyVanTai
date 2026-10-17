@@ -6,13 +6,20 @@ using Transport.Application.Models;
 namespace Transport.Infrastructure.Export;
 
 // Xuất danh sách ra .xlsx: dòng 1 tiêu đề, dòng 2 thời điểm + người xuất, từ dòng 4 là bảng
-internal sealed class ClosedXmlExcelExporter(IUserSession session, TimeProvider time) : IExcelExporter
+internal sealed class ClosedXmlExcelExporter(IUserSession session, TimeProvider time) : IExcelExporter, IExportService
 {
     private const int HeaderRow = 4;
 
     public Task ExportAsync<T>(IEnumerable<T> rows, IReadOnlyList<ExportColumn<T>> columns, string title, string filePath,
         CancellationToken ct = default)
     {
+        ArgumentNullException.ThrowIfNull(columns);
+        ArgumentException.ThrowIfNullOrWhiteSpace(filePath);
+        if (columns.Count == 0)
+        {
+            throw new ArgumentException("At least one column must be specified.", nameof(columns));
+        }
+
         using var workbook = new XLWorkbook();
         var sheet = workbook.AddWorksheet("Data");
 

@@ -20,7 +20,7 @@
         <!-- Cột thương hiệu -->
         <Border Background="{StaticResource HaUiNavyBrush}">
             <StackPanel VerticalAlignment="Center" Margin="40">
-                <TextBlock Text="HaUI" FontSize="44" FontWeight="Bold" Foreground="White" />
+                <TextBlock Text="{l:Loc App_Brand}" FontSize="44" FontWeight="Bold" Foreground="White" />
                 <Rectangle Height="4" Width="64" Fill="{StaticResource HaUiGoldBrush}" HorizontalAlignment="Left" Margin="0,8,0,16" />
                 <TextBlock Text="{l:Loc App_Title}" FontSize="22" Foreground="White" TextWrapping="Wrap" />
                 <TextBlock Text="{l:Loc Login_Hint}" Foreground="#CCFFFFFF" Margin="0,12,0,0" TextWrapping="Wrap" />

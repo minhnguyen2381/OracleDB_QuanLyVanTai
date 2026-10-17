@@ -43,4 +43,16 @@ public class ClosedXmlExcelExporterTests
             File.Delete(path);
         }
     }
+
+    [Fact]
+    public async Task ExportAsync_RejectsEmptyColumnsOrBlankPath()
+    {
+        var exporter = new ClosedXmlExcelExporter(new FakeUserSession(),
+            new FixedTimeProvider(new DateTimeOffset(2026, 10, 17, 9, 30, 0, TimeSpan.Zero)));
+        var columns = new[] { new ExportColumn<Row>("Tuyến", r => r.Name) };
+        var rows = new[] { new Row("Hà Nội - Lào Cai", 280000m, DateTime.Today) };
+
+        await Assert.ThrowsAsync<ArgumentException>(() => exporter.ExportAsync(rows, [], "Title", "out.xlsx"));
+        await Assert.ThrowsAsync<ArgumentException>(() => exporter.ExportAsync(rows, columns, "Title", "  "));
+    }
 }

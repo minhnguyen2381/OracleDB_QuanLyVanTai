@@ -3,7 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace Transport.Presentation.Wpf.Services;
 
-public sealed partial class NotificationService : ObservableObject, INotificationService
+public sealed partial class NotificationService : ObservableObject, INotificationService, IDisposable
 {
     private CancellationTokenSource? _autoHide;
 
@@ -27,18 +27,28 @@ public sealed partial class NotificationService : ObservableObject, INotificatio
     [RelayCommand]
     private void Close()
     {
-        _autoHide?.Cancel();
+        CancelAutoHide();
         IsOpen = false;
     }
 
     private void Show(string message, NotificationSeverity severity, TimeSpan duration)
     {
-        _autoHide?.Cancel();
+        CancelAutoHide();
         _autoHide = new CancellationTokenSource();
         Message = message;
         Severity = severity;
         IsOpen = true;
         _ = HideLaterAsync(duration, _autoHide.Token);
+    }
+
+    private void CancelAutoHide()
+    {
+        if (_autoHide is { } cts)
+        {
+            cts.Cancel();
+            cts.Dispose();
+            _autoHide = null;
+        }
     }
 
     // Tự ẩn sau một lúc; thông báo mới sẽ hủy lần ẩn của thông báo cũ
@@ -53,4 +63,6 @@ public sealed partial class NotificationService : ObservableObject, INotificatio
         {
         }
     }
+
+    public void Dispose() => CancelAutoHide();
 }

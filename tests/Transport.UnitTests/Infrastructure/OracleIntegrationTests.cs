@@ -3,6 +3,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Transport.Application;
 using Transport.Application.Abstractions;
 using Transport.Application.Models;
+using Transport.Domain.Entities;
+using Transport.Domain.Enums;
 using Transport.Domain.Errors;
 using Transport.Infrastructure;
 
@@ -82,6 +84,45 @@ public class OracleIntegrationTests
             .BookAsync(new BookingRequest(trip.ScheduleId, "Integration Test", "0999111222", null, 99)));
 
         Assert.Equal(BusinessErrorCode.SeatNotFound, ex.Code);
+    }
+
+    [Fact]
+    public async Task Operator_AddsAndDeletesPassenger()
+    {
+        RequireDatabase();
+        using var services = await SignInAsync("operator01", "Operator#01");
+        var repo = services.GetRequiredService<IPassengerRepository>();
+        var p = new Passenger
+        {
+            FullName = "Nguyễn Văn Test",
+            Phone = "0987654321",
+            IdCard = "001099999999",
+            Email = "test@example.com"
+        };
+        await repo.AddAsync(p);
+        var found = await repo.FindByPhoneAsync("0987654321");
+        Assert.NotNull(found);
+        Assert.Equal("Nguyễn Văn Test", found.FullName);
+        await repo.DeleteAsync(found.Id);
+    }
+
+    [Fact]
+    public async Task Seller_BooksPaysAndCancelsTicket()
+    {
+        RequireDatabase();
+        using var services = await SignInAsync("seller01", "Seller#001");
+        var trips = await OpenTripsAsync(services);
+        var trip = trips[0];
+        var ticketRepo = services.GetRequiredService<ITicketRepository>();
+        var bookedSeats = await ticketRepo.GetBookedSeatsAsync(trip.ScheduleId);
+        var freeSeat = Enumerable.Range(1, trip.SeatCount).First(s => !bookedSeats.Contains(s));
+
+        var ticketId = await ticketRepo.BookAsync(new BookingRequest(trip.ScheduleId, "Khách Test", "0912345678", null, freeSeat));
+        Assert.True(ticketId > 0);
+
+        await ticketRepo.PayAsync(ticketId, PaymentMethod.Cash);
+
+        await ticketRepo.CancelAsync(ticketId, "Test hủy vé");
     }
 
     [Fact]

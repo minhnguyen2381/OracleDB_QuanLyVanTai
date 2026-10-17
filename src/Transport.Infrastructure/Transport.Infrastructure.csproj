@@ -8,6 +8,7 @@
     <PackageReference Include="Dapper" />
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" />
     <PackageReference Include="Oracle.ManagedDataAccess.Core" />
+    <PackageReference Include="System.Security.Cryptography.Pkcs" />
   </ItemGroup>
   <ItemGroup>
     <InternalsVisibleTo Include="Transport.UnitTests" />
