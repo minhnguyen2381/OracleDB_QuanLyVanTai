@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="App_Title" xml:space="preserve"><value>Transport &amp; Ticketing Management</value></data>
+  <data name="App_Subtitle" xml:space="preserve"><value>Bus transport &amp; ticketing</value></data>
+  <data name="Login_Title" xml:space="preserve"><value>Sign in</value></data>
+  <data name="Login_Hint" xml:space="preserve"><value>Sign in with your Oracle staff account.</value></data>
+  <data name="Login_Username" xml:space="preserve"><value>Username</value></data>
+  <data name="Login_Password" xml:space="preserve"><value>Password</value></data>
+  <data name="Login_Language" xml:space="preserve"><value>Language</value></data>
+  <data name="Login_Button" xml:space="preserve"><value>Sign in</value></data>
+  <data name="Lang_vi" xml:space="preserve"><value>Tiếng Việt</value></data>
+  <data name="Lang_en" xml:space="preserve"><value>English</value></data>
+  <data name="Role_Operator" xml:space="preserve"><value>Operator</value></data>
+  <data name="Role_TicketSeller" xml:space="preserve"><value>Ticket seller</value></data>
+  <data name="Btn_SwitchLanguage" xml:space="preserve"><value>Tiếng Việt</value></data>
+  <data name="Btn_Logout" xml:space="preserve"><value>Sign out</value></data>
+  <data name="Btn_OK" xml:space="preserve"><value>OK</value></data>
+  <data name="Btn_Cancel" xml:space="preserve"><value>Cancel</value></data>
+  <data name="Btn_Close" xml:space="preserve"><value>Close</value></data>
+  <data name="Msg_ConfirmLogout" xml:space="preserve"><value>Do you want to sign out?</value></data>
+  <data name="Msg_Saved" xml:space="preserve"><value>Saved successfully.</value></data>
+  <data name="Msg_Deleted" xml:space="preserve"><value>Deleted successfully.</value></data>
+  <data name="Msg_ConfirmDelete" xml:space="preserve"><value>Delete {0}?</value></data>
+  <data name="Msg_FixErrors" xml:space="preserve"><value>Please correct the highlighted fields.</value></data>
+  <data name="Msg_Exported" xml:space="preserve"><value>Exported to {0}</value></data>
+  <data name="Dialog_Payment_Title" xml:space="preserve"><value>Payment</value></data>
+  <data name="Dialog_Payment_Amount" xml:space="preserve"><value>Amount to pay</value></data>
+  <data name="Dialog_Payment_Method" xml:space="preserve"><value>Payment method</value></data>
+  <data name="Dialog_Password_Label" xml:space="preserve"><value>New password (at least 8 characters)</value></data>
+  <data name="PaymentMethod_Cash" xml:space="preserve"><value>Cash</value></data>
+  <data name="PaymentMethod_Transfer" xml:space="preserve"><value>Bank transfer</value></data>
+  <data name="PaymentMethod_Card" xml:space="preserve"><value>Card</value></data>
+  <data name="Val_Required" xml:space="preserve"><value>This field is required.</value></data>
+  <data name="Val_Phone" xml:space="preserve"><value>10 digits starting with 0.</value></data>
+  <data name="Val_Positive" xml:space="preserve"><value>Must be greater than 0.</value></data>
+  <data name="Err_20001" xml:space="preserve"><value>Seat {0} does not exist on this vehicle.</value></data>
+  <data name="Err_20002" xml:space="preserve"><value>This trip is no longer open for sale.</value></data>
+  <data name="Err_20003" xml:space="preserve"><value>Seat {0} is already booked.</value></data>
+  <data name="Err_20010" xml:space="preserve"><value>The trip has departed; booking is not allowed.</value></data>
+  <data name="Err_20011" xml:space="preserve"><value>Trip not found.</value></data>
+  <data name="Err_20020" xml:space="preserve"><value>Only unpaid (booked) tickets can be paid.</value></data>
+  <data name="Err_20021" xml:space="preserve"><value>Ticket not found.</value></data>
+  <data name="Err_20030" xml:space="preserve"><value>The ticket is already cancelled.</value></data>
+  <data name="Err_20031" xml:space="preserve"><value>The trip has departed; cancellation is not allowed.</value></data>
+  <data name="Err_20032" xml:space="preserve"><value>Ticket not found.</value></data>
+  <data name="Err_20040" xml:space="preserve"><value>Invalid username (3–30 letters, digits or _, starting with a letter).</value></data>
+  <data name="Err_20041" xml:space="preserve"><value>Invalid role.</value></data>
+  <data name="Err_20042" xml:space="preserve"><value>Staff member not found.</value></data>
+  <data name="Err_20043" xml:space="preserve"><value>You cannot lock or change your own account.</value></data>
+  <data name="Err_20044" xml:space="preserve"><value>Password must be at least 8 characters and must not contain double quotes.</value></data>
+  <data name="Err_20050" xml:space="preserve"><value>Trip not found.</value></data>
+  <data name="Err_20051" xml:space="preserve"><value>Only scheduled trips can be cancelled.</value></data>
+  <data name="Err_20052" xml:space="preserve"><value>This trip still has active tickets; use "Cancel trip".</value></data>
+  <data name="Err_1" xml:space="preserve"><value>This value already exists (plate number, phone, ID card, licence number…).</value></data>
+  <data name="Err_1017" xml:space="preserve"><value>Wrong username or password.</value></data>
+  <data name="Err_1031" xml:space="preserve"><value>You do not have permission to perform this action.</value></data>
+  <data name="Err_1920" xml:space="preserve"><value>This username already exists.</value></data>
+  <data name="Err_2292" xml:space="preserve"><value>Cannot delete because related data exists.</value></data>
+  <data name="Err_2290" xml:space="preserve"><value>Invalid data (for example origin equals destination, or seat count outside 1–60).</value></data>
+  <data name="Err_28000" xml:space="preserve"><value>This account is locked.</value></data>
+  <data name="Err_12541" xml:space="preserve"><value>Cannot connect to Oracle. Check that the database service is running.</value></data>
+  <data name="Err_90001" xml:space="preserve"><value>Please fill in all required fields.</value></data>
+  <data name="Err_90002" xml:space="preserve"><value>Phone number must be 10 digits starting with 0.</value></data>
+  <data name="Err_90003" xml:space="preserve"><value>Please choose a valid seat.</value></data>
+  <data name="Err_90004" xml:space="preserve"><value>Arrival time must be after departure time.</value></data>
+  <data name="Err_90005" xml:space="preserve"><value>Price must be greater than 0.</value></data>
+  <data name="Err_90006" xml:space="preserve"><value>Only operators can perform this action.</value></data>
+</root>

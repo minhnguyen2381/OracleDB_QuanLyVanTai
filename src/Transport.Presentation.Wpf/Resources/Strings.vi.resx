@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="App_Title" xml:space="preserve"><value>Quản lý vận tải và đặt vé xe</value></data>
+  <data name="App_Subtitle" xml:space="preserve"><value>Vận tải &amp; đặt vé xe khách</value></data>
+  <data name="Login_Title" xml:space="preserve"><value>Đăng nhập</value></data>
+  <data name="Login_Hint" xml:space="preserve"><value>Đăng nhập bằng tài khoản Oracle của nhân viên.</value></data>
+  <data name="Login_Username" xml:space="preserve"><value>Tên đăng nhập</value></data>
+  <data name="Login_Password" xml:space="preserve"><value>Mật khẩu</value></data>
+  <data name="Login_Language" xml:space="preserve"><value>Ngôn ngữ</value></data>
+  <data name="Login_Button" xml:space="preserve"><value>Đăng nhập</value></data>
+  <data name="Lang_vi" xml:space="preserve"><value>Tiếng Việt</value></data>
+  <data name="Lang_en" xml:space="preserve"><value>English</value></data>
+  <data name="Role_Operator" xml:space="preserve"><value>Điều hành</value></data>
+  <data name="Role_TicketSeller" xml:space="preserve"><value>Nhân viên bán vé</value></data>
+  <data name="Btn_SwitchLanguage" xml:space="preserve"><value>English</value></data>
+  <data name="Btn_Logout" xml:space="preserve"><value>Đăng xuất</value></data>
+  <data name="Btn_OK" xml:space="preserve"><value>Đồng ý</value></data>
+  <data name="Btn_Cancel" xml:space="preserve"><value>Hủy bỏ</value></data>
+  <data name="Btn_Close" xml:space="preserve"><value>Đóng</value></data>
+  <data name="Msg_ConfirmLogout" xml:space="preserve"><value>Bạn có muốn đăng xuất không?</value></data>
+  <data name="Msg_Saved" xml:space="preserve"><value>Đã lưu thành công.</value></data>
+  <data name="Msg_Deleted" xml:space="preserve"><value>Đã xóa thành công.</value></data>
+  <data name="Msg_ConfirmDelete" xml:space="preserve"><value>Bạn có chắc muốn xóa {0}?</value></data>
+  <data name="Msg_FixErrors" xml:space="preserve"><value>Vui lòng sửa các ô đang báo lỗi.</value></data>
+  <data name="Msg_Exported" xml:space="preserve"><value>Đã xuất file: {0}</value></data>
+  <data name="Dialog_Payment_Title" xml:space="preserve"><value>Thanh toán</value></data>
+  <data name="Dialog_Payment_Amount" xml:space="preserve"><value>Số tiền cần thanh toán</value></data>
+  <data name="Dialog_Payment_Method" xml:space="preserve"><value>Phương thức thanh toán</value></data>
+  <data name="Dialog_Password_Label" xml:space="preserve"><value>Mật khẩu mới (tối thiểu 8 ký tự)</value></data>
+  <data name="PaymentMethod_Cash" xml:space="preserve"><value>Tiền mặt</value></data>
+  <data name="PaymentMethod_Transfer" xml:space="preserve"><value>Chuyển khoản</value></data>
+  <data name="PaymentMethod_Card" xml:space="preserve"><value>Thẻ</value></data>
+  <data name="Val_Required" xml:space="preserve"><value>Không được để trống.</value></data>
+  <data name="Val_Phone" xml:space="preserve"><value>Gồm 10 chữ số, bắt đầu bằng 0.</value></data>
+  <data name="Val_Positive" xml:space="preserve"><value>Phải lớn hơn 0.</value></data>
+  <data name="Err_20001" xml:space="preserve"><value>Ghế {0} không có trên xe này.</value></data>
+  <data name="Err_20002" xml:space="preserve"><value>Chuyến này không còn mở bán.</value></data>
+  <data name="Err_20003" xml:space="preserve"><value>Ghế {0} đã có người đặt.</value></data>
+  <data name="Err_20010" xml:space="preserve"><value>Chuyến đã khởi hành, không thể đặt vé.</value></data>
+  <data name="Err_20011" xml:space="preserve"><value>Không tìm thấy chuyến xe.</value></data>
+  <data name="Err_20020" xml:space="preserve"><value>Chỉ thanh toán được vé đang chờ thanh toán.</value></data>
+  <data name="Err_20021" xml:space="preserve"><value>Không tìm thấy vé.</value></data>
+  <data name="Err_20030" xml:space="preserve"><value>Vé đã bị hủy trước đó.</value></data>
+  <data name="Err_20031" xml:space="preserve"><value>Chuyến đã khởi hành, không thể hủy vé.</value></data>
+  <data name="Err_20032" xml:space="preserve"><value>Không tìm thấy vé.</value></data>
+  <data name="Err_20040" xml:space="preserve"><value>Tên đăng nhập không hợp lệ (3–30 ký tự chữ, số hoặc _, bắt đầu bằng chữ).</value></data>
+  <data name="Err_20041" xml:space="preserve"><value>Vai trò không hợp lệ.</value></data>
+  <data name="Err_20042" xml:space="preserve"><value>Không tìm thấy nhân viên.</value></data>
+  <data name="Err_20043" xml:space="preserve"><value>Bạn không thể khóa hoặc đổi quyền tài khoản của chính mình.</value></data>
+  <data name="Err_20044" xml:space="preserve"><value>Mật khẩu tối thiểu 8 ký tự và không chứa dấu nháy kép.</value></data>
+  <data name="Err_20050" xml:space="preserve"><value>Không tìm thấy chuyến xe.</value></data>
+  <data name="Err_20051" xml:space="preserve"><value>Chỉ hủy được chuyến chưa chạy.</value></data>
+  <data name="Err_20052" xml:space="preserve"><value>Chuyến còn vé hiệu lực, hãy dùng chức năng "Hủy chuyến".</value></data>
+  <data name="Err_1" xml:space="preserve"><value>Dữ liệu bị trùng (biển số, SĐT, CCCD, số bằng lái…).</value></data>
+  <data name="Err_1017" xml:space="preserve"><value>Sai tên đăng nhập hoặc mật khẩu.</value></data>
+  <data name="Err_1031" xml:space="preserve"><value>Bạn không có quyền thực hiện thao tác này.</value></data>
+  <data name="Err_1920" xml:space="preserve"><value>Tên đăng nhập đã tồn tại.</value></data>
+  <data name="Err_2292" xml:space="preserve"><value>Không xóa được vì đang có dữ liệu liên quan.</value></data>
+  <data name="Err_2290" xml:space="preserve"><value>Dữ liệu không hợp lệ (ví dụ điểm đi trùng điểm đến, số ghế ngoài khoảng 1–60).</value></data>
+  <data name="Err_28000" xml:space="preserve"><value>Tài khoản đã bị khóa.</value></data>
+  <data name="Err_12541" xml:space="preserve"><value>Không kết nối được Oracle, hãy kiểm tra dịch vụ CSDL.</value></data>
+  <data name="Err_90001" xml:space="preserve"><value>Vui lòng nhập đầy đủ thông tin bắt buộc.</value></data>
+  <data name="Err_90002" xml:space="preserve"><value>Số điện thoại phải gồm 10 chữ số, bắt đầu bằng 0.</value></data>
+  <data name="Err_90003" xml:space="preserve"><value>Vui lòng chọn ghế hợp lệ.</value></data>
+  <data name="Err_90004" xml:space="preserve"><value>Giờ đến phải sau giờ khởi hành.</value></data>
+  <data name="Err_90005" xml:space="preserve"><value>Giá phải lớn hơn 0.</value></data>
+  <data name="Err_90006" xml:space="preserve"><value>Chỉ điều hành mới được thực hiện thao tác này.</value></data>
+</root>
