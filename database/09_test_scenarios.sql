@@ -174,4 +174,13 @@ BEGIN
 END;
 /
 
+-- ===== Kiểm tra phân quyền thủ công (không tự chạy) =====
+-- Đăng nhập seller01/Seller#001 rồi chạy:
+--   INSERT INTO transport.tickets (schedule_id, passenger_id, seat_no, price) VALUES (1, 1, 1, 1);
+--     -> ORA-01031: insufficient privileges (chỉ bán vé được qua PKG_TICKET)
+--   EXEC transport.pkg_staff.set_locked('SELLER02', 1)
+--     -> PLS-00201: identifier 'TRANSPORT.PKG_STAFF' must be declared (seller không có quyền EXECUTE)
+--   SELECT COUNT(*) FROM transport.drivers;
+--     -> ORA-00942: table or view does not exist (seller không được xem tài xế)
+
 EXIT
