@@ -139,4 +139,30 @@
   <data name="TicketStatus_Booked" xml:space="preserve"><value>Unpaid</value></data>
   <data name="TicketStatus_Paid" xml:space="preserve"><value>Paid</value></data>
   <data name="TicketStatus_Cancelled" xml:space="preserve"><value>Cancelled</value></data>
+  <data name="Menu_Schedules" xml:space="preserve"><value>Schedules</value></data>
+  <data name="Schedules_Departure" xml:space="preserve"><value>Departure</value></data>
+  <data name="Schedules_Arrival" xml:space="preserve"><value>Arrival</value></data>
+  <data name="Schedules_Route" xml:space="preserve"><value>Route</value></data>
+  <data name="Schedules_Vehicle" xml:space="preserve"><value>Vehicle</value></data>
+  <data name="Schedules_Driver" xml:space="preserve"><value>Driver</value></data>
+  <data name="Schedules_Price" xml:space="preserve"><value>Ticket price</value></data>
+  <data name="Schedules_Seats" xml:space="preserve"><value>Sold / seats</value></data>
+  <data name="Schedules_Sold" xml:space="preserve"><value>Seats sold</value></data>
+  <data name="Schedules_SeatCount" xml:space="preserve"><value>Seats</value></data>
+  <data name="Schedules_Status" xml:space="preserve"><value>Status</value></data>
+  <data name="Schedules_Date" xml:space="preserve"><value>Date</value></data>
+  <data name="Schedules_Time" xml:space="preserve"><value>Time (HH:mm)</value></data>
+  <data name="Schedules_ExportTitle" xml:space="preserve"><value>Schedule list</value></data>
+  <data name="Schedules_Cancel" xml:space="preserve"><value>Cancel trip</value></data>
+  <data name="Schedules_CancelTitle" xml:space="preserve"><value>Cancel trip</value></data>
+  <data name="Schedules_CancelReason" xml:space="preserve"><value>Reason (all tickets are cancelled and paid tickets refunded)</value></data>
+  <data name="Schedules_Cancelled" xml:space="preserve"><value>Trip cancelled; paid tickets were refunded.</value></data>
+  <data name="Schedules_MarkRunning" xml:space="preserve"><value>Start trip</value></data>
+  <data name="Schedules_MarkCompleted" xml:space="preserve"><value>Complete trip</value></data>
+  <data name="Schedules_StatusUpdated" xml:space="preserve"><value>Trip status updated.</value></data>
+  <data name="ScheduleStatus_Scheduled" xml:space="preserve"><value>Scheduled</value></data>
+  <data name="ScheduleStatus_Running" xml:space="preserve"><value>Running</value></data>
+  <data name="ScheduleStatus_Completed" xml:space="preserve"><value>Completed</value></data>
+  <data name="ScheduleStatus_Cancelled" xml:space="preserve"><value>Cancelled</value></data>
+  <data name="Val_Time" xml:space="preserve"><value>Use HH:mm, for example 07:30.</value></data>
 </root>

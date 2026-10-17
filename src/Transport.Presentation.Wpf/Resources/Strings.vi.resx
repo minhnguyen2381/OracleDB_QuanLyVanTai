@@ -139,4 +139,30 @@
   <data name="TicketStatus_Booked" xml:space="preserve"><value>Chờ thanh toán</value></data>
   <data name="TicketStatus_Paid" xml:space="preserve"><value>Đã thanh toán</value></data>
   <data name="TicketStatus_Cancelled" xml:space="preserve"><value>Đã hủy</value></data>
+  <data name="Menu_Schedules" xml:space="preserve"><value>Lịch chạy</value></data>
+  <data name="Schedules_Departure" xml:space="preserve"><value>Khởi hành</value></data>
+  <data name="Schedules_Arrival" xml:space="preserve"><value>Đến nơi</value></data>
+  <data name="Schedules_Route" xml:space="preserve"><value>Tuyến</value></data>
+  <data name="Schedules_Vehicle" xml:space="preserve"><value>Xe</value></data>
+  <data name="Schedules_Driver" xml:space="preserve"><value>Tài xế</value></data>
+  <data name="Schedules_Price" xml:space="preserve"><value>Giá vé</value></data>
+  <data name="Schedules_Seats" xml:space="preserve"><value>Đã bán / số ghế</value></data>
+  <data name="Schedules_Sold" xml:space="preserve"><value>Ghế đã bán</value></data>
+  <data name="Schedules_SeatCount" xml:space="preserve"><value>Số ghế</value></data>
+  <data name="Schedules_Status" xml:space="preserve"><value>Trạng thái</value></data>
+  <data name="Schedules_Date" xml:space="preserve"><value>Ngày</value></data>
+  <data name="Schedules_Time" xml:space="preserve"><value>Giờ (HH:mm)</value></data>
+  <data name="Schedules_ExportTitle" xml:space="preserve"><value>Danh sách lịch chạy</value></data>
+  <data name="Schedules_Cancel" xml:space="preserve"><value>Hủy chuyến</value></data>
+  <data name="Schedules_CancelTitle" xml:space="preserve"><value>Hủy chuyến xe</value></data>
+  <data name="Schedules_CancelReason" xml:space="preserve"><value>Lý do (mọi vé sẽ bị hủy, vé đã thanh toán được hoàn tiền)</value></data>
+  <data name="Schedules_Cancelled" xml:space="preserve"><value>Đã hủy chuyến và hoàn tiền các vé đã thanh toán.</value></data>
+  <data name="Schedules_MarkRunning" xml:space="preserve"><value>Bắt đầu chạy</value></data>
+  <data name="Schedules_MarkCompleted" xml:space="preserve"><value>Hoàn thành</value></data>
+  <data name="Schedules_StatusUpdated" xml:space="preserve"><value>Đã cập nhật trạng thái chuyến.</value></data>
+  <data name="ScheduleStatus_Scheduled" xml:space="preserve"><value>Chờ chạy</value></data>
+  <data name="ScheduleStatus_Running" xml:space="preserve"><value>Đang chạy</value></data>
+  <data name="ScheduleStatus_Completed" xml:space="preserve"><value>Hoàn thành</value></data>
+  <data name="ScheduleStatus_Cancelled" xml:space="preserve"><value>Đã hủy</value></data>
+  <data name="Val_Time" xml:space="preserve"><value>Nhập dạng HH:mm, ví dụ 07:30.</value></data>
 </root>
