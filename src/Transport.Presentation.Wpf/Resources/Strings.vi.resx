@@ -222,4 +222,11 @@
   <data name="Stats_Cancelled" xml:space="preserve"><value>Vé hủy</value></data>
   <data name="Stats_RevenueByRoute" xml:space="preserve"><value>Doanh thu thực theo tuyến</value></data>
   <data name="Stats_ExportTitle" xml:space="preserve"><value>Thống kê chuyến xe</value></data>
+  <data name="Menu_Dashboard" xml:space="preserve"><value>Tổng quan</value></data>
+  <data name="Dash_Today" xml:space="preserve"><value>Hôm nay</value></data>
+  <data name="Dash_TripsToday" xml:space="preserve"><value>Chuyến hôm nay</value></data>
+  <data name="Dash_TicketsToday" xml:space="preserve"><value>Vé bán hôm nay</value></data>
+  <data name="Dash_RevenueToday" xml:space="preserve"><value>Doanh thu thực hôm nay</value></data>
+  <data name="Dash_Occupancy" xml:space="preserve"><value>Lấp đầy trung bình hôm nay</value></data>
+  <data name="Dash_Last7Days" xml:space="preserve"><value>Doanh thu thực 7 ngày gần nhất (theo ngày khởi hành)</value></data>
 </root>

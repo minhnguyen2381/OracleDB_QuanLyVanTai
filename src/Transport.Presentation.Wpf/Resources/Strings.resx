@@ -222,4 +222,11 @@
   <data name="Stats_Cancelled" xml:space="preserve"><value>Cancelled tickets</value></data>
   <data name="Stats_RevenueByRoute" xml:space="preserve"><value>Net revenue by route</value></data>
   <data name="Stats_ExportTitle" xml:space="preserve"><value>Trip statistics</value></data>
+  <data name="Menu_Dashboard" xml:space="preserve"><value>Dashboard</value></data>
+  <data name="Dash_Today" xml:space="preserve"><value>Today</value></data>
+  <data name="Dash_TripsToday" xml:space="preserve"><value>Trips today</value></data>
+  <data name="Dash_TicketsToday" xml:space="preserve"><value>Tickets sold today</value></data>
+  <data name="Dash_RevenueToday" xml:space="preserve"><value>Net revenue today</value></data>
+  <data name="Dash_Occupancy" xml:space="preserve"><value>Average occupancy today</value></data>
+  <data name="Dash_Last7Days" xml:space="preserve"><value>Net revenue – last 7 days (by departure date)</value></data>
 </root>

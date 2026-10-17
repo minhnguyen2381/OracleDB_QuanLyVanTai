@@ -3,6 +3,7 @@
                     xmlns:vm="clr-namespace:Transport.Presentation.Wpf.ViewModels.Pages"
                     xmlns:pages="clr-namespace:Transport.Presentation.Wpf.Views.Pages">
     <!-- Mỗi trang một DataTemplate: ViewModel -> View -->
+    <DataTemplate DataType="{x:Type vm:DashboardViewModel}"><pages:DashboardPage /></DataTemplate>
     <DataTemplate DataType="{x:Type vm:RoutesViewModel}"><pages:RoutesPage /></DataTemplate>
     <DataTemplate DataType="{x:Type vm:VehiclesViewModel}"><pages:VehiclesPage /></DataTemplate>
     <DataTemplate DataType="{x:Type vm:DriversViewModel}"><pages:DriversPage /></DataTemplate>

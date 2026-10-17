@@ -41,6 +41,7 @@ public static class PresentationServices
     // Danh sách trang của ứng dụng (Plan 3 thêm từng dòng services.AddPage<...>(...) trước return)
     private static IServiceCollection AddPages(this IServiceCollection services)
     {
+        services.AddPage<DashboardViewModel>("Menu_Dashboard", "\uE80F", 10);
         services.AddPage<SellTicketViewModel>("Menu_SellTicket", "\uE7BF", 20);
         services.AddPage<TicketsViewModel>("Menu_Tickets", "\uE8A5", 30);
         services.AddPage<PassengersViewModel>("Menu_Passengers", "\uE716", 40);
