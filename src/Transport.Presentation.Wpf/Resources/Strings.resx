@@ -202,4 +202,13 @@
   <data name="Print_SoldBy" xml:space="preserve"><value>Sold by</value></data>
   <data name="Print_PrintedAt" xml:space="preserve"><value>Printed at</value></data>
   <data name="Print_Footer" xml:space="preserve"><value>Please be at the station 15 minutes before departure.</value></data>
+  <data name="Menu_Tickets" xml:space="preserve"><value>Tickets</value></data>
+  <data name="Tickets_Keyword" xml:space="preserve"><value>Ticket #, phone or name</value></data>
+  <data name="Tickets_Pay" xml:space="preserve"><value>Pay</value></data>
+  <data name="Tickets_Cancel" xml:space="preserve"><value>Cancel ticket</value></data>
+  <data name="Tickets_Print" xml:space="preserve"><value>Print (Ctrl+P)</value></data>
+  <data name="Tickets_CancelTitle" xml:space="preserve"><value>Cancel ticket #{0}</value></data>
+  <data name="Tickets_Cancelled" xml:space="preserve"><value>Ticket cancelled.</value></data>
+  <data name="Tickets_CancelledRefund" xml:space="preserve"><value>Ticket cancelled; {0:N0} ₫ refunded.</value></data>
+  <data name="Tickets_ExportTitle" xml:space="preserve"><value>Ticket list</value></data>
 </root>

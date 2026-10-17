@@ -202,4 +202,13 @@
   <data name="Print_SoldBy" xml:space="preserve"><value>Người bán</value></data>
   <data name="Print_PrintedAt" xml:space="preserve"><value>In lúc</value></data>
   <data name="Print_Footer" xml:space="preserve"><value>Quý khách vui lòng có mặt tại bến trước giờ khởi hành 15 phút.</value></data>
+  <data name="Menu_Tickets" xml:space="preserve"><value>Quản lý vé</value></data>
+  <data name="Tickets_Keyword" xml:space="preserve"><value>Mã vé, SĐT hoặc tên khách</value></data>
+  <data name="Tickets_Pay" xml:space="preserve"><value>Thanh toán</value></data>
+  <data name="Tickets_Cancel" xml:space="preserve"><value>Hủy vé</value></data>
+  <data name="Tickets_Print" xml:space="preserve"><value>In vé (Ctrl+P)</value></data>
+  <data name="Tickets_CancelTitle" xml:space="preserve"><value>Hủy vé #{0}</value></data>
+  <data name="Tickets_Cancelled" xml:space="preserve"><value>Đã hủy vé.</value></data>
+  <data name="Tickets_CancelledRefund" xml:space="preserve"><value>Đã hủy vé và hoàn {0:N0} ₫.</value></data>
+  <data name="Tickets_ExportTitle" xml:space="preserve"><value>Danh sách vé</value></data>
 </root>

@@ -9,4 +9,5 @@
     <DataTemplate DataType="{x:Type vm:PassengersViewModel}"><pages:PassengersPage /></DataTemplate>
     <DataTemplate DataType="{x:Type vm:SchedulesViewModel}"><pages:SchedulesPage /></DataTemplate>
     <DataTemplate DataType="{x:Type vm:SellTicketViewModel}"><pages:SellTicketPage /></DataTemplate>
+    <DataTemplate DataType="{x:Type vm:TicketsViewModel}"><pages:TicketsPage /></DataTemplate>
 </ResourceDictionary>

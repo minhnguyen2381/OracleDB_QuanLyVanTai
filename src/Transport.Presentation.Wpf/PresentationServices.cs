@@ -42,6 +42,7 @@ public static class PresentationServices
     private static IServiceCollection AddPages(this IServiceCollection services)
     {
         services.AddPage<SellTicketViewModel>("Menu_SellTicket", "\uE7BF", 20);
+        services.AddPage<TicketsViewModel>("Menu_Tickets", "\uE8A5", 30);
         services.AddPage<PassengersViewModel>("Menu_Passengers", "\uE716", 40);
         services.AddPage<RoutesViewModel>("Menu_Routes", "\uE707", 50);
         services.AddPage<VehiclesViewModel>("Menu_Vehicles", "\uE806", 60, operatorOnly: true);
