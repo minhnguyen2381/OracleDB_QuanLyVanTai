@@ -1,0 +1,140 @@
+<UserControl x:Class="Transport.Presentation.Wpf.Views.Pages.SellTicketPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:l="clr-namespace:Transport.Presentation.Wpf.Localization"
+             xmlns:c="clr-namespace:Transport.Presentation.Wpf.Controls"
+             xmlns:vm="clr-namespace:Transport.Presentation.Wpf.ViewModels.Pages"
+             mc:Ignorable="d" d:DesignWidth="1100" d:DesignHeight="680"
+             d:DataContext="{d:DesignInstance Type=vm:SellTicketViewModel}">
+    <UserControl.Resources>
+        <ItemsPanelTemplate x:Key="HorizontalPanel">
+            <StackPanel Orientation="Horizontal" />
+        </ItemsPanelTemplate>
+        <DataTemplate x:Key="SeatTemplate" DataType="{x:Type vm:SeatViewModel}">
+            <Button Style="{StaticResource SeatButtonStyle}" Content="{Binding Number}"
+                    Command="{Binding DataContext.SelectSeatCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                    CommandParameter="{Binding}" AutomationProperties.Name="{Binding Number}" />
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="340" />
+        </Grid.ColumnDefinitions>
+
+        <!-- Bộ lọc chuyến -->
+        <Border Grid.ColumnSpan="3" Style="{StaticResource CardStyle}" Margin="0,0,0,16">
+            <WrapPanel>
+                <StackPanel Width="170" Margin="0,0,12,0">
+                    <TextBlock Text="{l:Loc Sell_Origin}" Style="{StaticResource FieldLabelStyle}" Margin="0,0,0,4" />
+                    <TextBox Text="{Binding Origin, UpdateSourceTrigger=PropertyChanged}" c:Shortcut.Gesture="Ctrl+F"
+                             AutomationProperties.Name="{l:Loc Sell_Origin}" />
+                </StackPanel>
+                <StackPanel Width="170" Margin="0,0,12,0">
+                    <TextBlock Text="{l:Loc Sell_Destination}" Style="{StaticResource FieldLabelStyle}" Margin="0,0,0,4" />
+                    <TextBox Text="{Binding Destination, UpdateSourceTrigger=PropertyChanged}" AutomationProperties.Name="{l:Loc Sell_Destination}" />
+                </StackPanel>
+                <StackPanel Width="160" Margin="0,0,12,0">
+                    <TextBlock Text="{l:Loc Sell_Date}" Style="{StaticResource FieldLabelStyle}" Margin="0,0,0,4" />
+                    <DatePicker SelectedDate="{Binding TravelDate}" AutomationProperties.Name="{l:Loc Sell_Date}" />
+                </StackPanel>
+                <StackPanel Width="130" Margin="0,0,12,0">
+                    <TextBlock Text="{l:Loc Sell_MinPrice}" Style="{StaticResource FieldLabelStyle}" Margin="0,0,0,4" />
+                    <TextBox Text="{Binding MinPrice, UpdateSourceTrigger=PropertyChanged, TargetNullValue=''}" AutomationProperties.Name="{l:Loc Sell_MinPrice}" />
+                </StackPanel>
+                <StackPanel Width="130" Margin="0,0,12,0">
+                    <TextBlock Text="{l:Loc Sell_MaxPrice}" Style="{StaticResource FieldLabelStyle}" Margin="0,0,0,4" />
+                    <TextBox Text="{Binding MaxPrice, UpdateSourceTrigger=PropertyChanged, TargetNullValue=''}" AutomationProperties.Name="{l:Loc Sell_MaxPrice}" />
+                </StackPanel>
+                <Button Content="{l:Loc Btn_Search}" Command="{Binding SearchCommand}" Style="{StaticResource PrimaryButtonStyle}"
+                        VerticalAlignment="Bottom" MinWidth="110" c:Shortcut.Gesture="F5" />
+            </WrapPanel>
+        </Border>
+
+        <!-- Chuyến còn vé -->
+        <Border Grid.Row="1" Style="{StaticResource CardStyle}">
+            <DockPanel>
+                <TextBlock DockPanel.Dock="Top" Text="{l:Loc Sell_Trips}" Style="{StaticResource SectionTitleStyle}" />
+                <DataGrid Style="{StaticResource ListGridStyle}" ItemsSource="{Binding Trips}" SelectedItem="{Binding SelectedTrip}"
+                          AutomationProperties.Name="{l:Loc Sell_Trips}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="{l:Loc Schedules_Departure}" Binding="{Binding DepartureTime, StringFormat={}{0:HH:mm}}" Width="Auto" />
+                        <DataGridTextColumn Header="{l:Loc Schedules_Route}" Binding="{Binding RouteName}" Width="2*" />
+                        <DataGridTextColumn Header="{l:Loc Vehicles_Type}" Binding="{Binding VehicleType}" Width="*" />
+                        <DataGridTextColumn Header="{l:Loc Schedules_Vehicle}" Binding="{Binding PlateNumber}" Width="Auto" />
+                        <DataGridTextColumn Header="{l:Loc Schedules_Price}" Binding="{Binding TicketPrice, StringFormat={}{0:N0} ₫}" Width="Auto" />
+                        <DataGridTextColumn Header="{l:Loc Sell_SeatsLeft}" Binding="{Binding SeatsAvailable}" Width="Auto" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </DockPanel>
+        </Border>
+
+        <!-- Sơ đồ ghế -->
+        <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource CardStyle}" Margin="16,0" MinWidth="280">
+            <DockPanel>
+                <TextBlock DockPanel.Dock="Top" Text="{l:Loc Sell_SeatMap}" Style="{StaticResource SectionTitleStyle}" />
+                <WrapPanel DockPanel.Dock="Bottom" Margin="0,12,0,0">
+                    <Border Width="16" Height="16" CornerRadius="3" Background="{StaticResource SeatFreeBrush}" Margin="0,0,6,0" />
+                    <TextBlock Text="{l:Loc Sell_LegendFree}" Margin="0,0,16,0" />
+                    <Border Width="16" Height="16" CornerRadius="3" Background="{StaticResource SeatBookedBrush}" Margin="0,0,6,0" />
+                    <TextBlock Text="{l:Loc Sell_LegendBooked}" Margin="0,0,16,0" />
+                    <Border Width="16" Height="16" CornerRadius="3" Background="{StaticResource SeatSelectedBrush}" Margin="0,0,6,0" />
+                    <TextBlock Text="{l:Loc Sell_LegendSelected}" />
+                </WrapPanel>
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <ItemsControl ItemsSource="{Binding SeatRows}" AutomationProperties.Name="{l:Loc Sell_SeatMap}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="{x:Type vm:SeatRowViewModel}">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <ItemsControl ItemsSource="{Binding Left}" ItemsPanel="{StaticResource HorizontalPanel}"
+                                                  ItemTemplate="{StaticResource SeatTemplate}" />
+                                    <Border Width="28" />
+                                    <ItemsControl ItemsSource="{Binding Right}" ItemsPanel="{StaticResource HorizontalPanel}"
+                                                  ItemTemplate="{StaticResource SeatTemplate}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </DockPanel>
+        </Border>
+
+        <!-- Khách hàng + đặt vé -->
+        <Border Grid.Row="1" Grid.Column="2" Style="{StaticResource CardStyle}">
+            <StackPanel>
+                <TextBlock Text="{l:Loc Sell_Passenger}" Style="{StaticResource SectionTitleStyle}" />
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                    <TextBlock Text="{l:Loc Sell_SelectedSeat}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                    <TextBlock Text="{Binding SelectedSeat.Number, FallbackValue=–}" FontWeight="Bold" FontSize="16"
+                               Foreground="{StaticResource HaUiNavyBrush}" Margin="8,0,0,0" />
+                    <TextBlock Text="{Binding SelectedTrip.TicketPrice, StringFormat={}· {0:N0} ₫, FallbackValue=''}"
+                               FontWeight="SemiBold" Margin="8,0,0,0" />
+                </StackPanel>
+
+                <TextBlock Text="{l:Loc Sell_Phone}" Style="{StaticResource FieldLabelStyle}" />
+                <DockPanel>
+                    <Button DockPanel.Dock="Right" Content="{l:Loc Sell_Lookup}" Command="{Binding LookupPassengerCommand}" Margin="8,0,0,0" />
+                    <TextBox Text="{Binding Phone, UpdateSourceTrigger=PropertyChanged}" MaxLength="10" AutomationProperties.Name="{l:Loc Sell_Phone}" />
+                </DockPanel>
+                <TextBlock Text="{Binding PassengerHint}" Foreground="{StaticResource HaUiNavyBrush}" TextWrapping="Wrap" Margin="0,4,0,0"
+                           Visibility="{Binding PassengerHint, Converter={StaticResource NullToCollapsed}}" />
+
+                <TextBlock Text="{l:Loc Sell_FullName}" Style="{StaticResource FieldLabelStyle}" />
+                <TextBox Text="{Binding FullName, UpdateSourceTrigger=PropertyChanged}" AutomationProperties.Name="{l:Loc Sell_FullName}" />
+                <TextBlock Text="{l:Loc Sell_IdCard}" Style="{StaticResource FieldLabelStyle}" />
+                <TextBox Text="{Binding IdCard, UpdateSourceTrigger=PropertyChanged}" MaxLength="12" AutomationProperties.Name="{l:Loc Sell_IdCard}" />
+
+                <Button Content="{l:Loc Sell_Book}" Command="{Binding BookCommand}" Style="{StaticResource PrimaryButtonStyle}"
+                        HorizontalAlignment="Stretch" Margin="0,24,0,0" c:Shortcut.Gesture="Ctrl+S" />
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>

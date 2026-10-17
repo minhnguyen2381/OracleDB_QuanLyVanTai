@@ -165,4 +165,41 @@
   <data name="ScheduleStatus_Completed" xml:space="preserve"><value>Hoàn thành</value></data>
   <data name="ScheduleStatus_Cancelled" xml:space="preserve"><value>Đã hủy</value></data>
   <data name="Val_Time" xml:space="preserve"><value>Nhập dạng HH:mm, ví dụ 07:30.</value></data>
+  <data name="Menu_SellTicket" xml:space="preserve"><value>Bán vé</value></data>
+  <data name="Sell_Origin" xml:space="preserve"><value>Điểm đi</value></data>
+  <data name="Sell_Destination" xml:space="preserve"><value>Điểm đến</value></data>
+  <data name="Sell_Date" xml:space="preserve"><value>Ngày đi</value></data>
+  <data name="Sell_MinPrice" xml:space="preserve"><value>Giá từ</value></data>
+  <data name="Sell_MaxPrice" xml:space="preserve"><value>Giá đến</value></data>
+  <data name="Sell_Trips" xml:space="preserve"><value>Chuyến còn mở bán</value></data>
+  <data name="Sell_SeatsLeft" xml:space="preserve"><value>Ghế trống</value></data>
+  <data name="Sell_SeatMap" xml:space="preserve"><value>Sơ đồ ghế</value></data>
+  <data name="Sell_LegendFree" xml:space="preserve"><value>Trống</value></data>
+  <data name="Sell_LegendBooked" xml:space="preserve"><value>Đã đặt</value></data>
+  <data name="Sell_LegendSelected" xml:space="preserve"><value>Đang chọn</value></data>
+  <data name="Sell_Passenger" xml:space="preserve"><value>Hành khách</value></data>
+  <data name="Sell_SelectedSeat" xml:space="preserve"><value>Ghế đang chọn:</value></data>
+  <data name="Sell_Phone" xml:space="preserve"><value>Số điện thoại</value></data>
+  <data name="Sell_FullName" xml:space="preserve"><value>Họ tên</value></data>
+  <data name="Sell_IdCard" xml:space="preserve"><value>CCCD (không bắt buộc)</value></data>
+  <data name="Sell_Lookup" xml:space="preserve"><value>Tìm khách</value></data>
+  <data name="Sell_NewPassenger" xml:space="preserve"><value>Khách mới – vui lòng nhập họ tên.</value></data>
+  <data name="Sell_FoundPassenger" xml:space="preserve"><value>Khách quen: {0}</value></data>
+  <data name="Sell_Book" xml:space="preserve"><value>Đặt vé (Ctrl+S)</value></data>
+  <data name="Sell_Booked" xml:space="preserve"><value>Đã đặt vé #{0} (ghế {1}).</value></data>
+  <data name="Sell_Paid" xml:space="preserve"><value>Vé #{0} đã thanh toán.</value></data>
+  <data name="Sell_ConfirmPrint" xml:space="preserve"><value>In vé ngay bây giờ?</value></data>
+  <data name="Print_Title" xml:space="preserve"><value>VÉ XE KHÁCH</value></data>
+  <data name="Print_TicketNo" xml:space="preserve"><value>Số vé</value></data>
+  <data name="Print_Route" xml:space="preserve"><value>Tuyến</value></data>
+  <data name="Print_Departure" xml:space="preserve"><value>Khởi hành</value></data>
+  <data name="Print_Arrival" xml:space="preserve"><value>Dự kiến đến</value></data>
+  <data name="Print_Vehicle" xml:space="preserve"><value>Xe</value></data>
+  <data name="Print_Seat" xml:space="preserve"><value>Ghế</value></data>
+  <data name="Print_Passenger" xml:space="preserve"><value>Hành khách</value></data>
+  <data name="Print_Price" xml:space="preserve"><value>Giá vé</value></data>
+  <data name="Print_Status" xml:space="preserve"><value>Thanh toán</value></data>
+  <data name="Print_SoldBy" xml:space="preserve"><value>Người bán</value></data>
+  <data name="Print_PrintedAt" xml:space="preserve"><value>In lúc</value></data>
+  <data name="Print_Footer" xml:space="preserve"><value>Quý khách vui lòng có mặt tại bến trước giờ khởi hành 15 phút.</value></data>
 </root>

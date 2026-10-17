@@ -16,6 +16,7 @@ public static class PresentationServices
         services.AddSingleton<INotificationService>(sp => sp.GetRequiredService<NotificationService>());
         services.AddSingleton<IDialogService, DialogService>();
         services.AddSingleton<IWindowService, WindowService>();
+        services.AddSingleton<ITicketPrintService, TicketPrintService>();
         services.AddSingleton<PageServices>();
         // Mỗi cửa sổ chính có bộ điều hướng riêng
         services.AddTransient<INavigationService, NavigationService>();
@@ -40,6 +41,7 @@ public static class PresentationServices
     // Danh sách trang của ứng dụng (Plan 3 thêm từng dòng services.AddPage<...>(...) trước return)
     private static IServiceCollection AddPages(this IServiceCollection services)
     {
+        services.AddPage<SellTicketViewModel>("Menu_SellTicket", "\uE7BF", 20);
         services.AddPage<PassengersViewModel>("Menu_Passengers", "\uE716", 40);
         services.AddPage<RoutesViewModel>("Menu_Routes", "\uE707", 50);
         services.AddPage<VehiclesViewModel>("Menu_Vehicles", "\uE806", 60, operatorOnly: true);

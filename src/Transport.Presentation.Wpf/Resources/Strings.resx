@@ -165,4 +165,41 @@
   <data name="ScheduleStatus_Completed" xml:space="preserve"><value>Completed</value></data>
   <data name="ScheduleStatus_Cancelled" xml:space="preserve"><value>Cancelled</value></data>
   <data name="Val_Time" xml:space="preserve"><value>Use HH:mm, for example 07:30.</value></data>
+  <data name="Menu_SellTicket" xml:space="preserve"><value>Sell tickets</value></data>
+  <data name="Sell_Origin" xml:space="preserve"><value>From</value></data>
+  <data name="Sell_Destination" xml:space="preserve"><value>To</value></data>
+  <data name="Sell_Date" xml:space="preserve"><value>Travel date</value></data>
+  <data name="Sell_MinPrice" xml:space="preserve"><value>Price from</value></data>
+  <data name="Sell_MaxPrice" xml:space="preserve"><value>Price to</value></data>
+  <data name="Sell_Trips" xml:space="preserve"><value>Trips open for sale</value></data>
+  <data name="Sell_SeatsLeft" xml:space="preserve"><value>Seats left</value></data>
+  <data name="Sell_SeatMap" xml:space="preserve"><value>Seat map</value></data>
+  <data name="Sell_LegendFree" xml:space="preserve"><value>Free</value></data>
+  <data name="Sell_LegendBooked" xml:space="preserve"><value>Booked</value></data>
+  <data name="Sell_LegendSelected" xml:space="preserve"><value>Selected</value></data>
+  <data name="Sell_Passenger" xml:space="preserve"><value>Passenger</value></data>
+  <data name="Sell_SelectedSeat" xml:space="preserve"><value>Selected seat:</value></data>
+  <data name="Sell_Phone" xml:space="preserve"><value>Phone</value></data>
+  <data name="Sell_FullName" xml:space="preserve"><value>Full name</value></data>
+  <data name="Sell_IdCard" xml:space="preserve"><value>ID card (optional)</value></data>
+  <data name="Sell_Lookup" xml:space="preserve"><value>Find</value></data>
+  <data name="Sell_NewPassenger" xml:space="preserve"><value>New passenger – please enter the full name.</value></data>
+  <data name="Sell_FoundPassenger" xml:space="preserve"><value>Returning passenger: {0}</value></data>
+  <data name="Sell_Book" xml:space="preserve"><value>Book ticket (Ctrl+S)</value></data>
+  <data name="Sell_Booked" xml:space="preserve"><value>Ticket #{0} booked (seat {1}).</value></data>
+  <data name="Sell_Paid" xml:space="preserve"><value>Ticket #{0} paid.</value></data>
+  <data name="Sell_ConfirmPrint" xml:space="preserve"><value>Print the ticket now?</value></data>
+  <data name="Print_Title" xml:space="preserve"><value>BUS TICKET</value></data>
+  <data name="Print_TicketNo" xml:space="preserve"><value>Ticket No.</value></data>
+  <data name="Print_Route" xml:space="preserve"><value>Route</value></data>
+  <data name="Print_Departure" xml:space="preserve"><value>Departure</value></data>
+  <data name="Print_Arrival" xml:space="preserve"><value>Arrival (est.)</value></data>
+  <data name="Print_Vehicle" xml:space="preserve"><value>Vehicle</value></data>
+  <data name="Print_Seat" xml:space="preserve"><value>Seat</value></data>
+  <data name="Print_Passenger" xml:space="preserve"><value>Passenger</value></data>
+  <data name="Print_Price" xml:space="preserve"><value>Price</value></data>
+  <data name="Print_Status" xml:space="preserve"><value>Payment</value></data>
+  <data name="Print_SoldBy" xml:space="preserve"><value>Sold by</value></data>
+  <data name="Print_PrintedAt" xml:space="preserve"><value>Printed at</value></data>
+  <data name="Print_Footer" xml:space="preserve"><value>Please be at the station 15 minutes before departure.</value></data>
 </root>
