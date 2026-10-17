@@ -40,6 +40,8 @@ public static class Program
     private static readonly Font FontSmall = new("Segoe UI", 8.5f);
     private static readonly Font FontSmallB = new("Segoe UI", 8.5f, FontStyle.Bold);
     private static readonly Font FontBtn = new("Segoe UI", 9.5f, FontStyle.Bold);
+    private static readonly Font FontSymbol = new("Segoe MDL2 Assets", 11f);
+    private static readonly Font FontSymbolSm = new("Segoe MDL2 Assets", 9f);
 
     private static readonly Brush BNavy = new SolidBrush(Navy);
     private static readonly Brush BNavyDark = new SolidBrush(NavyDark);
@@ -117,9 +119,9 @@ public static class Program
 
         var titleText = isEng ? "Transport Management & Ticket Booking - HaUI" : "Quản lý vận tải và đặt vé xe - HaUI";
         g.DrawString(titleText, FontTitle, BDark, 12, 8);
-        g.DrawString("—", FontTitle, BDark, w - 90, 6);
-        g.DrawString("□", FontTitle, BDark, w - 60, 6);
-        g.DrawString("✕", FontTitle, BDark, w - 30, 6);
+        g.DrawString("\uE921", FontSymbolSm, BDark, w - 90, 10);
+        g.DrawString("\uE922", FontSymbolSm, BDark, w - 60, 10);
+        g.DrawString("\uE8BB", FontSymbolSm, BDark, w - 30, 10);
 
         // Sidebar
         g.FillRectangle(BNavy, 0, 32, 230, h - 32);
@@ -132,7 +134,7 @@ public static class Program
         var menusVi = new[] { "Tổng quan", "Bán vé", "Quản lý vé", "Hành khách", "Tuyến xe", "Phương tiện", "Tài xế", "Lịch chạy", "Thống kê", "Nhân viên", "Sao lưu" };
         var menusEn = new[] { "Dashboard", "Sell Tickets", "Tickets", "Passengers", "Routes", "Vehicles", "Drivers", "Schedules", "Statistics", "Staff", "Backup" };
         var menus = isEng ? menusEn : menusVi;
-        var icons = new[] { "●", "🎫", "📑", "👥", "🛣️", "🚌", "👨‍✈️", "📅", "📈", "👤", "💾" };
+        var glyphs = new[] { "\uE80F", "\uE7BF", "\uE8A5", "\uE716", "\uE707", "\uE806", "\uE77B", "\uE787", "\uE9D2", "\uE7EF", "\uE74E" };
 
         var ym = 125;
         for (int i = 0; i < menus.Length; i++)
@@ -141,20 +143,23 @@ public static class Program
             {
                 g.FillRectangle(BNavyHover, 0, ym, 230, 38);
                 g.FillRectangle(BGold, 0, ym, 4, 38);
-                g.DrawString($"{icons[i]}  {menus[i]}", FontMenuB, BWhite, 18, ym + 9);
+                g.DrawString(glyphs[i], FontSymbol, BWhite, 18, ym + 11);
+                g.DrawString(menus[i], FontMenuB, BWhite, 46, ym + 9);
             }
             else
             {
                 using var b = new SolidBrush(Color.FromArgb(215, 225, 245));
-                g.DrawString($"{icons[i]}  {menus[i]}", FontMenu, b, 18, ym + 9);
+                g.DrawString(glyphs[i], FontSymbol, b, 18, ym + 11);
+                g.DrawString(menus[i], FontMenu, b, 46, ym + 9);
             }
             ym += 42;
         }
 
         // Logout button
-        var logoutText = isEng ? "🚪  Sign out" : "🚪  Đăng xuất";
+        var logoutText = isEng ? "Sign out" : "Đăng xuất";
         g.FillRectangle(BNavyDark, 0, h - 46, 230, 46);
-        g.DrawString(logoutText, FontMenu, BWhite, 20, h - 32);
+        g.DrawString("\uE7E8", FontSymbol, BWhite, 18, h - 30);
+        g.DrawString(logoutText, FontMenu, BWhite, 46, h - 32);
 
         // Top Header
         g.FillRectangle(BWhite, 230, 32, w - 230, 56);
@@ -166,11 +171,12 @@ public static class Program
         g.DrawString(role, FontSmall, BNavy, w - 380, 62);
 
         // Lang button
-        var langBtnText = isEng ? "🌐 English" : "🌐 Tiếng Việt";
+        var langBtnText = isEng ? "English" : "Tiếng Việt";
         using (var b = new SolidBrush(ColorTranslator.FromHtml("#F1F5F9")))
             g.FillRectangle(b, w - 135, 43, 110, 32);
         g.DrawRectangle(PBorder, w - 135, 43, 110, 32);
-        g.DrawString(langBtnText, FontSmallB, BDark, w - 124, 51);
+        g.DrawString("\uE774", FontSymbolSm, BDark, w - 124, 52);
+        g.DrawString(langBtnText, FontSmallB, BDark, w - 104, 51);
     }
 
     private static void DrawGridTable(Graphics g, int x, int y, int w, int h, string[] cols, int[] widths, string[][] rows, int selectedIdx = -1)
@@ -266,9 +272,9 @@ public static class Program
         using (var b = new SolidBrush(ColorTranslator.FromHtml("#E2E8F0")))
             g.FillRectangle(b, 0, 0, 900, 32);
         g.DrawString("Quản lý vận tải và đặt vé xe", FontTitle, BDark, 12, 8);
-        g.DrawString("—", FontTitle, BDark, 810, 6);
-        g.DrawString("□", FontTitle, BDark, 840, 6);
-        g.DrawString("✕", FontTitle, BDark, 870, 6);
+        g.DrawString("\uE921", FontSymbolSm, BDark, 810, 10);
+        g.DrawString("\uE922", FontSymbolSm, BDark, 840, 10);
+        g.DrawString("\uE8BB", FontSymbolSm, BDark, 870, 10);
 
         // Left brand
         g.FillRectangle(BNavy, 0, 32, 380, 508);
@@ -364,10 +370,10 @@ public static class Program
         g.DrawLine(PBorder, 900, 254, 1316, 254);
         var nextTrips = new[]
         {
-            (R: "Hà Nội ➔ Hải Phòng", I: "08:30 | 29B-196.88", S: "38/40", St: "Sắp chạy", C: Green),
-            (R: "Hà Nội ➔ Nam Định", I: "09:00 | 29B-205.12", S: "26/29", St: "Sắp chạy", C: Green),
-            (R: "Hà Nội ➔ Quảng Ninh", I: "09:45 | 29B-311.05", S: "34/40", St: "Đang đón khách", C: Green),
-            (R: "Hà Nội ➔ Đà Nẵng", I: "11:00 | 29B-402.19", S: "40/40", St: "Hết vé", C: Red)
+            (R: "Hà Nội → Hải Phòng", I: "08:30 | 29B-196.88", S: "38/40", St: "Sắp chạy", C: Green),
+            (R: "Hà Nội → Nam Định", I: "09:00 | 29B-205.12", S: "26/29", St: "Sắp chạy", C: Green),
+            (R: "Hà Nội → Quảng Ninh", I: "09:45 | 29B-311.05", S: "34/40", St: "Đang đón khách", C: Green),
+            (R: "Hà Nội → Đà Nẵng", I: "11:00 | 29B-402.19", S: "40/40", St: "Hết vé", C: Red)
         };
         int ty = 268;
         foreach (var tr in nextTrips)
@@ -430,10 +436,10 @@ public static class Program
 
         var trips = new[]
         {
-            (Time: "07:00 ➔ 09:00", Route: "Hà Nội - Hải Phòng", Price: "120.000 ₫", Bus: "29B-196.88 (40 chỗ)", Empty: "28 ghế trống", Sel: true),
-            (Time: "09:30 ➔ 11:30", Route: "Hà Nội - Hải Phòng", Price: "120.000 ₫", Bus: "29B-205.12 (29 chỗ)", Empty: "14 ghế trống", Sel: false),
-            (Time: "13:00 ➔ 15:00", Route: "Hà Nội - Hải Phòng", Price: "120.000 ₫", Bus: "29B-311.05 (40 chỗ)", Empty: "35 ghế trống", Sel: false),
-            (Time: "16:30 ➔ 18:30", Route: "Hà Nội - Hải Phòng", Price: "120.000 ₫", Bus: "29B-402.19 (40 chỗ)", Empty: "39 ghế trống", Sel: false)
+            (Time: "07:00 → 09:00", Route: "Hà Nội - Hải Phòng", Price: "120.000 ₫", Bus: "29B-196.88 (40 chỗ)", Empty: "28 ghế trống", Sel: true),
+            (Time: "09:30 → 11:30", Route: "Hà Nội - Hải Phòng", Price: "120.000 ₫", Bus: "29B-205.12 (29 chỗ)", Empty: "14 ghế trống", Sel: false),
+            (Time: "13:00 → 15:00", Route: "Hà Nội - Hải Phòng", Price: "120.000 ₫", Bus: "29B-311.05 (40 chỗ)", Empty: "35 ghế trống", Sel: false),
+            (Time: "16:30 → 18:30", Route: "Hà Nội - Hải Phòng", Price: "120.000 ₫", Bus: "29B-402.19 (40 chỗ)", Empty: "39 ghế trống", Sel: false)
         };
         int ty = 226;
         foreach (var t in trips)
@@ -471,7 +477,8 @@ public static class Program
         g.DrawString("Đang chọn", FontSmall, BDark, 878, 218);
         g.DrawLine(PBorder, 722, 242, 1030, 242);
 
-        g.DrawString("🚗 Vị trí tài xế", FontSmallB, BMuted, 724, 252);
+        g.DrawString("\uE806", FontSymbolSm, BMuted, 724, 254);
+        g.DrawString("Vị trí tài xế", FontSmallB, BMuted, 742, 252);
 
         var bookedSeats = new[] { 1, 2, 6, 8, 11, 12, 15, 20, 22, 28, 30, 33 };
         int sy = 280;
@@ -526,7 +533,10 @@ public static class Program
         using (var p = new Pen(GreenBorder, 1f))
             g.DrawRectangle(p, 1074, ry, 246, 28);
         using (var b = new SolidBrush(Green))
-            g.DrawString("✓ Khách hàng thân thiết (3 vé đã mua)", FontSmallB, b, 1082, ry + 6);
+        {
+            g.DrawString("\uE73E", FontSymbolSm, b, 1082, ry + 7);
+            g.DrawString("Khách hàng thân thiết (3 vé đã mua)", FontSmallB, b, 1098, ry + 6);
+        }
 
         g.FillRectangle(BNavy, 1074, 580, 246, 44);
         g.DrawString("ĐẶT VÉ (Ctrl+S)", FontBtn, BWhite, new RectangleF(1074, 580, 246, 44), SfCenter);
@@ -552,11 +562,11 @@ public static class Program
 
         g.FillRectangle(BNavy, mx, my, mw, 50);
         g.DrawString("Thanh toán vé xe", FontCardT, BWhite, mx + 20, my + 16);
-        g.DrawString("✕", FontMenu, BWhite, mx + mw - 34, my + 14);
+        g.DrawString("\uE8BB", FontSymbolSm, BWhite, mx + mw - 30, my + 16);
 
         g.DrawString("Mã vé: TK-20261019-001  |  Ghế: 05", FontSmallB, BMuted, mx + 28, my + 70);
         g.DrawString("Khách hàng: Nguyễn Văn An (0912345678)", FontSmall, BDark, mx + 28, my + 92);
-        g.DrawString("Tuyến: Hà Nội ➔ Hải Phòng (07:00 19/10/2026)", FontSmall, BDark, mx + 28, my + 112);
+        g.DrawString("Tuyến: Hà Nội → Hải Phòng (07:00 19/10/2026)", FontSmall, BDark, mx + 28, my + 112);
         g.DrawLine(PBorder, mx + 28, my + 140, mx + mw - 28, my + 140);
 
         g.DrawString("Số tiền cần thanh toán:", FontMenu, BDark, mx + 28, my + 155);
@@ -598,7 +608,8 @@ public static class Program
         // Toolbar
         g.FillRectangle(BWhite, 254, 102, 1082, 54);
         g.DrawRectangle(PBorder, 254, 102, 1082, 54);
-        g.DrawString("🔍 Tìm mã vé, SĐT, tên khách:", FontSmallB, BDark, 268, 110);
+        g.DrawString("\uE721", FontSymbolSm, BDark, 268, 112);
+        g.DrawString("Tìm mã vé, SĐT, tên khách:", FontSmallB, BDark, 286, 110);
         using (var b = new SolidBrush(ColorTranslator.FromHtml("#F8FAFC")))
             g.FillRectangle(b, 268, 128, 220, 24);
         g.DrawRectangle(PBorder, 268, 128, 220, 24);
@@ -620,11 +631,13 @@ public static class Program
 
         using (var b = new SolidBrush(ColorTranslator.FromHtml("#059669")))
             g.FillRectangle(b, 1060, 112, 120, 34);
-        g.DrawString("🖨️ IN VÉ (Ctrl+P)", FontSmallB, BWhite, new RectangleF(1060, 112, 120, 34), SfCenter);
+        g.DrawString("\uE749", FontSymbolSm, BWhite, 1070, 122);
+        g.DrawString("IN VÉ (Ctrl+P)", FontSmallB, BWhite, 1088, 121);
 
         using (var b = new SolidBrush(ColorTranslator.FromHtml("#16A34A")))
             g.FillRectangle(b, 1190, 112, 130, 34);
-        g.DrawString("📊 XUẤT EXCEL", FontSmallB, BWhite, new RectangleF(1190, 112, 130, 34), SfCenter);
+        g.DrawString("\uE9D2", FontSymbolSm, BWhite, 1200, 122);
+        g.DrawString("XUẤT EXCEL", FontSmallB, BWhite, 1218, 121);
 
         var tCols = new[] { "Mã vé", "Tuyến xe", "Khởi hành", "Ghế", "Khách hàng", "Số điện thoại", "Giá vé", "Trạng thái", "Người bán" };
         var tWidths = new[] { 120, 180, 140, 60, 160, 120, 110, 130, 110 };
@@ -762,7 +775,10 @@ public static class Program
         using (var p = new Pen(YellowBorder, 1.5f))
             g.DrawRectangle(p, 254, 102, 1082, 40);
         using (var b = new SolidBrush(ColorTranslator.FromHtml("#92400E")))
-            g.DrawString("⚠️ Chú ý: Có 1 tài xế sắp hết hạn bằng lái trong 30 ngày tới (Đỗ Minh Quân - Hạng E - Hạn: 28/10/2026). Vui lòng yêu cầu gia hạn bằng.", FontSmallB, b, 268, 114);
+        {
+            g.DrawString("\uE7BA", FontSymbolSm, b, 268, 116);
+            g.DrawString("Chú ý: Có 1 tài xế sắp hết hạn bằng lái trong 30 ngày tới (Đỗ Minh Quân - Hạng E - Hạn: 28/10/2026). Vui lòng yêu cầu gia hạn bằng.", FontSmallB, b, 288, 114);
+        }
 
         var dCols = new[] { "Mã TX", "Họ và tên", "Số điện thoại", "CCCD", "Hạng bằng", "Hạn bằng lái", "Tình trạng bằng" };
         var dWidths = new[] { 70, 160, 110, 120, 80, 100, 100 };
@@ -960,7 +976,10 @@ public static class Program
         using (var p = new Pen(GreenBorder, 1.5f))
             g.DrawRectangle(p, 254, 102, 1082, 42);
         using (var b = new SolidBrush(ColorTranslator.FromHtml("#166534")))
-            g.DrawString("✓ Đã sao lưu dữ liệu vận hành thành công lúc 14:32:15. Đã lưu snapshot 64 chuyến, 1.840 vé, 1.840 thanh toán vào bảng *_BK.", FontSmallB, b, 268, 115);
+        {
+            g.DrawString("\uE73E", FontSymbolSm, b, 268, 116);
+            g.DrawString("Đã sao lưu dữ liệu vận hành thành công lúc 14:32:15. Đã lưu snapshot 64 chuyến, 1.840 vé, 1.840 thanh toán vào bảng *_BK.", FontSmallB, b, 288, 115);
+        }
 
         // Left Col
         g.FillRectangle(BWhite, 254, 156, 530, 642);
@@ -969,7 +988,8 @@ public static class Program
         g.DrawString("Chép toàn bộ dữ liệu lịch chạy, vé, thanh toán sang các bảng `_BK` (giữ 7 bản).", FontSmall, BMuted, 270, 194);
 
         g.FillRectangle(BNavy, 270, 222, 160, 38);
-        g.DrawString("⚡ SAO LƯU NGAY", FontBtn, BWhite, new RectangleF(270, 222, 160, 38), SfCenter);
+        g.DrawString("\uE7C0", FontSymbolSm, BWhite, 282, 234);
+        g.DrawString("SAO LƯU NGAY", FontBtn, BWhite, 298, 231);
 
         var bkCols = new[] { "Mã BK", "Thời điểm sao lưu", "Người thực hiện", "Số bản ghi", "Trạng thái" };
         var bkW = new[] { 60, 130, 110, 90, 90 };
@@ -1071,10 +1091,10 @@ public static class Program
         g.DrawLine(PBorder, 900, 254, 1316, 254);
         var enNextTrips = new[]
         {
-            (R: "Hanoi ➔ Haiphong", I: "08:30 | 29B-196.88", S: "38/40", St: "Ready", C: Green),
-            (R: "Hanoi ➔ Nam Dinh", I: "09:00 | 29B-205.12", S: "26/29", St: "Ready", C: Green),
-            (R: "Hanoi ➔ Quang Ninh", I: "09:45 | 29B-311.05", S: "34/40", St: "Boarding", C: Green),
-            (R: "Hanoi ➔ Da Nang", I: "11:00 | 29B-402.19", S: "40/40", St: "Sold Out", C: Red)
+            (R: "Hanoi → Haiphong", I: "08:30 | 29B-196.88", S: "38/40", St: "Ready", C: Green),
+            (R: "Hanoi → Nam Dinh", I: "09:00 | 29B-205.12", S: "26/29", St: "Ready", C: Green),
+            (R: "Hanoi → Quang Ninh", I: "09:45 | 29B-311.05", S: "34/40", St: "Boarding", C: Green),
+            (R: "Hanoi → Da Nang", I: "11:00 | 29B-402.19", S: "40/40", St: "Sold Out", C: Red)
         };
         int ty = 268;
         foreach (var tr in enNextTrips)
@@ -1118,14 +1138,17 @@ public static class Program
         using (var b = new SolidBrush(ColorTranslator.FromHtml("#107C41")))
             g.FillRectangle(b, 0, 0, 1280, 42);
         g.DrawString("BaoCao_ThongKe_20261018.xlsx - Excel", FontMenuB, BWhite, 16, 12);
-        g.DrawString("—   □   ✕", FontMenu, BWhite, 1200, 12);
+        g.DrawString("\uE921", FontSymbolSm, BWhite, 1200, 14);
+        g.DrawString("\uE922", FontSymbolSm, BWhite, 1225, 14);
+        g.DrawString("\uE8BB", FontSymbolSm, BWhite, 1250, 14);
 
         // Ribbon
         using (var b = new SolidBrush(ColorTranslator.FromHtml("#F3F4F6")))
             g.FillRectangle(b, 0, 42, 1280, 58);
         g.DrawLine(PBorder, 0, 100, 1280, 100);
         g.DrawString("File    Home    Insert    Page Layout    Formulas    Data    Review    View", FontGridCell, BDark, 16, 52);
-        g.DrawString("📋 Paste  |  B  I  U  |  Font: Segoe UI  11  |  Align  |  Format: #,##0 ₫  |  AutoSum  |  Sort & Filter", FontSmall, BMuted, 16, 78);
+        g.DrawString("\uE77F", FontSymbolSm, BMuted, 16, 80);
+        g.DrawString("Paste  |  B  I  U  |  Font: Segoe UI  11  |  Align  |  Format: #,##0 ₫  |  AutoSum  |  Sort & Filter", FontSmall, BMuted, 34, 78);
 
         // Formula Bar
         g.FillRectangle(BWhite, 0, 100, 1280, 28);
