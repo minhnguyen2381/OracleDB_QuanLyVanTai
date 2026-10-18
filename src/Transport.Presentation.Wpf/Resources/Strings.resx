@@ -294,4 +294,22 @@
   <data name="Btn_ChangePassword" xml:space="preserve"><value>Change password</value></data>
   <data name="ChangePassword_Done" xml:space="preserve"><value>Password changed.</value></data>
   <data name="Err_Unexpected" xml:space="preserve"><value>An unexpected error occurred. Please try again.</value></data>
+  <data name="Menu_Registrations" xml:space="preserve"><value>Account requests</value></data>
+  <data name="Reg_Id" xml:space="preserve"><value>#</value></data>
+  <data name="Reg_Status" xml:space="preserve"><value>Status</value></data>
+  <data name="Reg_RequestedAt" xml:space="preserve"><value>Requested at</value></data>
+  <data name="Reg_Host" xml:space="preserve"><value>Computer</value></data>
+  <data name="Reg_ReviewedBy" xml:space="preserve"><value>Reviewed by</value></data>
+  <data name="Reg_ReviewedAt" xml:space="preserve"><value>Reviewed at</value></data>
+  <data name="Reg_RejectReason" xml:space="preserve"><value>Reject reason</value></data>
+  <data name="Reg_OnlyPending" xml:space="preserve"><value>Pending requests only</value></data>
+  <data name="Reg_Reject" xml:space="preserve"><value>Reject</value></data>
+  <data name="Reg_ApproveTitle" xml:space="preserve"><value>Approve request of {0}</value></data>
+  <data name="Reg_RejectTitle" xml:space="preserve"><value>Reject request of {0}</value></data>
+  <data name="Reg_Approved" xml:space="preserve"><value>Account created. Give the temporary password to the user in person.</value></data>
+  <data name="Reg_Rejected" xml:space="preserve"><value>Request rejected.</value></data>
+  <data name="Reg_ExportTitle" xml:space="preserve"><value>Account requests</value></data>
+  <data name="RegStatus_Pending" xml:space="preserve"><value>Pending</value></data>
+  <data name="RegStatus_Approved" xml:space="preserve"><value>Approved</value></data>
+  <data name="RegStatus_Rejected" xml:space="preserve"><value>Rejected</value></data>
 </root>

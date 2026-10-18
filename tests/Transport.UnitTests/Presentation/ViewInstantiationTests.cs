@@ -47,6 +47,7 @@ public class ViewInstantiationTests
                 _ = new DashboardPage();
                 _ = new StaffPage();
                 _ = new BackupPage();
+                _ = new RegistrationRequestsPage();
                 _ = new RegisterDialog();
                 _ = new ChangePasswordDialog();
                 _ = new ApproveRegistrationDialog();
