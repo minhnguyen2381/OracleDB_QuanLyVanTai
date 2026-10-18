@@ -23,6 +23,7 @@ public static class DependencyInjection
         services.AddSingleton<IScheduleRepository, ScheduleRepository>();
         services.AddSingleton<ITicketRepository, TicketRepository>();
         services.AddSingleton<IStaffRepository, StaffRepository>();
+        services.AddSingleton<IRegistrationRepository, RegistrationRepository>();
         services.AddSingleton<IStatisticsQueries, StatisticsQueries>();
         services.AddSingleton<IBackupRepository, BackupRepository>();
 

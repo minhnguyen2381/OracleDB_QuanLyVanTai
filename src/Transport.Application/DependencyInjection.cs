@@ -11,6 +11,7 @@ public static class DependencyInjection
         services.AddSingleton<TicketService>();
         services.AddSingleton<ScheduleService>();
         services.AddSingleton<StaffService>();
+        services.AddSingleton<RegistrationService>();
         services.AddSingleton<BackupService>();
         services.AddSingleton<DashboardService>();
         return services;

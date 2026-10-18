@@ -9,4 +9,9 @@ public sealed class DatabaseOptions
 
     // Schema chứa bảng/package; mọi phiên được ALTER SESSION SET CURRENT_SCHEMA về đây
     public string Schema { get; set; } = "TRANSPORT";
+
+    // User chỉ được gửi yêu cầu đăng ký; mật khẩu công khai có chủ đích (spec auth-security §2.2)
+    public string RegistrarUser { get; set; } = "TRANSPORT_REGISTRAR";
+
+    public string RegistrarPassword { get; set; } = "Register#Only1";
 }

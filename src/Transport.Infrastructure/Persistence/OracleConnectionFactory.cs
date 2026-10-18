@@ -15,6 +15,10 @@ internal sealed partial class OracleConnectionFactory(IOptions<DatabaseOptions> 
     public Task<OracleConnection> OpenAsync(string username, string password, CancellationToken ct) =>
         OpenCoreAsync(Create(username, password, pooling: true), c => c.OpenAsync(ct), ct);
 
+    // Người chưa có tài khoản gửi yêu cầu đăng ký bằng user chỉ có quyền gọi submit_request
+    public Task<OracleConnection> OpenRegistrarAsync(CancellationToken ct) =>
+        OpenAsync(options.Value.RegistrarUser, options.Value.RegistrarPassword, ct);
+
     // Đổi mật khẩu ngay lúc mở kết nối (dùng được cả khi mật khẩu đã hết hạn - ORA-28001).
     // Không qua pool: pool không mở được phiên bằng mật khẩu đã hết hạn.
     public Task<OracleConnection> OpenWithNewPasswordAsync(string username, string oldPassword, string newPassword,

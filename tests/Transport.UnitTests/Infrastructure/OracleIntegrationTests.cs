@@ -170,4 +170,22 @@ public class OracleIntegrationTests
         using var cleanup = await SignInAsync("operator01", OperatorPassword);
         await cleanup.GetRequiredService<StaffService>().SetLockedAsync(username, true);
     }
+
+    [Fact]
+    public async Task Registration_IsSubmittedWithoutSignInAndReviewedByOperator()
+    {
+        RequireDatabase();
+        var username = $"rq_{DateTime.Now:MMddHHmmss}";
+        using (var anonymous = CreateServices())
+        {
+            await anonymous.GetRequiredService<RegistrationService>().SubmitAsync(username, "Integration Test", null);
+        }
+
+        using var admin = await SignInAsync("operator01", OperatorPassword);
+        var registrations = admin.GetRequiredService<RegistrationService>();
+        var request = (await registrations.GetAllAsync()).Single(r => r.Username == username.ToUpperInvariant());
+        Assert.Equal(RegistrationStatus.Pending, request.Status);
+
+        await registrations.RejectAsync(request.RequestId, "Integration test");
+    }
 }

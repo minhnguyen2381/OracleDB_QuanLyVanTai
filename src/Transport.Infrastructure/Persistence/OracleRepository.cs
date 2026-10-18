@@ -25,14 +25,21 @@ internal abstract class OracleRepository(OracleConnectionFactory factory)
 
     // Gọi procedure/package, VD "pkg_ticket.pay_ticket"
     protected Task CallAsync(string procedure, object? args, CancellationToken ct) =>
-        RunAsync(c => c.ExecuteAsync(new CommandDefinition(procedure, args,
-            commandType: CommandType.StoredProcedure, cancellationToken: ct)), ct);
+        RunAsync(c => c.ExecuteAsync(Procedure(procedure, args, ct)), ct);
 
-    protected async Task<T> RunAsync<T>(Func<OracleConnection, Task<T>> work, CancellationToken ct)
+    // Gọi procedure khi chưa đăng nhập, bằng user TRANSPORT_REGISTRAR
+    protected Task CallAsRegistrarAsync(string procedure, object? args, CancellationToken ct) =>
+        RunAsync(factory.OpenRegistrarAsync, c => c.ExecuteAsync(Procedure(procedure, args, ct)), ct);
+
+    protected Task<T> RunAsync<T>(Func<OracleConnection, Task<T>> work, CancellationToken ct) =>
+        RunAsync(factory.OpenAsync, work, ct);
+
+    private static async Task<T> RunAsync<T>(Func<CancellationToken, Task<OracleConnection>> open,
+        Func<OracleConnection, Task<T>> work, CancellationToken ct)
     {
         try
         {
-            await using var connection = await factory.OpenAsync(ct);
+            await using var connection = await open(ct);
             return await work(connection);
         }
         catch (OracleException ex) when (OracleErrorMapper.Map(ex.Number, ex.Message) is { } mapped)
@@ -40,4 +47,7 @@ internal abstract class OracleRepository(OracleConnectionFactory factory)
             throw mapped;
         }
     }
+
+    private static CommandDefinition Procedure(string procedure, object? args, CancellationToken ct) =>
+        new(procedure, args, commandType: CommandType.StoredProcedure, cancellationToken: ct);
 }
