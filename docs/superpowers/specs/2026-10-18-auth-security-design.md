@@ -57,7 +57,8 @@ GRANT SELECT ON sys.unified_audit_trail TO transport WITH GRANT OPTION;
 
 - TRANSPORT giữ profile `DEFAULT`.
 - Seed vẫn đạt luật mới: `Operator#01`, `Seller#001`, `Seller#002` đều có chữ hoa, chữ thường, số và `#`, và không chứa username đầy đủ.
-- `PKG_STAFF.check_password` và `Rules.Password` (C#) đổi theo cùng luật này. Mã lỗi vẫn là `-20044`, thông điệp mới: `Password does not meet the complexity rules.`
+- `PKG_STAFF.check_password` **giữ nguyên** (≥ 8 ký tự, cấm `"` để chặn injection trong `EXECUTE IMMEDIATE`). Phần độ phức tạp do verify function kiểm tra khi `CREATE/ALTER USER` và báo `ORA-28003` (app ánh xạ về `InvalidPassword`), để luật chỉ viết một chỗ trong DB.
+- `Rules.Password(password, username)` (C#) kiểm tra đủ luật để báo lỗi sớm trên form.
 
 ### 2.2 User nhận đăng ký `TRANSPORT_REGISTRAR`
 
@@ -164,7 +165,8 @@ SELECT event_timestamp, dbusername AS username, action_name,
 | 28001 | Oracle | Mật khẩu hết hạn | `PasswordExpired` |
 | 28003 | Oracle (verify function bọc -20044) | Mật khẩu không đạt luật | ánh xạ về `InvalidPassword` |
 | 28007 | Oracle | Không được dùng lại mật khẩu cũ | `PasswordReused` |
-| 90007 | client | Mật khẩu nhập lại không khớp | `PasswordMismatch` |
+
+Mật khẩu nhập lại không khớp không cần mã lỗi: hộp thoại khóa nút OK và hiện cảnh báo ngay.
 
 Không còn hiện `AccountLocked` (28000) và `InsufficientPrivileges` ở màn hình đăng nhập (xem §4.2).
 
@@ -194,7 +196,7 @@ Thêm `IAuthService.LoginWithNewPasswordAsync(username, oldPassword, newPassword
 
 `LoginViewModel`:
 - Bắt `PasswordExpired`, mở `ChangePasswordDialog` ở chế độ "bắt buộc" (chỉ có mật khẩu mới và nhập lại).
-- Kiểm tra `Rules.Password`, và hai lần nhập phải khớp (`PasswordMismatch`), rồi gọi `LoginWithNewPasswordAsync`, thành công thì `ShowMain()`.
+- Hai lần nhập phải khớp thì nút OK mới bật. Gọi `LoginWithNewPasswordAsync` (Oracle kiểm tra luật qua verify function), thành công thì `ShowMain()`.
 - Người dùng hủy hộp thoại thì quay lại form đăng nhập.
 - Sau mỗi lần thất bại thì xóa ô mật khẩu.
 
@@ -235,12 +237,18 @@ Hai trang này theo mẫu `CrudPageViewModel`/`PageViewModel` đang có. Chuỗi
   - Đổi thành công thì gọi `ShowMain`.
 - Các test hiện có (khởi tạo view, resolve DI, kiểm tra đủ resource) phải chạy qua cả hai trang và hai hộp thoại mới.
 
-**SQL (`09_test_scenarios.sql`)**
-1. REGISTRAR `SELECT` từ `staff` hoặc `registration_requests` đều bị ORA-00942/01031. Gọi `pkg_registration.approve_request` bị ORA-06550/01031.
-2. Gửi yêu cầu thứ 4 từ cùng host thì bị -20061. Gửi trùng username đang chờ thì không lỗi và không thêm dòng.
-3. Duyệt một yêu cầu xong, `dba_users.account_status` của user mới là `EXPIRED` và `profile` là `PROFILE_STAFF`.
-4. `create_staff` với mật khẩu `abcdefgh` bị -20044.
-5. `reset_password` xong thì trạng thái là `EXPIRED`.
+**SQL (`09_test_scenarios.sql`, chạy bằng TRANSPORT)**
+1. REGISTRAR chỉ có đúng một quyền object: `EXECUTE` trên `PKG_REGISTRATION_PUBLIC` (đọc `all_tab_privs`).
+2. Gửi yêu cầu thứ 4 từ cùng host thì bị -20061. Gửi trùng username đang chờ thì không lỗi và không thêm dòng. Dữ liệu sai bị -20062.
+3. Duyệt tạo dòng STAFF; duyệt lần hai bị -20060; từ chối không có lý do bị -20062.
+4. `create_staff` với mật khẩu `abcdefgh` bị -28003 (verify function).
+
+**SQL (`11_security_checks.sql` mới, chạy thủ công bằng SYS ngay sau khi cài)**
+1. Mọi user trong STAFF dùng `PROFILE_STAFF`; ba tài khoản demo ở trạng thái `EXPIRED`.
+2. REGISTRAR không có role, không có quyền hệ thống nào ngoài `CREATE SESSION`.
+3. `PROFILE_STAFF` khóa sau 5 lần sai và dùng `STAFF_PASSWORD_VERIFY`; hai audit policy đang bật.
+
+Trường hợp `reset_password` gắn `PASSWORD EXPIRE` được kiểm tra thủ công (đặt lại mật khẩu rồi đăng nhập thì bị bắt đổi).
 
 **Chạy thật**
 1. Đăng nhập `operator01/Operator#01`, bị bắt đổi mật khẩu, đổi xong vào app.
