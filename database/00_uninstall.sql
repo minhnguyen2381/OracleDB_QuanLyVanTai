@@ -29,7 +29,8 @@ END;
 -- Phòng trường hợp bảng STAFF đã mất nhưng user demo/test vẫn còn
 BEGIN
   FOR u IN (SELECT username FROM dba_users
-             WHERE username IN ('OPERATOR01', 'SELLER01', 'SELLER02', 'TEST_STAFF_01', 'TEST_REG_01')) LOOP
+             WHERE username IN ('OPERATOR01', 'SELLER01', 'SELLER02', 'TEST_STAFF_01')
+                OR username LIKE 'TEST\_REG\_%' ESCAPE '\') LOOP
     EXECUTE IMMEDIATE 'DROP USER ' || u.username || ' CASCADE';
   END LOOP;
 END;

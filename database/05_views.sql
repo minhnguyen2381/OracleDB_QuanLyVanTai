@@ -52,7 +52,7 @@ SELECT CAST(event_timestamp AS TIMESTAMP)                     AS event_time,
        object_name
   FROM sys.unified_audit_trail
  WHERE action_name = 'LOGON'
-    OR (object_schema = 'TRANSPORT' AND object_name IN ('PKG_STAFF', 'PKG_REGISTRATION'));
+    OR (object_schema = 'TRANSPORT' AND object_name IN ('PKG_STAFF', 'PKG_REGISTRATION_PUBLIC'));
 
 -- Dừng nếu có object bị lỗi biên dịch
 SELECT name, type, line, text FROM user_errors ORDER BY name, sequence;

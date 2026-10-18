@@ -19,8 +19,6 @@ GRANT EXECUTE ON pkg_ticket              TO role_operator;
 GRANT EXECUTE ON pkg_schedule            TO role_operator;
 GRANT EXECUTE ON pkg_staff               TO role_operator;
 GRANT EXECUTE ON backup_operational_data TO role_operator;
-GRANT SELECT ON registration_requests  TO role_operator;
-GRANT EXECUTE ON pkg_registration      TO role_operator;
 GRANT SELECT ON v_login_audit          TO role_operator;
 
 -- Bán vé: xem lịch, quản lý khách, bán/thanh toán/hủy vé qua package
@@ -34,7 +32,7 @@ GRANT SELECT ON staff             TO role_ticket_seller;
 GRANT SELECT ON v_trip_statistics TO role_ticket_seller;
 GRANT EXECUTE ON pkg_ticket       TO role_ticket_seller;
 
--- Người chưa có tài khoản: chỉ được gửi yêu cầu đăng ký, không đọc được bảng nào
+-- Người chưa có tài khoản: chỉ được tự đăng ký tài khoản bán vé, không đọc được bảng nào
 GRANT EXECUTE ON pkg_registration_public TO transport_registrar;
 
 EXIT

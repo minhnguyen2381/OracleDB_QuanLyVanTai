@@ -16,6 +16,7 @@ DECLARE
   v_n       NUMBER;
   v_m       NUMBER;
   v_log     NUMBER;
+  v_before  NUMBER;
 
   -- Ghi nhận kết quả một kiểm tra
   PROCEDURE ok(p_name VARCHAR2, p_cond BOOLEAN) IS
@@ -43,9 +44,10 @@ DECLARE
   BEGIN
     DELETE FROM staff WHERE username = 'TEST_STAFF_01';
     BEGIN EXECUTE IMMEDIATE 'DROP USER test_staff_01'; EXCEPTION WHEN OTHERS THEN NULL; END;
-    DELETE FROM staff WHERE username = 'TEST_REG_01';
-    BEGIN EXECUTE IMMEDIATE 'DROP USER test_reg_01'; EXCEPTION WHEN OTHERS THEN NULL; END;
-    DELETE FROM registration_requests WHERE username LIKE 'TEST\_REG\_%' ESCAPE '\';
+    FOR i IN 1 .. 9 LOOP
+      DELETE FROM staff WHERE username = 'TEST_REG_0' || i;
+      BEGIN EXECUTE IMMEDIATE 'DROP USER test_reg_0' || i; EXCEPTION WHEN OTHERS THEN NULL; END;
+    END LOOP;
     DELETE FROM payments WHERE ticket_id IN (
       SELECT t.ticket_id FROM tickets t JOIN schedules s ON s.schedule_id = t.schedule_id
         JOIN vehicles v ON v.vehicle_id = s.vehicle_id WHERE v.plate_number = '99Z-999.99');
@@ -174,41 +176,36 @@ BEGIN
   COMMIT;
   EXECUTE IMMEDIATE 'DROP USER test_staff_01';
 
-  -- 12. Đăng ký tài khoản: gửi, chống spam, duyệt, từ chối
+  -- 12. Tự đăng ký: kiểm tra dữ liệu, tạo tài khoản bán vé, trùng tên, mật khẩu yếu, chống spam
   expect_error('12a. invalid registration username is rejected', -20062,
-    'BEGIN pkg_registration_public.submit_request(''x;'', ''Test Reg'', NULL); END;');
+    'BEGIN pkg_registration_public.register_account(''x;'', ''TestReg#1'', ''Test Reg'', NULL); END;');
   expect_error('12b. invalid registration phone is rejected', -20062,
-    'BEGIN pkg_registration_public.submit_request(''test_reg_01'', ''Test Reg'', ''123''); END;');
-  pkg_registration_public.submit_request('test_reg_01', 'Test Reg', '0999000001');
-  pkg_registration_public.submit_request('test_reg_01', 'Test Reg', '0999000001');
-  SELECT COUNT(*) INTO v_n FROM registration_requests WHERE username = 'TEST_REG_01' AND status = 'PENDING';
-  ok('12c. duplicate pending request is silently ignored', v_n = 1);
-  -- Tối đa 3 yêu cầu đang chờ từ một máy: trong 4 lần gửi tiếp theo phải có ít nhất 2 lần bị chặn
+    'BEGIN pkg_registration_public.register_account(''test_reg_01'', ''TestReg#1'', ''Test Reg'', ''123''); END;');
+  -- Số tài khoản user này đã tạo trong 1 giờ qua (VD seed lúc cài), dùng để tính kết quả 12f
+  SELECT COUNT(*) INTO v_before FROM staff
+   WHERE created_by = USER AND created_at > SYSTIMESTAMP - INTERVAL '1' HOUR;
+  pkg_registration_public.register_account('test_reg_01', 'TestReg#1', 'Test Reg', '0999000001');
+  SELECT COUNT(*) INTO v_n FROM staff
+   WHERE username = 'TEST_REG_01' AND role_name = 'ROLE_TICKET_SELLER' AND created_by = USER;
+  SELECT COUNT(*) INTO v_m FROM all_users WHERE username = 'TEST_REG_01';
+  ok('12c. registration creates a ticket seller account', v_n = 1 AND v_m = 1);
+  expect_error('12d. registering an existing username is rejected', -1920,
+    'BEGIN pkg_registration_public.register_account(''test_reg_01'', ''TestReg#1'', ''Test Reg'', NULL); END;');
+  expect_error('12e. weak registration password is rejected by the verify function', -28003,
+    'BEGIN pkg_registration_public.register_account(''test_reg_09'', ''abcdefgh'', ''Test Reg'', NULL); END;');
+  -- Tối đa 5 tài khoản/giờ cho mỗi user gọi: trong 5 lần thử tiếp theo chỉ phần còn lại của hạn mức thành công
+  v_n := 0;
   v_m := 0;
-  FOR i IN 2 .. 5 LOOP
+  FOR i IN 2 .. 6 LOOP
     BEGIN
-      pkg_registration_public.submit_request('test_reg_0' || i, 'Test Reg', NULL);
+      pkg_registration_public.register_account('test_reg_0' || i, 'TestReg#' || i, 'Test Reg', NULL);
+      v_n := v_n + 1;
     EXCEPTION
       WHEN OTHERS THEN
         IF SQLCODE = -20061 THEN v_m := v_m + 1; ELSE RAISE; END IF;
     END;
   END LOOP;
-  ok('12d. more than 3 pending requests from one computer are rejected', v_m >= 2);
-
-  SELECT request_id INTO v_n FROM registration_requests WHERE username = 'TEST_REG_01' AND status = 'PENDING';
-  pkg_registration.approve_request(v_n, 'TempPass#1', 'ROLE_TICKET_SELLER');
-  SELECT COUNT(*) INTO v_m FROM staff WHERE username = 'TEST_REG_01' AND role_name = 'ROLE_TICKET_SELLER';
-  ok('12e. approval creates the staff account', v_m = 1);
-  expect_error('12f. approving twice is rejected', -20060,
-    'BEGIN pkg_registration.approve_request(' || v_n || ', ''TempPass#1'', ''ROLE_TICKET_SELLER''); END;');
-
-  SELECT request_id INTO v_n FROM registration_requests WHERE username = 'TEST_REG_02' AND status = 'PENDING';
-  expect_error('12g. rejecting without a reason is rejected', -20062,
-    'BEGIN pkg_registration.reject_request(' || v_n || ', '' ''); END;');
-  pkg_registration.reject_request(v_n, 'Test');
-  SELECT COUNT(*) INTO v_m FROM registration_requests
-   WHERE request_id = v_n AND status = 'REJECTED' AND reviewed_by = USER AND reject_reason = 'Test';
-  ok('12h. rejection is recorded', v_m = 1);
+  ok('12f. at most 5 registrations per hour per caller', v_n = GREATEST(4 - v_before, 0) AND v_m = 5 - v_n);
 
   -- 13. REGISTRAR chỉ được gọi đúng một package
   SELECT COUNT(*) INTO v_n FROM all_tab_privs WHERE grantee = 'TRANSPORT_REGISTRAR';
@@ -226,8 +223,8 @@ END;
 -- Đăng nhập transport_registrar/Register#Only1 rồi chạy:
 --   SELECT COUNT(*) FROM transport.staff;
 --     -> ORA-00942 (REGISTRAR không đọc được bảng nào)
---   EXEC transport.pkg_registration.reject_request(1, 'x')
---     -> PLS-00201 (REGISTRAR không gọi được thủ tục duyệt)
+--   EXEC transport.pkg_staff.create_staff('x_op01', 'XxOper#01', 'X', NULL, 'ROLE_OPERATOR')
+--     -> PLS-00201 (REGISTRAR không gọi thẳng được PKG_STAFF; chỉ tạo được tài khoản bán vé qua PKG_REGISTRATION_PUBLIC)
 -- Đăng nhập seller01/Seller#001 rồi chạy:
 --   INSERT INTO transport.tickets (schedule_id, passenger_id, seat_no, price) VALUES (1, 1, 1, 1);
 --     -> ORA-01031: insufficient privileges (chỉ bán vé được qua PKG_TICKET)

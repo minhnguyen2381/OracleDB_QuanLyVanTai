@@ -60,7 +60,7 @@ CREATE PROFILE profile_registrar LIMIT
   PASSWORD_LIFE_TIME    UNLIMITED;
 
 -- User nhận đăng ký: mật khẩu công khai có chủ đích (nằm trong appsettings.json của app),
--- chỉ được gọi PKG_REGISTRATION_PUBLIC.SUBMIT_REQUEST (cấp ở 07_grants.sql)
+-- chỉ được gọi PKG_REGISTRATION_PUBLIC.REGISTER_ACCOUNT (cấp ở 07_grants.sql)
 CREATE USER transport_registrar IDENTIFIED BY "Register#Only1" PROFILE profile_registrar;
 GRANT CREATE SESSION TO transport_registrar;
 

@@ -8,9 +8,9 @@ SET SERVEROUTPUT ON SIZE UNLIMITED
 CREATE AUDIT POLICY pol_transport_logon ACTIONS LOGON;
 AUDIT POLICY pol_transport_logon;
 
--- Mọi lần tạo/khóa/đổi quyền/đặt lại mật khẩu nhân viên và duyệt/từ chối đăng ký
+-- Mọi lần tạo/khóa/đổi quyền/đặt lại mật khẩu nhân viên và mọi lần tự đăng ký
 CREATE AUDIT POLICY pol_transport_account_admin
-  ACTIONS EXECUTE ON transport.pkg_staff, EXECUTE ON transport.pkg_registration;
+  ACTIONS EXECUTE ON transport.pkg_staff, EXECUTE ON transport.pkg_registration_public;
 AUDIT POLICY pol_transport_account_admin;
 
 EXIT

@@ -136,9 +136,10 @@ END pkg_schedule;
 /
 
 CREATE OR REPLACE PACKAGE pkg_staff AS
-  -- Tạo user Oracle, cấp role, ghi vào STAFF
+  -- Tạo user Oracle, cấp role, ghi vào STAFF.
+  -- p_expire = 1: mật khẩu tạm do điều hành đặt, phải đổi ở lần đăng nhập đầu; 0: người dùng tự đặt (tự đăng ký)
   PROCEDURE create_staff(p_username IN VARCHAR2, p_password IN VARCHAR2, p_full_name IN VARCHAR2,
-                         p_phone IN VARCHAR2, p_role IN VARCHAR2);
+                         p_phone IN VARCHAR2, p_role IN VARCHAR2, p_expire IN NUMBER DEFAULT 1);
   -- Sửa họ tên, SĐT
   PROCEDURE update_staff_info(p_username IN VARCHAR2, p_full_name IN VARCHAR2, p_phone IN VARCHAR2);
   -- Đổi role (thu role cũ, cấp role mới)
@@ -195,14 +196,14 @@ CREATE OR REPLACE PACKAGE BODY pkg_staff AS
   END not_self;
 
   PROCEDURE create_staff(p_username IN VARCHAR2, p_password IN VARCHAR2, p_full_name IN VARCHAR2,
-                         p_phone IN VARCHAR2, p_role IN VARCHAR2) IS
+                         p_phone IN VARCHAR2, p_role IN VARCHAR2, p_expire IN NUMBER DEFAULT 1) IS
     v_user VARCHAR2(30) := valid_username(p_username);
   BEGIN
     check_role(p_role);
     check_password(p_password);
     -- Mật khẩu do điều hành đặt chỉ là mật khẩu tạm: nhân viên phải đổi ở lần đăng nhập đầu
-    EXECUTE IMMEDIATE 'CREATE USER ' || v_user || ' IDENTIFIED BY "' || p_password
-                      || '" PROFILE profile_staff PASSWORD EXPIRE';
+    EXECUTE IMMEDIATE 'CREATE USER ' || v_user || ' IDENTIFIED BY "' || p_password || '" PROFILE profile_staff'
+                      || CASE WHEN p_expire = 1 THEN ' PASSWORD EXPIRE' END;
     BEGIN
       EXECUTE IMMEDIATE 'GRANT ' || p_role || ' TO ' || v_user;
       INSERT INTO staff (username, full_name, phone, role_name) VALUES (v_user, p_full_name, p_phone, p_role);
@@ -260,100 +261,42 @@ END pkg_staff;
 /
 
 CREATE OR REPLACE PACKAGE pkg_registration_public AS
-  -- Người chưa có tài khoản gửi yêu cầu (gọi bằng user TRANSPORT_REGISTRAR).
-  -- Không bao giờ cho biết username đã tồn tại, để không dò được tài khoản.
-  PROCEDURE submit_request(p_username IN VARCHAR2, p_full_name IN VARCHAR2, p_phone IN VARCHAR2);
+  -- Người chưa có tài khoản tự đăng ký (gọi bằng user TRANSPORT_REGISTRAR).
+  -- Luôn tạo tài khoản bán vé; mật khẩu do người dùng tự đặt nên không bắt đổi ở lần đăng nhập đầu.
+  PROCEDURE register_account(p_username IN VARCHAR2, p_password IN VARCHAR2,
+                             p_full_name IN VARCHAR2, p_phone IN VARCHAR2);
 END pkg_registration_public;
 /
 
 CREATE OR REPLACE PACKAGE BODY pkg_registration_public AS
 
-  c_max_pending          CONSTANT PLS_INTEGER := 50;  -- Tổng số yêu cầu đang chờ
-  c_max_pending_per_host CONSTANT PLS_INTEGER := 3;   -- Số yêu cầu đang chờ từ một máy
+  c_max_per_hour CONSTANT PLS_INTEGER := 5;  -- Số tài khoản một user (thường là REGISTRAR) được tạo trong 1 giờ
 
-  PROCEDURE submit_request(p_username IN VARCHAR2, p_full_name IN VARCHAR2, p_phone IN VARCHAR2) IS
-    v_name      VARCHAR2(4000) := TRIM(p_full_name);
-    v_host      VARCHAR2(64)   := NVL(SUBSTR(SYS_CONTEXT('USERENV', 'HOST'), 1, 64), 'UNKNOWN');
-    v_user      VARCHAR2(30);
-    v_total     PLS_INTEGER;
-    v_from_host PLS_INTEGER;
+  PROCEDURE register_account(p_username IN VARCHAR2, p_password IN VARCHAR2,
+                             p_full_name IN VARCHAR2, p_phone IN VARCHAR2) IS
+    v_name   VARCHAR2(4000) := TRIM(p_full_name);
+    v_recent PLS_INTEGER;
   BEGIN
     IF p_username IS NULL OR NOT REGEXP_LIKE(p_username, '^[A-Za-z][A-Za-z0-9_]{2,29}$')
        OR v_name IS NULL OR LENGTH(v_name) > 100
        OR (p_phone IS NOT NULL AND NOT REGEXP_LIKE(p_phone, '^0[0-9]{9}$')) THEN
       RAISE_APPLICATION_ERROR(-20062, 'Invalid registration data.');
     END IF;
-    v_user := UPPER(p_username);
 
-    -- Đã có yêu cầu đang chờ cho username này: bỏ qua, trả về như thành công
-    SELECT COUNT(*) INTO v_total FROM registration_requests WHERE username = v_user AND status = 'PENDING';
-    IF v_total > 0 THEN
-      RETURN;
+    -- Chống spam: STAFF.CREATED_BY mặc định là user phiên, nên đếm được số tài khoản REGISTRAR vừa tạo
+    SELECT COUNT(*) INTO v_recent
+      FROM staff
+     WHERE created_by = USER AND created_at > SYSTIMESTAMP - INTERVAL '1' HOUR;
+    IF v_recent >= c_max_per_hour THEN
+      RAISE_APPLICATION_ERROR(-20061, 'Too many registrations. Try again later.');
     END IF;
 
-    -- Chống spam
-    SELECT COUNT(*), COUNT(CASE WHEN NVL(client_host, 'UNKNOWN') = v_host THEN 1 END)
-      INTO v_total, v_from_host
-      FROM registration_requests
-     WHERE status = 'PENDING';
-    IF v_total >= c_max_pending OR v_from_host >= c_max_pending_per_host THEN
-      RAISE_APPLICATION_ERROR(-20061, 'Too many pending requests.');
-    END IF;
-
-    INSERT INTO registration_requests (username, full_name, phone, client_host)
-    VALUES (v_user, v_name, p_phone, v_host);
-    COMMIT;
-  END submit_request;
+    -- Role ghi cứng: tự đăng ký không bao giờ có quyền điều hành.
+    -- create_staff tự kiểm tra mật khẩu (verify function -> ORA-28003), trùng username (ORA-01920) và tự commit.
+    pkg_staff.create_staff(p_username, p_password, v_name, p_phone, 'ROLE_TICKET_SELLER', p_expire => 0);
+  END register_account;
 
 END pkg_registration_public;
-/
-
-CREATE OR REPLACE PACKAGE pkg_registration AS
-  -- Duyệt: tạo user Oracle qua PKG_STAFF (mật khẩu tạm, hết hạn ngay) rồi đánh dấu APPROVED
-  PROCEDURE approve_request(p_request_id IN NUMBER, p_temp_password IN VARCHAR2, p_role IN VARCHAR2);
-  -- Từ chối kèm lý do
-  PROCEDURE reject_request(p_request_id IN NUMBER, p_reason IN VARCHAR2);
-END pkg_registration;
-/
-
-CREATE OR REPLACE PACKAGE BODY pkg_registration AS
-
-  -- Yêu cầu phải đang chờ duyệt (khóa dòng để tránh duyệt/từ chối đồng thời)
-  FUNCTION pending_request(p_request_id IN NUMBER) RETURN registration_requests%ROWTYPE IS
-    v_req registration_requests%ROWTYPE;
-  BEGIN
-    SELECT * INTO v_req FROM registration_requests WHERE request_id = p_request_id AND status = 'PENDING' FOR UPDATE;
-    RETURN v_req;
-  EXCEPTION
-    WHEN NO_DATA_FOUND THEN
-      RAISE_APPLICATION_ERROR(-20060, 'Registration request not found or already reviewed.');
-  END pending_request;
-
-  PROCEDURE approve_request(p_request_id IN NUMBER, p_temp_password IN VARCHAR2, p_role IN VARCHAR2) IS
-    v_req registration_requests%ROWTYPE := pending_request(p_request_id);
-  BEGIN
-    -- create_staff tự kiểm tra username/role/mật khẩu và tự commit.
-    -- Nếu lỗi (VD trùng username ORA-01920) thì yêu cầu vẫn PENDING để điều hành từ chối.
-    pkg_staff.create_staff(v_req.username, p_temp_password, v_req.full_name, v_req.phone, p_role);
-    UPDATE registration_requests
-       SET status = 'APPROVED', reviewed_by = USER, reviewed_at = SYSDATE
-     WHERE request_id = p_request_id;
-    COMMIT;
-  END approve_request;
-
-  PROCEDURE reject_request(p_request_id IN NUMBER, p_reason IN VARCHAR2) IS
-    v_req registration_requests%ROWTYPE := pending_request(p_request_id);
-  BEGIN
-    IF TRIM(p_reason) IS NULL OR LENGTH(TRIM(p_reason)) > 200 THEN
-      RAISE_APPLICATION_ERROR(-20062, 'Invalid registration data.');
-    END IF;
-    UPDATE registration_requests
-       SET status = 'REJECTED', reviewed_by = USER, reviewed_at = SYSDATE, reject_reason = TRIM(p_reason)
-     WHERE request_id = v_req.request_id;
-    COMMIT;
-  END reject_request;
-
-END pkg_registration;
 /
 
 -- Dừng nếu có object bị lỗi biên dịch
