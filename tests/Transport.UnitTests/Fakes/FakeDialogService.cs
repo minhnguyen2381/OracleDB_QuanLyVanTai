@@ -13,7 +13,7 @@ internal sealed class FakeDialogService : IDialogService
     public string? PromptPasswordResult { get; set; }
     public PaymentMethod? PaymentResult { get; set; }
     public List<string> Prompts { get; } = [];
-    public bool RegistrationResult { get; set; }
+    public string? RegistrationResult { get; set; }
     public int RegistrationCount { get; private set; }
     public PasswordChange? PasswordChangeResult { get; set; }
     public List<bool> PasswordChangeRequests { get; } = [];
@@ -40,7 +40,7 @@ internal sealed class FakeDialogService : IDialogService
 
     public PaymentMethod? ChoosePaymentMethod(decimal amount) => PaymentResult;
 
-    public bool ShowRegistration()
+    public string? ShowRegistration()
     {
         RegistrationCount++;
         return RegistrationResult;

@@ -170,4 +170,25 @@ public class OracleIntegrationTests
         using var cleanup = await SignInAsync("operator01", OperatorPassword);
         await cleanup.GetRequiredService<StaffService>().SetLockedAsync(username, true);
     }
+
+    [Fact]
+    public async Task SelfRegistration_CreatesTicketSellerWhoCanSignInRightAway()
+    {
+        RequireDatabase();
+        // User mới mỗi lần chạy; app không xóa được user nên cuối test khóa lại
+        var username = $"sr_{DateTime.Now:MMddHHmmss}";
+        using (var anonymous = CreateServices())
+        {
+            await anonymous.GetRequiredService<RegistrationService>().RegisterAsync(username, "SelfReg#1", "Integration Test", null);
+        }
+
+        // Không bị bắt đổi mật khẩu (không PASSWORD EXPIRE) và chỉ có quyền bán vé
+        using (var services = await SignInAsync(username, "SelfReg#1"))
+        {
+            Assert.False(services.GetRequiredService<IUserSession>().IsOperator);
+        }
+
+        using var cleanup = await SignInAsync("operator01", OperatorPassword);
+        await cleanup.GetRequiredService<StaffService>().SetLockedAsync(username, true);
+    }
 }

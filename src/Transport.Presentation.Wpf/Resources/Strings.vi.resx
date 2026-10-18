@@ -271,13 +271,15 @@
   <data name="Backup_Tickets" xml:space="preserve"><value>Vé</value></data>
   <data name="Backup_Payments" xml:space="preserve"><value>Thanh toán</value></data>
   <data name="Backup_ExportTitle" xml:space="preserve"><value>Lịch sử sao lưu</value></data>
-  <data name="Err_20061" xml:space="preserve"><value>Đang có quá nhiều yêu cầu đăng ký chờ duyệt. Vui lòng thử lại sau.</value></data>
+  <data name="Err_20061" xml:space="preserve"><value>Có quá nhiều tài khoản vừa được đăng ký. Vui lòng thử lại sau.</value></data>
   <data name="Err_20062" xml:space="preserve"><value>Thông tin đăng ký không hợp lệ.</value></data>
   <data name="Err_28001" xml:space="preserve"><value>Mật khẩu đã hết hạn. Vui lòng đặt mật khẩu mới.</value></data>
   <data name="Err_28007" xml:space="preserve"><value>Không được dùng lại mật khẩu gần đây.</value></data>
   <data name="Register_Title" xml:space="preserve"><value>Đăng ký tài khoản</value></data>
-  <data name="Register_Hint" xml:space="preserve"><value>Điều hành sẽ duyệt yêu cầu và cấp mật khẩu tạm cho bạn.</value></data>
-  <data name="Register_Submit" xml:space="preserve"><value>Gửi yêu cầu</value></data>
+  <data name="Register_Hint" xml:space="preserve"><value>Tài khoản mới dùng được ngay với quyền bán vé. Điều hành có thể cấp thêm quyền sau.</value></data>
+  <data name="Register_Submit" xml:space="preserve"><value>Đăng ký</value></data>
+  <data name="Register_Password" xml:space="preserve"><value>Mật khẩu</value></data>
+  <data name="Register_ConfirmPassword" xml:space="preserve"><value>Nhập lại mật khẩu</value></data>
   <data name="ChangePassword_Title" xml:space="preserve"><value>Đổi mật khẩu</value></data>
   <data name="ChangePassword_ExpiredTitle" xml:space="preserve"><value>Đặt mật khẩu mới</value></data>
   <data name="ChangePassword_ExpiredHint" xml:space="preserve"><value>Mật khẩu đã hết hạn hoặc do điều hành cấp. Hãy đặt mật khẩu mới để tiếp tục.</value></data>
@@ -287,7 +289,7 @@
   <data name="ChangePassword_Mismatch" xml:space="preserve"><value>Mật khẩu nhập lại không khớp.</value></data>
   <data name="ChangePassword_Rules" xml:space="preserve"><value>Tối thiểu 8 ký tự, có chữ hoa, chữ thường, chữ số và ký tự đặc biệt; không chứa tên đăng nhập.</value></data>
   <data name="Login_Register" xml:space="preserve"><value>Đăng ký tài khoản</value></data>
-  <data name="Register_Submitted" xml:space="preserve"><value>Đã gửi yêu cầu. Vui lòng chờ điều hành duyệt và cấp mật khẩu tạm.</value></data>
+  <data name="Register_Submitted" xml:space="preserve"><value>Đăng ký thành công. Bạn có thể đăng nhập ngay.</value></data>
   <data name="Btn_ChangePassword" xml:space="preserve"><value>Đổi mật khẩu</value></data>
   <data name="ChangePassword_Done" xml:space="preserve"><value>Đã đổi mật khẩu.</value></data>
   <data name="Err_Unexpected" xml:space="preserve"><value>Đã xảy ra lỗi không mong muốn. Vui lòng thử lại.</value></data>

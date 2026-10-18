@@ -18,8 +18,8 @@ public interface IDialogService
 
     PaymentMethod? ChoosePaymentMethod(decimal amount);
 
-    // Form đăng ký ở màn hình đăng nhập; true nếu đã gửi yêu cầu thành công
-    bool ShowRegistration();
+    // Form tự đăng ký ở màn hình đăng nhập; trả về username vừa tạo, null nếu hủy
+    string? ShowRegistration();
 
     // Đổi mật khẩu; requireCurrent = false khi bị bắt đổi lúc đăng nhập. null nếu hủy
     PasswordChange? PromptPasswordChange(bool requireCurrent);

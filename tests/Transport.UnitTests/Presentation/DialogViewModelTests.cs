@@ -75,30 +75,37 @@ public class DialogViewModelTests
     }
 
     [Fact]
-    public async Task Register_SubmitsAndCloses()
+    public async Task Register_NeedsMatchingPasswordsThenCloses()
     {
         var repository = new FakeRegistrationRepository();
         var dialog = new RegisterViewModel(new RegistrationService(repository), new FakeLocalizationService());
         bool? result = null;
         dialog.CloseRequested += r => result = r;
 
-        Assert.False(dialog.SubmitCommand.CanExecute(null));
         dialog.Username = "newuser01";
         dialog.FullName = "Người Mới";
+        dialog.Password = "Secret#123";
+        dialog.ConfirmPassword = "Secret#12";
+        Assert.True(dialog.IsMismatch);
+        Assert.False(dialog.SubmitCommand.CanExecute(null));
+
+        dialog.ConfirmPassword = "Secret#123";
+        Assert.False(dialog.IsMismatch);
         await dialog.SubmitCommand.ExecuteAsync(null);
 
         Assert.True(result);
-        Assert.Equal(new[] { "submit:newuser01:Người Mới:" }, repository.Calls);
+        Assert.Equal(new[] { "register:newuser01:Secret#123:Người Mới:" }, repository.Calls);
     }
 
     [Fact]
     public async Task Register_ShowsTranslatedErrorAndStaysOpen()
     {
-        var dialog = new RegisterViewModel(new RegistrationService(new FakeRegistrationRepository()),
-            new FakeLocalizationService())
+        var dialog = new RegisterViewModel(new RegistrationService(new FakeRegistrationRepository()), new FakeLocalizationService())
         {
-            Username = "ab",
+            Username = "newuser01",
             FullName = "Người Mới",
+            Password = "weakpass",
+            ConfirmPassword = "weakpass",
         };
         bool? result = null;
         dialog.CloseRequested += r => result = r;
@@ -106,6 +113,6 @@ public class DialogViewModelTests
         await dialog.SubmitCommand.ExecuteAsync(null);
 
         Assert.Null(result);
-        Assert.Equal($"Err_{(int)BusinessErrorCode.InvalidUsername}", dialog.ErrorMessage);
+        Assert.Equal($"Err_{(int)BusinessErrorCode.InvalidPassword}", dialog.ErrorMessage);
     }
 }

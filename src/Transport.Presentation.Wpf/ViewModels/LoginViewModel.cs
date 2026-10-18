@@ -70,8 +70,11 @@ public sealed partial class LoginViewModel : ObservableObject
     [RelayCommand]
     private void Register()
     {
-        if (_dialogs.ShowRegistration())
+        if (_dialogs.ShowRegistration() is { } username)
         {
+            Username = username;
+            Password = string.Empty;
+            ErrorMessage = null;
             InfoMessage = _localization["Register_Submitted"];
         }
     }

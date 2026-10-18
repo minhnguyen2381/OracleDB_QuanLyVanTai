@@ -53,7 +53,11 @@ public sealed class DialogService(ILocalizationService localization, Registratio
         return ShowModal(new PaymentDialog(), viewModel) ? viewModel.SelectedMethod : null;
     }
 
-    public bool ShowRegistration() => ShowModal(new RegisterDialog(), new RegisterViewModel(registrations, localization));
+    public string? ShowRegistration()
+    {
+        var viewModel = new RegisterViewModel(registrations, localization);
+        return ShowModal(new RegisterDialog(), viewModel) ? viewModel.Username.Trim() : null;
+    }
 
     public PasswordChange? PromptPasswordChange(bool requireCurrent)
     {

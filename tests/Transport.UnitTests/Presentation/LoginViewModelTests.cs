@@ -109,17 +109,18 @@ public class LoginViewModelTests
     }
 
     [Theory]
-    [InlineData(true, "Register_Submitted")]
-    [InlineData(false, null)]
-    public void Register_ShowsConfirmationOnlyWhenSubmitted(bool submitted, string? expected)
+    [InlineData("newuser01", "Register_Submitted")]
+    [InlineData(null, null)]
+    public void Register_PrefillsUsernameOnlyWhenRegistered(string? registered, string? expected)
     {
-        _dialogs.RegistrationResult = submitted;
+        _dialogs.RegistrationResult = registered;
         var login = CreateViewModel();
 
         login.RegisterCommand.Execute(null);
 
         Assert.Equal(1, _dialogs.RegistrationCount);
         Assert.Equal(expected, login.InfoMessage);
+        Assert.Equal(registered ?? string.Empty, login.Username);
     }
 
     [Fact]

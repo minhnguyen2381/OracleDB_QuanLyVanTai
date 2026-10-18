@@ -271,13 +271,15 @@
   <data name="Backup_Tickets" xml:space="preserve"><value>Tickets</value></data>
   <data name="Backup_Payments" xml:space="preserve"><value>Payments</value></data>
   <data name="Backup_ExportTitle" xml:space="preserve"><value>Backup history</value></data>
-  <data name="Err_20061" xml:space="preserve"><value>There are too many pending registration requests. Please try again later.</value></data>
+  <data name="Err_20061" xml:space="preserve"><value>Too many accounts were registered recently. Please try again later.</value></data>
   <data name="Err_20062" xml:space="preserve"><value>Invalid registration data.</value></data>
   <data name="Err_28001" xml:space="preserve"><value>Your password has expired. Please set a new password.</value></data>
   <data name="Err_28007" xml:space="preserve"><value>You cannot reuse a recent password.</value></data>
-  <data name="Register_Title" xml:space="preserve"><value>Request an account</value></data>
-  <data name="Register_Hint" xml:space="preserve"><value>An operator will review your request and give you a temporary password.</value></data>
-  <data name="Register_Submit" xml:space="preserve"><value>Send request</value></data>
+  <data name="Register_Title" xml:space="preserve"><value>Create an account</value></data>
+  <data name="Register_Hint" xml:space="preserve"><value>The new account can sell tickets right away. An operator can grant more permissions later.</value></data>
+  <data name="Register_Submit" xml:space="preserve"><value>Register</value></data>
+  <data name="Register_Password" xml:space="preserve"><value>Password</value></data>
+  <data name="Register_ConfirmPassword" xml:space="preserve"><value>Confirm password</value></data>
   <data name="ChangePassword_Title" xml:space="preserve"><value>Change password</value></data>
   <data name="ChangePassword_ExpiredTitle" xml:space="preserve"><value>Set a new password</value></data>
   <data name="ChangePassword_ExpiredHint" xml:space="preserve"><value>Your password has expired or was set by an operator. Choose a new password to continue.</value></data>
@@ -287,7 +289,7 @@
   <data name="ChangePassword_Mismatch" xml:space="preserve"><value>The passwords do not match.</value></data>
   <data name="ChangePassword_Rules" xml:space="preserve"><value>At least 8 characters with an uppercase letter, a lowercase letter, a digit and a special character; must not contain the username.</value></data>
   <data name="Login_Register" xml:space="preserve"><value>Request an account</value></data>
-  <data name="Register_Submitted" xml:space="preserve"><value>Request sent. Please wait for an operator to approve it and give you a temporary password.</value></data>
+  <data name="Register_Submitted" xml:space="preserve"><value>Account created. You can sign in now.</value></data>
   <data name="Btn_ChangePassword" xml:space="preserve"><value>Change password</value></data>
   <data name="ChangePassword_Done" xml:space="preserve"><value>Password changed.</value></data>
   <data name="Err_Unexpected" xml:space="preserve"><value>An unexpected error occurred. Please try again.</value></data>

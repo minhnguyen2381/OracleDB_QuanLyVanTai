@@ -6,9 +6,9 @@ internal sealed class FakeRegistrationRepository : IRegistrationRepository
 {
     public List<string> Calls { get; } = [];
 
-    public Task SubmitAsync(string username, string fullName, string? phone, CancellationToken ct = default)
+    public Task RegisterAsync(string username, string password, string fullName, string? phone, CancellationToken ct = default)
     {
-        Calls.Add($"submit:{username}:{fullName}:{phone}");
+        Calls.Add($"register:{username}:{password}:{fullName}:{phone}");
         return Task.CompletedTask;
     }
 }

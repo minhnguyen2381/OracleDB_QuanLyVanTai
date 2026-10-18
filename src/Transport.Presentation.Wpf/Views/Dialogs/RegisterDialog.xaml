@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:l="clr-namespace:Transport.Presentation.Wpf.Localization"
+        xmlns:c="clr-namespace:Transport.Presentation.Wpf.Controls"
         xmlns:vm="clr-namespace:Transport.Presentation.Wpf.ViewModels.Dialogs"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance Type=vm:RegisterViewModel}"
@@ -15,6 +16,15 @@
         <TextBlock Text="{l:Loc Staff_Username}" Style="{StaticResource FieldLabelStyle}" />
         <TextBox x:Name="UsernameInput" Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}" MaxLength="30"
                  AutomationProperties.Name="{l:Loc Staff_Username}" />
+        <TextBlock Text="{l:Loc Register_Password}" Style="{StaticResource FieldLabelStyle}" />
+        <PasswordBox c:PasswordBoxAssistant.BoundPassword="{Binding Password}"
+                     AutomationProperties.Name="{l:Loc Register_Password}" />
+        <TextBlock Text="{l:Loc Register_ConfirmPassword}" Style="{StaticResource FieldLabelStyle}" />
+        <PasswordBox c:PasswordBoxAssistant.BoundPassword="{Binding ConfirmPassword}"
+                     AutomationProperties.Name="{l:Loc Register_ConfirmPassword}" />
+        <TextBlock Text="{l:Loc ChangePassword_Mismatch}" Foreground="{StaticResource ErrorBrush}" Margin="0,8,0,0"
+                   Visibility="{Binding IsMismatch, Converter={StaticResource BoolToVisibility}}" />
+        <TextBlock Text="{l:Loc ChangePassword_Rules}" Style="{StaticResource StatLabelStyle}" TextWrapping="Wrap" Margin="0,8,0,0" />
         <TextBlock Text="{l:Loc Staff_FullName}" Style="{StaticResource FieldLabelStyle}" />
         <TextBox Text="{Binding FullName, UpdateSourceTrigger=PropertyChanged}" MaxLength="100"
                  AutomationProperties.Name="{l:Loc Staff_FullName}" />
