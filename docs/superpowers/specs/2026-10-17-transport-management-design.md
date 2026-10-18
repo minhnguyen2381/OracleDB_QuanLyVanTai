@@ -582,11 +582,13 @@ SELECT s.schedule_id,
 
 ## 7. Phân quyền
 
+> Bổ sung bảo mật (profile mật khẩu, đăng ký tài khoản, nhật ký đăng nhập): xem `2026-10-18-auth-security-design.md`.
+
 ### 7.1 `01_sys_setup.sql` (chạy bằng SYS trong `XEPDB1`)
 
 ```sql
 -- Chủ schema: chỉ dùng để tạo/bảo trì object, app không đăng nhập bằng user này
-CREATE USER transport IDENTIFIED BY "Transport#2026" QUOTA UNLIMITED ON users;
+CREATE USER transport IDENTIFIED BY "<mật khẩu do người cài nhập>" QUOTA UNLIMITED ON users;
 GRANT CREATE SESSION, CREATE TABLE, CREATE VIEW, CREATE PROCEDURE,
       CREATE TRIGGER, CREATE SEQUENCE, CREATE JOB TO transport;
 -- Quyền hệ thống cấp trực tiếp (không qua role) để PKG_STAFF dùng được trong definer rights
@@ -733,14 +735,14 @@ Xuất toàn bộ schema TRANSPORT ra `.dmp`; đây là cách khôi phục thậ
 :: backup.bat – xuất schema TRANSPORT, tên file kèm thời gian
 @echo off
 for /f %%i in ('powershell -NoProfile -Command "Get-Date -Format yyyyMMdd_HHmm"') do set TS=%%i
-expdp transport/"Transport#2026"@localhost:1521/XEPDB1 schemas=TRANSPORT directory=BACKUP_DIR dumpfile=transport_%TS%.dmp logfile=export_%TS%.log
+expdp transport/"<mật khẩu do người cài nhập>"@localhost:1521/XEPDB1 schemas=TRANSPORT directory=BACKUP_DIR dumpfile=transport_%TS%.dmp logfile=export_%TS%.log
 ```
 
 ```bat
 :: restore.bat <tên_file.dmp> – khôi phục, ghi đè các bảng hiện có
 @echo off
 if "%~1"=="" (echo Usage: restore.bat transport_YYYYMMDD_HHMM.dmp & exit /b 1)
-impdp transport/"Transport#2026"@localhost:1521/XEPDB1 schemas=TRANSPORT directory=BACKUP_DIR dumpfile=%1 table_exists_action=REPLACE
+impdp transport/"<mật khẩu do người cài nhập>"@localhost:1521/XEPDB1 schemas=TRANSPORT directory=BACKUP_DIR dumpfile=%1 table_exists_action=REPLACE
 ```
 
 ## 9. Bảng mã lỗi (hợp đồng giữa SQL và frontend)

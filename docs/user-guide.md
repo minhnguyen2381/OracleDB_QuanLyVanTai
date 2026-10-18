@@ -130,6 +130,57 @@ Mở file `src/Transport.Presentation.Wpf/appsettings.json`:
 
 Người dùng đăng nhập bằng tài khoản Oracle cá nhân được cấp. Có thể chuyển đổi ngôn ngữ giao diện ngay tại màn hình đăng nhập.
 
+### 4.3 Đăng ký tài khoản (Người dùng chưa có tài khoản)
+
+Khi chưa có tài khoản trong hệ thống, nhân viên có thể gửi yêu cầu đăng ký trực tiếp từ màn hình đăng nhập:
+1. Nhấn nút **Đăng ký tài khoản** ở cuối form đăng nhập.
+2. Hộp thoại **Đăng ký tài khoản** xuất hiện:
+   - **Tên đăng nhập**: Tối thiểu 3 ký tự, bắt đầu bằng chữ cái, chỉ chứa chữ cái, chữ số và dấu gạch dưới (`_`).
+   - **Họ và tên**: Họ tên đầy đủ của nhân viên (tối đa 100 ký tự).
+   - **Số điện thoại**: Số điện thoại liên hệ (10 chữ số, bắt đầu bằng 0, không bắt buộc).
+3. Nhấn **Gửi yêu cầu**. Hệ thống sẽ ghi nhận yêu cầu vào cơ sở dữ liệu qua tài khoản kỹ thuật chuyên dụng `TRANSPORT_REGISTRAR`.
+4. Người điều hành sẽ xét duyệt yêu cầu trong danh sách chờ và trực tiếp cấp mật khẩu tạm cho nhân viên.
+
+### 4.4 Đặt mật khẩu mới lần đầu hoặc khi mật khẩu hết hạn
+
+Để đảm bảo an toàn thông tin, hệ thống áp dụng chính sách mật khẩu Oracle (`profile_staff` và hàm kiểm tra `staff_password_verify`):
+- **Bắt buộc đổi mật khẩu tạm**: Mọi tài khoản mới được tạo hoặc cấp mật khẩu tạm đều có trạng thái hết hạn ngay (`PASSWORD EXPIRE`). Trong lần đăng nhập đầu tiên bằng mật khẩu tạm, hộp thoại **Đặt mật khẩu mới** sẽ tự động bật lên.
+- **Thời hạn mật khẩu**: Mật khẩu có hiệu lực tối đa 90 ngày. Khi hết hạn (lỗi `ORA-28001`), ứng dụng yêu cầu đặt mật khẩu mới ngay khi đăng nhập.
+- **Quy tắc mật khẩu an toàn**:
+  - Độ dài tối thiểu 8 ký tự.
+  - Phải chứa ít nhất 1 chữ cái in hoa (`A-Z`), 1 chữ cái in thường (`a-z`), 1 chữ số (`0-9`) và 1 ký tự đặc biệt (ví dụ `#`, `$`, `@`, `!`).
+  - Không được chứa tên đăng nhập (dưới bất kỳ dạng hoa/thường nào).
+  - Không được trùng với 5 mật khẩu gần nhất đã sử dụng (`PASSWORD_REUSE_MAX 5`).
+- **Khóa tài khoản tự động**: Nhập sai mật khẩu liên tiếp 5 lần tài khoản sẽ bị tạm khóa 15 phút (`FAILED_LOGIN_ATTEMPTS 5`, `PASSWORD_LOCK_TIME 15/1440`).
+
+### 4.5 Tự đổi mật khẩu định kỳ
+
+Nhân viên có thể chủ động đổi mật khẩu bất kỳ lúc nào khi đang làm việc:
+1. Nhấn nút **Đổi mật khẩu** (biểu tượng chìa khóa) ở góc trên bên phải thanh tiêu đề cửa sổ chính.
+2. Hộp thoại **Đổi mật khẩu** xuất hiện:
+   - Nhập **Mật khẩu hiện tại**.
+   - Nhập **Mật khẩu mới** (tuân thủ quy tắc mật khẩu an toàn).
+   - Nhập lại vào ô **Nhập lại mật khẩu mới** để xác nhận trùng khớp.
+3. Nhấn **Đồng ý**. Hệ thống sẽ cập nhật mật khẩu trực tiếp trên CSDL Oracle và hiển thị thông báo thành công màu xanh.
+
+### 4.6 (Người điều hành) Duyệt yêu cầu đăng ký và Xem nhật ký đăng nhập
+
+Dành riêng cho tài khoản người điều hành (`ROLE_OPERATOR`):
+
+#### a) Duyệt yêu cầu đăng ký tài khoản (Menu 'Yêu cầu đăng ký')
+1. Vào menu **Yêu cầu đăng ký** (biểu tượng danh sách thẻ).
+2. Mặc định bảng chỉ hiển thị các yêu cầu có trạng thái **Đang chờ** (Pending). Bỏ chọn ô *Chỉ yêu cầu đang chờ* nếu muốn xem toàn bộ lịch sử đã duyệt hoặc từ chối.
+3. **Duyệt yêu cầu**: Chọn dòng yêu cầu $\rightarrow$ Nhấn nút **Duyệt** $\rightarrow$ Hộp thoại yêu cầu nhập mật khẩu tạm và chọn vai trò cho nhân viên (`Nhân viên bán vé` hoặc `Người điều hành`) $\rightarrow$ Nhấn **Duyệt**. Hệ thống tạo tài khoản Oracle thật cho nhân viên với mật khẩu tạm hết hạn ngay. Người điều hành trao mật khẩu tạm này trực tiếp cho nhân viên.
+4. **Từ chối yêu cầu**: Chọn dòng $\rightarrow$ Nhấn **Từ chối** $\rightarrow$ Nhập lý do từ chối $\rightarrow$ Xác nhận.
+5. Có thể nhấn **Xuất Excel** (`Ctrl + E`) để kết xuất danh sách yêu cầu.
+
+#### b) Tra cứu nhật ký đăng nhập (Menu 'Nhật ký đăng nhập')
+1. Vào menu **Nhật ký đăng nhập** (biểu tượng bảo mật ổ khóa).
+2. Lọc theo tên tài khoản hoặc khoảng thời gian (*Từ ngày* – *Đến ngày*) $\rightarrow$ Nhấn **Tìm kiếm**.
+3. Dữ liệu được trích xuất trực tiếp từ Oracle Unified Auditing qua view `V_LOGIN_AUDIT`, hiển thị: Thời gian, Tài khoản, Hành động (`LOGON`), Kết quả (`Thành công` / `Thất bại`), Tên máy trạm gửi kết nối và Đối tượng truy cập.
+4. Nhấn **Xuất Excel** (`Ctrl + E`) để lưu báo cáo kiểm toán đăng nhập ra file `.xlsx`.
+
+
 ---
 
 ## 5. Tài khoản demo và phân quyền
@@ -156,6 +207,8 @@ Người dùng đăng nhập bằng tài khoản Oracle cá nhân được cấp
 | **Tài xế** | Toàn quyền quản lý, cảnh báo bằng lái | *Ẩn khỏi menu giao diện* |
 | **Thống kê báo cáo** | Xem doanh thu, biểu đồ, xuất Excel | Xem doanh thu, biểu đồ, xuất Excel |
 | **Nhân viên (Oracle Users)** | Thêm user, đổi role, reset MK, khóa | *Ẩn khỏi menu giao diện* |
+| **Yêu cầu đăng ký** | Duyệt, Từ chối, Xuất Excel | *Ẩn khỏi menu giao diện* |
+| **Nhật ký đăng nhập** | Tra cứu audit trail, Xuất Excel | *Ẩn khỏi menu giao diện* |
 | **Sao lưu & Khôi phục CSDL** | Kích hoạt sao lưu, xem job đêm | *Ẩn khỏi menu giao diện* |
 
 > **Cơ chế an toàn phía Oracle**: Phân quyền được enforce chặt chẽ tại tầng CSDL. Tài khoản nhân viên bán vé **không có quyền INSERT/UPDATE trực tiếp** lên bảng `TICKETS` hay `PAYMENTS`. Mọi thao tác bán vé, thanh toán và hoàn tiền đều bắt buộc phải thông qua `PKG_TICKET`.
@@ -430,8 +483,9 @@ Bảng tra cứu nguyên nhân và giải pháp khắc phục các tình huống
 | Thông báo lỗi hiển thị | Nguyên nhân gốc rễ | Hướng dẫn khắc phục |
 |---|---|---|
 | **Không thể kết nối đến máy chủ Oracle...** | Dịch vụ `OracleServiceXE` hoặc `OracleOraDB21Home1TNSListener` chưa chạy, hoặc sai địa chỉ `DataSource` trong file cấu hình | Mở `services.msc`, kiểm tra và Start lại 2 dịch vụ Oracle. Kiểm tra lại chuỗi `DataSource: "localhost:1521/XEPDB1"` trong file `appsettings.json`. |
-| **Sai tên đăng nhập hoặc mật khẩu** | Nhập sai tài khoản hoặc mật khẩu (lỗi ORA-01017) | Kiểm tra kỹ phím CapsLock; lưu ý mật khẩu trong Oracle phân biệt chữ hoa và chữ thường. |
-| **Tài khoản của bạn đã bị khóa** | Tài khoản bị khóa do quản trị viên thao tác hoặc do gõ sai mật khẩu quá số lần quy định (ORA-28000) | Liên hệ Người điều hành đăng nhập vào màn hình *Nhân viên* để mở khóa tài khoản. |
+| **Đăng nhập báo sai tên/mật khẩu hoặc bị khóa** | Nhập sai tài khoản hoặc mật khẩu (ORA-01017) hoặc tài khoản bị khóa do sai quá 5 lần / quản trị viên khóa (ORA-28000) | Kiểm tra kỹ phím CapsLock; nếu đã nhập sai 5 lần, chờ 15 phút hoặc nhờ người điều hành mở khóa / cấp lại mật khẩu tạm. |
+| **Mật khẩu đã hết hạn. Vui lòng đặt mật khẩu mới** | Mật khẩu tài khoản đã quá hạn 90 ngày hoặc là mật khẩu tạm do điều hành cấp (ORA-28001) | Nhập mật khẩu mới thỏa mãn chính sách bảo mật (≥ 8 ký tự, có hoa, thường, số, ký tự đặc biệt) trên hộp thoại xuất hiện. |
+| **Không được dùng lại mật khẩu gần đây** | Mật khẩu mới trùng với 1 trong 5 mật khẩu đã dùng trước đó (ORA-28007) | Chọn mật khẩu mới khác hoàn toàn so với các mật khẩu gần đây. |
 | **Bạn không có quyền thực hiện thao tác này** | Tài khoản nhân viên bán vé cố gắng thực hiện các thao tác chỉ dành cho điều hành (ORA-01031) | Thao tác đã bị hệ thống chặn theo đúng phân quyền nghiệp vụ. Chỉ tài khoản Điều hành mới thực hiện được. |
 | **Ghế {0} đã có người đặt** | Một quầy vé khác vừa hoàn tất đặt chiếc ghế này trước bạn vài giây (lỗi ORA-20003) | Hệ thống đã tự động làm mới sơ đồ ghế. Vui lòng hướng dẫn khách hàng lựa chọn một số ghế màu xanh khác. |
 | **Chuyến xe đã khởi hành, không thể đặt hoặc hủy vé** | Thời điểm hiện tại đã quá giờ xe lăn bánh (ORA-20004 / ORA-20032) | Giải thích cho khách hàng về quy định xuất bến; chọn chuyến xe ở khung giờ tiếp theo. |
