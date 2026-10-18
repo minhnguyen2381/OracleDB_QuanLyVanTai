@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Markup;
 using System.Windows.Threading;
@@ -43,10 +44,11 @@ public partial class App : System.Windows.Application
         base.OnExit(e);
     }
 
-    // Lỗi ngoài dự kiến: báo cho người dùng thay vì tắt ứng dụng
+    // Lỗi ngoài dự kiến: báo chung cho người dùng (không lộ chi tiết hệ thống), chi tiết chỉ ghi ra Debug
     private void OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
     {
-        MessageBox.Show(e.Exception.Message, LocalizationService.Instance["App_Title"],
+        Debug.WriteLine(e.Exception);
+        MessageBox.Show(LocalizationService.Instance["Err_Unexpected"], LocalizationService.Instance["App_Title"],
             MessageBoxButton.OK, MessageBoxImage.Error);
         e.Handled = true;
     }

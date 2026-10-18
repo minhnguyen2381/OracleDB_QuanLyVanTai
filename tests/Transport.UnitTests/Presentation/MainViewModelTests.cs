@@ -1,5 +1,7 @@
+using Transport.Domain.Errors;
 using Transport.Presentation.Wpf.Services;
 using Transport.Presentation.Wpf.ViewModels;
+using Transport.Presentation.Wpf.ViewModels.Dialogs;
 using Transport.UnitTests.Fakes;
 
 namespace Transport.UnitTests.Presentation;
@@ -91,5 +93,41 @@ public class MainViewModelTests
 
         Assert.Equal(0, _auth.LogoutCount);
         Assert.Empty(_windows.Shown);
+    }
+
+    [Fact]
+    public async Task ChangePassword_Success_ShowsNotification()
+    {
+        _dialogs.PasswordChangeResult = new PasswordChange("Old#Pass1", "NewPass#2");
+        var vm = Create(new FakeUserSession());
+
+        await vm.ChangePasswordCommand.ExecuteAsync(null);
+
+        Assert.Equal(new[] { true }, _dialogs.PasswordChangeRequests);
+        Assert.Equal(("Old#Pass1", "NewPass#2"), _auth.LastChange);
+        Assert.Equal("ChangePassword_Done", vm.Notifications.Message);
+    }
+
+    [Fact]
+    public async Task ChangePassword_Failure_ShowsTranslatedError()
+    {
+        _dialogs.PasswordChangeResult = new PasswordChange("wrong", "NewPass#2");
+        _auth.ChangeError = new BusinessRuleException(BusinessErrorCode.InvalidCredentials, "invalid");
+        var vm = Create(new FakeUserSession());
+
+        await vm.ChangePasswordCommand.ExecuteAsync(null);
+
+        Assert.Equal("Err_1017", vm.Notifications.Message);
+        Assert.Equal(NotificationSeverity.Error, vm.Notifications.Severity);
+    }
+
+    [Fact]
+    public async Task ChangePassword_Cancelled_DoesNothing()
+    {
+        var vm = Create(new FakeUserSession());
+
+        await vm.ChangePasswordCommand.ExecuteAsync(null);
+
+        Assert.Null(_auth.LastChange);
     }
 }

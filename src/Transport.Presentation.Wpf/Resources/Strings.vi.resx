@@ -289,4 +289,9 @@
   <data name="ChangePassword_Rules" xml:space="preserve"><value>Tối thiểu 8 ký tự, có chữ hoa, chữ thường, chữ số và ký tự đặc biệt; không chứa tên đăng nhập.</value></data>
   <data name="Reg_TempPassword" xml:space="preserve"><value>Mật khẩu tạm</value></data>
   <data name="Reg_Approve" xml:space="preserve"><value>Duyệt</value></data>
+  <data name="Login_Register" xml:space="preserve"><value>Đăng ký tài khoản</value></data>
+  <data name="Register_Submitted" xml:space="preserve"><value>Đã gửi yêu cầu. Vui lòng chờ điều hành duyệt và cấp mật khẩu tạm.</value></data>
+  <data name="Btn_ChangePassword" xml:space="preserve"><value>Đổi mật khẩu</value></data>
+  <data name="ChangePassword_Done" xml:space="preserve"><value>Đã đổi mật khẩu.</value></data>
+  <data name="Err_Unexpected" xml:space="preserve"><value>Đã xảy ra lỗi không mong muốn. Vui lòng thử lại.</value></data>
 </root>

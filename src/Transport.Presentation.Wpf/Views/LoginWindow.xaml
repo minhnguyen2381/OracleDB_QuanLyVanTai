@@ -57,6 +57,11 @@
                     Style="{StaticResource PrimaryButtonStyle}" HorizontalAlignment="Stretch" Margin="0,24,0,0" />
             <ProgressBar IsIndeterminate="True" Height="3" Margin="0,8,0,0"
                          Visibility="{Binding LoginCommand.IsRunning, Converter={StaticResource BoolToVisibility}}" />
+
+            <TextBlock Text="{Binding InfoMessage}" Foreground="{StaticResource SuccessBrush}" TextWrapping="Wrap"
+                       Margin="0,12,0,0" Visibility="{Binding InfoMessage, Converter={StaticResource NullToCollapsed}}" />
+            <Button Content="{l:Loc Login_Register}" Command="{Binding RegisterCommand}"
+                    HorizontalAlignment="Center" Margin="0,16,0,0" />
         </StackPanel>
     </Grid>
 </Window>

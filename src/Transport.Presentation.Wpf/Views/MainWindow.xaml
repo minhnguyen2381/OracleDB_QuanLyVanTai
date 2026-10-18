@@ -67,6 +67,12 @@
                         <TextBlock Text="{Binding RoleKey, Converter={StaticResource Localize}}"
                                    Foreground="{StaticResource HaUiNavyBrush}" HorizontalAlignment="Right" />
                     </StackPanel>
+                    <Button Command="{Binding ChangePasswordCommand}" AutomationProperties.Name="{l:Loc Btn_ChangePassword}" Margin="0,0,8,0">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="&#xE8D7;" FontFamily="{StaticResource SymbolFont}" Margin="0,0,8,0" VerticalAlignment="Center" />
+                            <TextBlock Text="{l:Loc Btn_ChangePassword}" />
+                        </StackPanel>
+                    </Button>
                     <Button Command="{Binding ToggleLanguageCommand}" AutomationProperties.Name="{l:Loc Btn_SwitchLanguage}">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="&#xE774;" FontFamily="{StaticResource SymbolFont}" Margin="0,0,8,0" VerticalAlignment="Center" />

@@ -1,6 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Transport.Application.Abstractions;
+using Transport.Domain.Errors;
 using Transport.Presentation.Wpf.Localization;
 using Transport.Presentation.Wpf.Services;
 
@@ -83,5 +84,24 @@ public sealed partial class MainViewModel : ObservableObject
 
         _auth.Logout();
         _windows.ShowLogin();
+    }
+
+    [RelayCommand]
+    private async Task ChangePasswordAsync()
+    {
+        if (_dialogs.PromptPasswordChange(requireCurrent: true) is not { } change)
+        {
+            return;
+        }
+
+        try
+        {
+            await _auth.ChangePasswordAsync(change.CurrentPassword, change.NewPassword);
+            Notifications.ShowSuccess(_localization["ChangePassword_Done"]);
+        }
+        catch (BusinessRuleException ex)
+        {
+            Notifications.ShowError(_localization.Translate(ex));
+        }
     }
 }
