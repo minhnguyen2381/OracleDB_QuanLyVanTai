@@ -55,6 +55,11 @@ CREATE PROFILE profile_registrar LIMIT
   FAILED_LOGIN_ATTEMPTS UNLIMITED
   PASSWORD_LIFE_TIME    UNLIMITED;
 
+-- User nhận đăng ký: mật khẩu công khai có chủ đích (nằm trong appsettings.json của app),
+-- chỉ được gọi PKG_REGISTRATION_PUBLIC.SUBMIT_REQUEST (cấp ở 07_grants.sql)
+CREATE USER transport_registrar IDENTIFIED BY "Register#Only1" PROFILE profile_registrar;
+GRANT CREATE SESSION TO transport_registrar;
+
 -- Thư mục cho Data Pump
 CREATE OR REPLACE DIRECTORY backup_dir AS 'D:\OracleBackup';
 GRANT READ, WRITE ON DIRECTORY backup_dir TO transport;

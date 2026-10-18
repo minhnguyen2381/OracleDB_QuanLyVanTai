@@ -29,6 +29,15 @@ BEGIN
    WHERE username IN ('OPERATOR01', 'SELLER01', 'SELLER02') AND account_status LIKE 'EXPIRED%';
   ok('2. demo accounts are EXPIRED right after install', v_n = 3);
 
+  -- 3. REGISTRAR: không role, không quyền hệ thống nào ngoài CREATE SESSION, chỉ EXECUTE một package
+  SELECT COUNT(*) INTO v_n FROM dba_role_privs WHERE grantee = 'TRANSPORT_REGISTRAR';
+  ok('3a. registrar has no role', v_n = 0);
+  SELECT COUNT(*) INTO v_n FROM dba_sys_privs WHERE grantee = 'TRANSPORT_REGISTRAR' AND privilege <> 'CREATE SESSION';
+  ok('3b. registrar has no system privilege besides CREATE SESSION', v_n = 0);
+  SELECT COUNT(*) INTO v_n FROM dba_tab_privs
+   WHERE grantee = 'TRANSPORT_REGISTRAR' AND NOT (privilege = 'EXECUTE' AND table_name = 'PKG_REGISTRATION_PUBLIC');
+  ok('3c. registrar can only execute PKG_REGISTRATION_PUBLIC', v_n = 0);
+
   -- 4. Profile khóa sau 5 lần sai và dùng hàm kiểm tra mật khẩu
   SELECT COUNT(*) INTO v_n FROM dba_profiles
    WHERE profile = 'PROFILE_STAFF'

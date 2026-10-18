@@ -259,6 +259,103 @@ CREATE OR REPLACE PACKAGE BODY pkg_staff AS
 END pkg_staff;
 /
 
+CREATE OR REPLACE PACKAGE pkg_registration_public AS
+  -- Người chưa có tài khoản gửi yêu cầu (gọi bằng user TRANSPORT_REGISTRAR).
+  -- Không bao giờ cho biết username đã tồn tại, để không dò được tài khoản.
+  PROCEDURE submit_request(p_username IN VARCHAR2, p_full_name IN VARCHAR2, p_phone IN VARCHAR2);
+END pkg_registration_public;
+/
+
+CREATE OR REPLACE PACKAGE BODY pkg_registration_public AS
+
+  c_max_pending          CONSTANT PLS_INTEGER := 50;  -- Tổng số yêu cầu đang chờ
+  c_max_pending_per_host CONSTANT PLS_INTEGER := 3;   -- Số yêu cầu đang chờ từ một máy
+
+  PROCEDURE submit_request(p_username IN VARCHAR2, p_full_name IN VARCHAR2, p_phone IN VARCHAR2) IS
+    v_name      VARCHAR2(4000) := TRIM(p_full_name);
+    v_host      VARCHAR2(64)   := SUBSTR(SYS_CONTEXT('USERENV', 'HOST'), 1, 64);
+    v_user      VARCHAR2(30);
+    v_total     PLS_INTEGER;
+    v_from_host PLS_INTEGER;
+  BEGIN
+    IF p_username IS NULL OR NOT REGEXP_LIKE(p_username, '^[A-Za-z][A-Za-z0-9_]{2,29}$')
+       OR v_name IS NULL OR LENGTH(v_name) > 100
+       OR (p_phone IS NOT NULL AND NOT REGEXP_LIKE(p_phone, '^0[0-9]{9}$')) THEN
+      RAISE_APPLICATION_ERROR(-20062, 'Invalid registration data.');
+    END IF;
+    v_user := UPPER(p_username);
+
+    -- Đã có yêu cầu đang chờ cho username này: bỏ qua, trả về như thành công
+    SELECT COUNT(*) INTO v_total FROM registration_requests WHERE username = v_user AND status = 'PENDING';
+    IF v_total > 0 THEN
+      RETURN;
+    END IF;
+
+    -- Chống spam
+    SELECT COUNT(*), COUNT(CASE WHEN client_host = v_host THEN 1 END)
+      INTO v_total, v_from_host
+      FROM registration_requests
+     WHERE status = 'PENDING';
+    IF v_total >= c_max_pending OR v_from_host >= c_max_pending_per_host THEN
+      RAISE_APPLICATION_ERROR(-20061, 'Too many pending requests.');
+    END IF;
+
+    INSERT INTO registration_requests (username, full_name, phone, client_host)
+    VALUES (v_user, v_name, p_phone, v_host);
+    COMMIT;
+  END submit_request;
+
+END pkg_registration_public;
+/
+
+CREATE OR REPLACE PACKAGE pkg_registration AS
+  -- Duyệt: tạo user Oracle qua PKG_STAFF (mật khẩu tạm, hết hạn ngay) rồi đánh dấu APPROVED
+  PROCEDURE approve_request(p_request_id IN NUMBER, p_temp_password IN VARCHAR2, p_role IN VARCHAR2);
+  -- Từ chối kèm lý do
+  PROCEDURE reject_request(p_request_id IN NUMBER, p_reason IN VARCHAR2);
+END pkg_registration;
+/
+
+CREATE OR REPLACE PACKAGE BODY pkg_registration AS
+
+  -- Yêu cầu phải đang chờ duyệt
+  FUNCTION pending_request(p_request_id IN NUMBER) RETURN registration_requests%ROWTYPE IS
+    v_req registration_requests%ROWTYPE;
+  BEGIN
+    SELECT * INTO v_req FROM registration_requests WHERE request_id = p_request_id AND status = 'PENDING';
+    RETURN v_req;
+  EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+      RAISE_APPLICATION_ERROR(-20060, 'Registration request not found or already reviewed.');
+  END pending_request;
+
+  PROCEDURE approve_request(p_request_id IN NUMBER, p_temp_password IN VARCHAR2, p_role IN VARCHAR2) IS
+    v_req registration_requests%ROWTYPE := pending_request(p_request_id);
+  BEGIN
+    -- create_staff tự kiểm tra username/role/mật khẩu và tự commit.
+    -- Nếu lỗi (VD trùng username ORA-01920) thì yêu cầu vẫn PENDING để điều hành từ chối.
+    pkg_staff.create_staff(v_req.username, p_temp_password, v_req.full_name, v_req.phone, p_role);
+    UPDATE registration_requests
+       SET status = 'APPROVED', reviewed_by = USER, reviewed_at = SYSDATE
+     WHERE request_id = p_request_id;
+    COMMIT;
+  END approve_request;
+
+  PROCEDURE reject_request(p_request_id IN NUMBER, p_reason IN VARCHAR2) IS
+    v_req registration_requests%ROWTYPE := pending_request(p_request_id);
+  BEGIN
+    IF TRIM(p_reason) IS NULL OR LENGTH(TRIM(p_reason)) > 200 THEN
+      RAISE_APPLICATION_ERROR(-20062, 'Invalid registration data.');
+    END IF;
+    UPDATE registration_requests
+       SET status = 'REJECTED', reviewed_by = USER, reviewed_at = SYSDATE, reject_reason = TRIM(p_reason)
+     WHERE request_id = v_req.request_id;
+    COMMIT;
+  END reject_request;
+
+END pkg_registration;
+/
+
 -- Dừng nếu có object bị lỗi biên dịch
 SELECT name, type, line, text FROM user_errors ORDER BY name, sequence;
 DECLARE

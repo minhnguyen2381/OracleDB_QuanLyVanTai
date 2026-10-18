@@ -43,6 +43,9 @@ DECLARE
   BEGIN
     DELETE FROM staff WHERE username = 'TEST_STAFF_01';
     BEGIN EXECUTE IMMEDIATE 'DROP USER test_staff_01'; EXCEPTION WHEN OTHERS THEN NULL; END;
+    DELETE FROM staff WHERE username = 'TEST_REG_01';
+    BEGIN EXECUTE IMMEDIATE 'DROP USER test_reg_01'; EXCEPTION WHEN OTHERS THEN NULL; END;
+    DELETE FROM registration_requests WHERE username LIKE 'TEST\_REG\_%' ESCAPE '\';
     DELETE FROM payments WHERE ticket_id IN (
       SELECT t.ticket_id FROM tickets t JOIN schedules s ON s.schedule_id = t.schedule_id
         JOIN vehicles v ON v.vehicle_id = s.vehicle_id WHERE v.plate_number = '99Z-999.99');
@@ -171,6 +174,48 @@ BEGIN
   COMMIT;
   EXECUTE IMMEDIATE 'DROP USER test_staff_01';
 
+  -- 12. Đăng ký tài khoản: gửi, chống spam, duyệt, từ chối
+  expect_error('12a. invalid registration username is rejected', -20062,
+    'BEGIN pkg_registration_public.submit_request(''x;'', ''Test Reg'', NULL); END;');
+  expect_error('12b. invalid registration phone is rejected', -20062,
+    'BEGIN pkg_registration_public.submit_request(''test_reg_01'', ''Test Reg'', ''123''); END;');
+  pkg_registration_public.submit_request('test_reg_01', 'Test Reg', '0999000001');
+  pkg_registration_public.submit_request('test_reg_01', 'Test Reg', '0999000001');
+  SELECT COUNT(*) INTO v_n FROM registration_requests WHERE username = 'TEST_REG_01' AND status = 'PENDING';
+  ok('12c. duplicate pending request is silently ignored', v_n = 1);
+  -- Tối đa 3 yêu cầu đang chờ từ một máy: trong 4 lần gửi tiếp theo phải có ít nhất 2 lần bị chặn
+  v_m := 0;
+  FOR i IN 2 .. 5 LOOP
+    BEGIN
+      pkg_registration_public.submit_request('test_reg_0' || i, 'Test Reg', NULL);
+    EXCEPTION
+      WHEN OTHERS THEN
+        IF SQLCODE = -20061 THEN v_m := v_m + 1; ELSE RAISE; END IF;
+    END;
+  END LOOP;
+  ok('12d. more than 3 pending requests from one computer are rejected', v_m >= 2);
+
+  SELECT request_id INTO v_n FROM registration_requests WHERE username = 'TEST_REG_01' AND status = 'PENDING';
+  pkg_registration.approve_request(v_n, 'TempPass#1', 'ROLE_TICKET_SELLER');
+  SELECT COUNT(*) INTO v_m FROM staff WHERE username = 'TEST_REG_01' AND role_name = 'ROLE_TICKET_SELLER';
+  ok('12e. approval creates the staff account', v_m = 1);
+  expect_error('12f. approving twice is rejected', -20060,
+    'BEGIN pkg_registration.approve_request(' || v_n || ', ''TempPass#1'', ''ROLE_TICKET_SELLER''); END;');
+
+  SELECT request_id INTO v_n FROM registration_requests WHERE username = 'TEST_REG_02' AND status = 'PENDING';
+  expect_error('12g. rejecting without a reason is rejected', -20062,
+    'BEGIN pkg_registration.reject_request(' || v_n || ', '' ''); END;');
+  pkg_registration.reject_request(v_n, 'Test');
+  SELECT COUNT(*) INTO v_m FROM registration_requests
+   WHERE request_id = v_n AND status = 'REJECTED' AND reviewed_by = USER AND reject_reason = 'Test';
+  ok('12h. rejection is recorded', v_m = 1);
+
+  -- 13. REGISTRAR chỉ được gọi đúng một package
+  SELECT COUNT(*) INTO v_n FROM all_tab_privs WHERE grantee = 'TRANSPORT_REGISTRAR';
+  SELECT COUNT(*) INTO v_m FROM all_tab_privs
+   WHERE grantee = 'TRANSPORT_REGISTRAR' AND privilege = 'EXECUTE' AND table_name = 'PKG_REGISTRATION_PUBLIC';
+  ok('13. registrar can only execute PKG_REGISTRATION_PUBLIC', v_n = 1 AND v_m = 1);
+
   cleanup;
   DBMS_OUTPUT.PUT_LINE(CASE WHEN g_fail = 0 THEN 'ALL TESTS PASSED'
                             ELSE g_fail || ' TEST(S) FAILED' END);
@@ -178,6 +223,11 @@ END;
 /
 
 -- ===== Kiểm tra phân quyền thủ công (không tự chạy) =====
+-- Đăng nhập transport_registrar/Register#Only1 rồi chạy:
+--   SELECT COUNT(*) FROM transport.staff;
+--     -> ORA-00942 (REGISTRAR không đọc được bảng nào)
+--   EXEC transport.pkg_registration.reject_request(1, 'x')
+--     -> PLS-00201 (REGISTRAR không gọi được thủ tục duyệt)
 -- Đăng nhập seller01/Seller#001 rồi chạy:
 --   INSERT INTO transport.tickets (schedule_id, passenger_id, seat_no, price) VALUES (1, 1, 1, 1);
 --     -> ORA-01031: insufficient privileges (chỉ bán vé được qua PKG_TICKET)

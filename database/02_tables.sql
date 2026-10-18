@@ -106,4 +106,20 @@ CREATE TABLE staff (
   created_by VARCHAR2(30) DEFAULT USER NOT NULL
 );
 
+-- Yêu cầu đăng ký tài khoản chờ điều hành duyệt; KHÔNG lưu mật khẩu
+CREATE TABLE registration_requests (
+  request_id    NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  username      VARCHAR2(30)  NOT NULL,
+  full_name     VARCHAR2(100) NOT NULL,
+  phone         VARCHAR2(10),
+  status        VARCHAR2(10) DEFAULT 'PENDING' NOT NULL
+                CONSTRAINT ck_reg_status CHECK (status IN ('PENDING','APPROVED','REJECTED')),
+  client_host   VARCHAR2(64),                 -- Máy gửi yêu cầu (SYS_CONTEXT('USERENV','HOST'))
+  requested_at  DATE DEFAULT SYSDATE NOT NULL,
+  reviewed_by   VARCHAR2(30),
+  reviewed_at   DATE,
+  reject_reason VARCHAR2(200)
+);
+CREATE INDEX idx_reg_status ON registration_requests(status);
+
 EXIT
