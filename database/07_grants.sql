@@ -21,6 +21,7 @@ GRANT EXECUTE ON pkg_staff               TO role_operator;
 GRANT EXECUTE ON backup_operational_data TO role_operator;
 GRANT SELECT ON registration_requests  TO role_operator;
 GRANT EXECUTE ON pkg_registration      TO role_operator;
+GRANT SELECT ON v_login_audit          TO role_operator;
 
 -- Bán vé: xem lịch, quản lý khách, bán/thanh toán/hủy vé qua package
 GRANT SELECT ON routes            TO role_ticket_seller;

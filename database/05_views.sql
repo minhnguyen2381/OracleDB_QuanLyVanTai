@@ -41,6 +41,19 @@ SELECT s.schedule_id,
           s.departure_time, s.arrival_time, s.ticket_price, s.status,
           v.plate_number, v.vehicle_type, d.full_name, v.seat_count;
 
+-- Nhật ký đăng nhập (thành công/thất bại) và thao tác quản trị tài khoản, đọc từ Unified Auditing
+CREATE OR REPLACE VIEW v_login_audit AS
+SELECT CAST(event_timestamp AS TIMESTAMP)                     AS event_time,
+       dbusername                                             AS username,
+       action_name,
+       CASE WHEN return_code = 0 THEN 'SUCCESS' ELSE 'FAILED' END AS result,
+       return_code,
+       userhost,
+       object_name
+  FROM sys.unified_audit_trail
+ WHERE action_name = 'LOGON'
+    OR (object_schema = 'TRANSPORT' AND object_name IN ('PKG_STAFF', 'PKG_REGISTRATION'));
+
 -- Dừng nếu có object bị lỗi biên dịch
 SELECT name, type, line, text FROM user_errors ORDER BY name, sequence;
 DECLARE

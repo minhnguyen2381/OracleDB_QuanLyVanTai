@@ -25,6 +25,9 @@ for %%f in (02_tables 03_triggers 04_packages 05_views 06_backup 07_grants 08_se
   sqlplus -S -L transport/"%TR_PWD%"@%DB% @%%f.sql || goto :fail
 )
 
+echo === 10_audit ===
+sqlplus -S -L "sys/%SYS_PWD%@%DB% as sysdba" @10_audit.sql || goto :fail
+
 echo.
 echo INSTALL OK. Demo accounts (a new password is required at first sign-in):
 echo   operator01/Operator#01, seller01/Seller#001, seller02/Seller#002

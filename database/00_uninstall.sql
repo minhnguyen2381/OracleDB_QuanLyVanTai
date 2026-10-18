@@ -4,6 +4,12 @@ WHENEVER SQLERROR CONTINUE
 SET DEFINE OFF
 SET SERVEROUTPUT ON SIZE UNLIMITED
 
+-- Tắt rồi xóa audit policy trước khi xóa schema (policy tham chiếu package của TRANSPORT)
+NOAUDIT POLICY pol_transport_logon;
+NOAUDIT POLICY pol_transport_account_admin;
+DROP AUDIT POLICY pol_transport_logon;
+DROP AUDIT POLICY pol_transport_account_admin;
+
 -- Xóa các user nhân viên có trong TRANSPORT.STAFF (dùng SQL động vì bảng có thể chưa tồn tại)
 DECLARE
   TYPE t_names IS TABLE OF VARCHAR2(30);

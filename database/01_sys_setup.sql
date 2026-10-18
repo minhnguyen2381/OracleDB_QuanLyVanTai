@@ -13,6 +13,8 @@ GRANT CREATE SESSION, CREATE TABLE, CREATE VIEW, CREATE PROCEDURE,
 -- Quyền hệ thống cấp trực tiếp (không qua role) để PKG_STAFF dùng được trong definer rights
 GRANT CREATE USER, ALTER USER, DROP USER TO transport;
 GRANT SELECT ON sys.dba_scheduler_jobs TO transport WITH GRANT OPTION;
+-- Cho view V_LOGIN_AUDIT đọc nhật ký Unified Auditing và cấp lại cho ROLE_OPERATOR
+GRANT SELECT ON sys.unified_audit_trail TO transport WITH GRANT OPTION;
 
 CREATE ROLE role_operator;
 CREATE ROLE role_ticket_seller;

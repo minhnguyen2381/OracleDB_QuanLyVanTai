@@ -45,6 +45,11 @@ BEGIN
        OR (resource_name = 'PASSWORD_VERIFY_FUNCTION' AND limit = 'STAFF_PASSWORD_VERIFY'));
   ok('4. PROFILE_STAFF locks after 5 failures and verifies passwords', v_n = 2);
 
+  -- 5. Hai audit policy đang bật
+  SELECT COUNT(*) INTO v_n FROM audit_unified_enabled_policies
+   WHERE policy_name IN ('POL_TRANSPORT_LOGON', 'POL_TRANSPORT_ACCOUNT_ADMIN');
+  ok('5. audit policies are enabled', v_n = 2);
+
   DBMS_OUTPUT.PUT_LINE(CASE WHEN g_fail = 0 THEN 'ALL CHECKS PASSED' ELSE g_fail || ' CHECK(S) FAILED' END);
 END;
 /
