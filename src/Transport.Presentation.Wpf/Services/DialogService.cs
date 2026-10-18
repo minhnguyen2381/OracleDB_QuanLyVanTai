@@ -1,6 +1,7 @@
 using System.IO;
 using System.Windows;
 using Microsoft.Win32;
+using Transport.Application.Services;
 using Transport.Domain.Enums;
 using Transport.Presentation.Wpf.Localization;
 using Transport.Presentation.Wpf.ViewModels.Dialogs;
@@ -8,7 +9,7 @@ using Transport.Presentation.Wpf.Views.Dialogs;
 
 namespace Transport.Presentation.Wpf.Services;
 
-public sealed class DialogService(ILocalizationService localization) : IDialogService
+public sealed class DialogService(ILocalizationService localization, RegistrationService registrations) : IDialogService
 {
     public bool Confirm(string message)
     {
@@ -50,6 +51,21 @@ public sealed class DialogService(ILocalizationService localization) : IDialogSe
     {
         var viewModel = new PaymentDialogViewModel(amount);
         return ShowModal(new PaymentDialog(), viewModel) ? viewModel.SelectedMethod : null;
+    }
+
+    public bool ShowRegistration() => ShowModal(new RegisterDialog(), new RegisterViewModel(registrations, localization));
+
+    public PasswordChange? PromptPasswordChange(bool requireCurrent)
+    {
+        var title = localization[requireCurrent ? "ChangePassword_Title" : "ChangePassword_ExpiredTitle"];
+        var viewModel = new ChangePasswordViewModel(title, requireCurrent);
+        return ShowModal(new ChangePasswordDialog(), viewModel) ? viewModel.Result : null;
+    }
+
+    public ApprovalInput? PromptApproval(string title)
+    {
+        var viewModel = new ApproveRegistrationViewModel(title);
+        return ShowModal(new ApproveRegistrationDialog(), viewModel) ? viewModel.Result : null;
     }
 
     private static bool ShowModal(Window dialog, IDialogViewModel viewModel)

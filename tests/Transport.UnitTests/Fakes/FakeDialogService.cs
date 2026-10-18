@@ -1,5 +1,6 @@
 using Transport.Domain.Enums;
 using Transport.Presentation.Wpf.Services;
+using Transport.Presentation.Wpf.ViewModels.Dialogs;
 
 namespace Transport.UnitTests.Fakes;
 
@@ -12,6 +13,11 @@ internal sealed class FakeDialogService : IDialogService
     public string? PromptPasswordResult { get; set; }
     public PaymentMethod? PaymentResult { get; set; }
     public List<string> Prompts { get; } = [];
+    public bool RegistrationResult { get; set; }
+    public int RegistrationCount { get; private set; }
+    public PasswordChange? PasswordChangeResult { get; set; }
+    public List<bool> PasswordChangeRequests { get; } = [];
+    public ApprovalInput? ApprovalResult { get; set; }
 
     public bool Confirm(string message)
     {
@@ -34,4 +40,23 @@ internal sealed class FakeDialogService : IDialogService
     }
 
     public PaymentMethod? ChoosePaymentMethod(decimal amount) => PaymentResult;
+
+    public bool ShowRegistration()
+    {
+        RegistrationCount++;
+        return RegistrationResult;
+    }
+
+    public PasswordChange? PromptPasswordChange(bool requireCurrent)
+    {
+        PasswordChangeRequests.Add(requireCurrent);
+        return PasswordChangeResult;
+    }
+
+    public ApprovalInput? PromptApproval(string title)
+    {
+        Prompts.Add(title);
+        return ApprovalResult;
+    }
 }
+

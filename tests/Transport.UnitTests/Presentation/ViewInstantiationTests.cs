@@ -1,6 +1,7 @@
 using System.Threading;
 using System.Windows;
 using Transport.Presentation.Wpf.Views.Controls;
+using Transport.Presentation.Wpf.Views.Dialogs;
 using Transport.Presentation.Wpf.Views.Pages;
 
 namespace Transport.UnitTests.Presentation;
@@ -46,6 +47,9 @@ public class ViewInstantiationTests
                 _ = new DashboardPage();
                 _ = new StaffPage();
                 _ = new BackupPage();
+                _ = new RegisterDialog();
+                _ = new ChangePasswordDialog();
+                _ = new ApproveRegistrationDialog();
             }
             catch (Exception ex)
             {

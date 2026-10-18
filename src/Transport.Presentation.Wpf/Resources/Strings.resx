@@ -276,4 +276,17 @@
   <data name="Err_20062" xml:space="preserve"><value>Invalid registration data.</value></data>
   <data name="Err_28001" xml:space="preserve"><value>Your password has expired. Please set a new password.</value></data>
   <data name="Err_28007" xml:space="preserve"><value>You cannot reuse a recent password.</value></data>
+  <data name="Register_Title" xml:space="preserve"><value>Request an account</value></data>
+  <data name="Register_Hint" xml:space="preserve"><value>An operator will review your request and give you a temporary password.</value></data>
+  <data name="Register_Submit" xml:space="preserve"><value>Send request</value></data>
+  <data name="ChangePassword_Title" xml:space="preserve"><value>Change password</value></data>
+  <data name="ChangePassword_ExpiredTitle" xml:space="preserve"><value>Set a new password</value></data>
+  <data name="ChangePassword_ExpiredHint" xml:space="preserve"><value>Your password has expired or was set by an operator. Choose a new password to continue.</value></data>
+  <data name="ChangePassword_Current" xml:space="preserve"><value>Current password</value></data>
+  <data name="ChangePassword_New" xml:space="preserve"><value>New password</value></data>
+  <data name="ChangePassword_Confirm" xml:space="preserve"><value>Confirm new password</value></data>
+  <data name="ChangePassword_Mismatch" xml:space="preserve"><value>The passwords do not match.</value></data>
+  <data name="ChangePassword_Rules" xml:space="preserve"><value>At least 8 characters with an uppercase letter, a lowercase letter, a digit and a special character; must not contain the username.</value></data>
+  <data name="Reg_TempPassword" xml:space="preserve"><value>Temporary password</value></data>
+  <data name="Reg_Approve" xml:space="preserve"><value>Approve</value></data>
 </root>

@@ -276,4 +276,17 @@
   <data name="Err_20062" xml:space="preserve"><value>Thông tin đăng ký không hợp lệ.</value></data>
   <data name="Err_28001" xml:space="preserve"><value>Mật khẩu đã hết hạn. Vui lòng đặt mật khẩu mới.</value></data>
   <data name="Err_28007" xml:space="preserve"><value>Không được dùng lại mật khẩu gần đây.</value></data>
+  <data name="Register_Title" xml:space="preserve"><value>Đăng ký tài khoản</value></data>
+  <data name="Register_Hint" xml:space="preserve"><value>Điều hành sẽ duyệt yêu cầu và cấp mật khẩu tạm cho bạn.</value></data>
+  <data name="Register_Submit" xml:space="preserve"><value>Gửi yêu cầu</value></data>
+  <data name="ChangePassword_Title" xml:space="preserve"><value>Đổi mật khẩu</value></data>
+  <data name="ChangePassword_ExpiredTitle" xml:space="preserve"><value>Đặt mật khẩu mới</value></data>
+  <data name="ChangePassword_ExpiredHint" xml:space="preserve"><value>Mật khẩu đã hết hạn hoặc do điều hành cấp. Hãy đặt mật khẩu mới để tiếp tục.</value></data>
+  <data name="ChangePassword_Current" xml:space="preserve"><value>Mật khẩu hiện tại</value></data>
+  <data name="ChangePassword_New" xml:space="preserve"><value>Mật khẩu mới</value></data>
+  <data name="ChangePassword_Confirm" xml:space="preserve"><value>Nhập lại mật khẩu mới</value></data>
+  <data name="ChangePassword_Mismatch" xml:space="preserve"><value>Mật khẩu nhập lại không khớp.</value></data>
+  <data name="ChangePassword_Rules" xml:space="preserve"><value>Tối thiểu 8 ký tự, có chữ hoa, chữ thường, chữ số và ký tự đặc biệt; không chứa tên đăng nhập.</value></data>
+  <data name="Reg_TempPassword" xml:space="preserve"><value>Mật khẩu tạm</value></data>
+  <data name="Reg_Approve" xml:space="preserve"><value>Duyệt</value></data>
 </root>
