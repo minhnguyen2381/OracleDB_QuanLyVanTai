@@ -12,27 +12,40 @@ internal sealed partial class OracleConnectionFactory(IOptions<DatabaseOptions> 
             ? OpenAsync(session.Username, session.Password, ct)
             : throw new InvalidOperationException("No user is signed in.");
 
-    public async Task<OracleConnection> OpenAsync(string username, string password, CancellationToken ct)
-    {
-        var settings = options.Value;
-        if (!SchemaPattern().IsMatch(settings.Schema))
-        {
-            throw new InvalidOperationException($"Invalid schema name '{settings.Schema}'.");
-        }
+    public Task<OracleConnection> OpenAsync(string username, string password, CancellationToken ct) =>
+        OpenCoreAsync(Create(username, password, pooling: true), c => c.OpenAsync(ct), ct);
 
-        var builder = new OracleConnectionStringBuilder
+    // Đổi mật khẩu ngay lúc mở kết nối (dùng được cả khi mật khẩu đã hết hạn - ORA-28001).
+    // Không qua pool: pool không mở được phiên bằng mật khẩu đã hết hạn.
+    public Task<OracleConnection> OpenWithNewPasswordAsync(string username, string oldPassword, string newPassword,
+        CancellationToken ct) =>
+        OpenCoreAsync(Create(username, oldPassword, pooling: false),
+            c => Task.Run(() => c.OpenWithNewPassword(newPassword), ct), ct);
+
+    private OracleConnection Create(string username, string password, bool pooling) =>
+        new(new OracleConnectionStringBuilder
         {
-            DataSource = settings.DataSource,
+            DataSource = options.Value.DataSource,
             UserID = username,
             Password = password,
-        };
-        var connection = new OracleConnection(builder.ConnectionString);
+            Pooling = pooling,
+        }.ConnectionString);
+
+    private async Task<OracleConnection> OpenCoreAsync(OracleConnection connection, Func<OracleConnection, Task> open,
+        CancellationToken ct)
+    {
         try
         {
-            await connection.OpenAsync(ct);
+            var schema = options.Value.Schema;
+            if (!SchemaPattern().IsMatch(schema))
+            {
+                throw new InvalidOperationException($"Invalid schema name '{schema}'.");
+            }
+
+            await open(connection);
             await using var command = connection.CreateCommand();
             // Nhờ vậy câu SQL trong app không cần tiền tố "transport."
-            command.CommandText = $"ALTER SESSION SET CURRENT_SCHEMA = {settings.Schema}";
+            command.CommandText = $"ALTER SESSION SET CURRENT_SCHEMA = {schema}";
             await command.ExecuteNonQueryAsync(ct);
             return connection;
         }

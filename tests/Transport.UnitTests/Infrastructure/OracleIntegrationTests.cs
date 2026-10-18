@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Transport.Application;
 using Transport.Application.Abstractions;
 using Transport.Application.Models;
+using Transport.Application.Services;
 using Transport.Domain.Entities;
 using Transport.Domain.Enums;
 using Transport.Domain.Errors;
@@ -16,6 +17,13 @@ public class OracleIntegrationTests
     private static void RequireDatabase() =>
         Assert.SkipUnless(Environment.GetEnvironmentVariable("TRANSPORT_DB_TESTS") == "1",
             "Set TRANSPORT_DB_TESTS=1 to run Oracle integration tests.");
+
+    // Tài khoản demo bị bắt đổi mật khẩu ở lần đăng nhập đầu: đổi trong app rồi đặt hai biến môi trường này
+    private static string OperatorPassword =>
+        Environment.GetEnvironmentVariable("TRANSPORT_DB_OPERATOR_PASSWORD") ?? "Operator#01";
+
+    private static string SellerPassword =>
+        Environment.GetEnvironmentVariable("TRANSPORT_DB_SELLER_PASSWORD") ?? "Seller#001";
 
     private static ServiceProvider CreateServices()
     {
@@ -44,7 +52,7 @@ public class OracleIntegrationTests
     public async Task Operator_ReadsSeededCatalogs()
     {
         RequireDatabase();
-        using var services = await SignInAsync("operator01", "Operator#01");
+        using var services = await SignInAsync("operator01", OperatorPassword);
 
         Assert.True(services.GetRequiredService<IUserSession>().IsOperator);
         Assert.Equal(5, (await services.GetRequiredService<IRouteRepository>().GetAllAsync()).Count);
@@ -61,7 +69,7 @@ public class OracleIntegrationTests
     public async Task Seller_SeesOpenTripsAndBookedSeats()
     {
         RequireDatabase();
-        using var services = await SignInAsync("seller01", "Seller#001");
+        using var services = await SignInAsync("seller01", SellerPassword);
 
         var trips = await OpenTripsAsync(services);
         var seats = await services.GetRequiredService<ITicketRepository>().GetBookedSeatsAsync(trips[0].ScheduleId);
@@ -77,7 +85,7 @@ public class OracleIntegrationTests
     public async Task BookingSeatBeyondCapacity_IsMappedToSeatNotFound()
     {
         RequireDatabase();
-        using var services = await SignInAsync("seller01", "Seller#001");
+        using var services = await SignInAsync("seller01", SellerPassword);
         var trip = (await OpenTripsAsync(services))[0];
 
         var ex = await Assert.ThrowsAsync<BusinessRuleException>(() => services.GetRequiredService<ITicketRepository>()
@@ -90,7 +98,7 @@ public class OracleIntegrationTests
     public async Task Operator_AddsAndDeletesPassenger()
     {
         RequireDatabase();
-        using var services = await SignInAsync("operator01", "Operator#01");
+        using var services = await SignInAsync("operator01", OperatorPassword);
         var repo = services.GetRequiredService<IPassengerRepository>();
         var p = new Passenger
         {
@@ -110,7 +118,7 @@ public class OracleIntegrationTests
     public async Task Seller_BooksPaysAndCancelsTicket()
     {
         RequireDatabase();
-        using var services = await SignInAsync("seller01", "Seller#001");
+        using var services = await SignInAsync("seller01", SellerPassword);
         var trips = await OpenTripsAsync(services);
         var trip = trips[0];
         var ticketRepo = services.GetRequiredService<ITicketRepository>();
@@ -133,5 +141,33 @@ public class OracleIntegrationTests
         var ex = await Assert.ThrowsAsync<BusinessRuleException>(() => SignInAsync("nobody_xyz", "wrong-password"));
 
         Assert.Equal(BusinessErrorCode.InvalidCredentials, ex.Code);
+    }
+
+    [Fact]
+    public async Task NewStaff_MustReplaceTemporaryPasswordAtFirstSignIn()
+    {
+        RequireDatabase();
+        // User mới mỗi lần chạy; app không xóa được user nên cuối test khóa lại
+        var username = $"it_{DateTime.Now:MMddHHmmss}";
+        using (var admin = await SignInAsync("operator01", OperatorPassword))
+        {
+            await admin.GetRequiredService<StaffService>().CreateAsync(
+                new NewStaffRequest(username, "TempPass#1", "Integration Test", null, StaffRole.TicketSeller));
+        }
+
+        using var services = CreateServices();
+        var auth = services.GetRequiredService<IAuthService>();
+        var expired = await Assert.ThrowsAsync<BusinessRuleException>(() => auth.LoginAsync(username, "TempPass#1"));
+        Assert.Equal(BusinessErrorCode.PasswordExpired, expired.Code);
+
+        await auth.LoginWithNewPasswordAsync(username, "TempPass#1", "NewPass#2");
+        Assert.Equal(username.ToUpperInvariant(), services.GetRequiredService<IUserSession>().Username);
+
+        await auth.ChangePasswordAsync("NewPass#2", "NewPass#3");
+        auth.Logout();
+        await auth.LoginAsync(username, "NewPass#3");
+
+        using var cleanup = await SignInAsync("operator01", OperatorPassword);
+        await cleanup.GetRequiredService<StaffService>().SetLockedAsync(username, true);
     }
 }
