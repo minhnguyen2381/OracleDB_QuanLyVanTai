@@ -50,13 +50,17 @@ internal static partial class Rules
         }
     }
 
-    // Cùng luật với PKG_STAFF.check_password
-    public static void Password(string? password)
+    // Cùng luật với SYS.STAFF_PASSWORD_VERIFY (PROFILE_STAFF) và dấu nháy kép bị PKG_STAFF chặn
+    public static void Password(string? password, string? username)
     {
-        if (password is null || password.Length < MinPasswordLength || password.Contains('"'))
+        if (password is null || password.Length < MinPasswordLength || password.Contains('"')
+            || !password.Any(char.IsAsciiLetterUpper) || !password.Any(char.IsAsciiLetterLower)
+            || !password.Any(char.IsAsciiDigit) || password.All(char.IsAsciiLetterOrDigit)
+            || (!string.IsNullOrWhiteSpace(username)
+                && password.Contains(username.Trim(), StringComparison.OrdinalIgnoreCase)))
         {
             throw new BusinessRuleException(BusinessErrorCode.InvalidPassword,
-                "Password must be at least 8 characters and must not contain double quotes.");
+                "Password does not meet the complexity rules.");
         }
     }
 

@@ -19,7 +19,7 @@ public sealed class StaffService(IStaffRepository staff, IUserSession session)
     {
         Rules.Operator(session);
         Rules.Username(request.Username);
-        Rules.Password(request.Password);
+        Rules.Password(request.Password, request.Username);
         Rules.Required(request.FullName);
         Rules.OptionalPhone(request.Phone);
         await staff.CreateAsync(request with { FullName = request.FullName.Trim(), Phone = Rules.TrimToNull(request.Phone) }, ct);
@@ -43,7 +43,7 @@ public sealed class StaffService(IStaffRepository staff, IUserSession session)
     public async Task ResetPasswordAsync(string username, string password, CancellationToken ct = default)
     {
         Rules.Operator(session);
-        Rules.Password(password);
+        Rules.Password(password, username);
         await staff.ResetPasswordAsync(username, password, ct);
     }
 

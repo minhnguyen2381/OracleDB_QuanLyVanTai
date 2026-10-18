@@ -22,6 +22,9 @@ public enum BusinessErrorCode
     ScheduleNotFound = 20050,
     ScheduleNotCancellable = 20051,
     ScheduleHasActiveTickets = 20052,
+    RegistrationNotFound = 20060,
+    TooManyPendingRequests = 20061,
+    InvalidRegistrationData = 20062,
 
     // Lỗi hệ thống Oracle hay gặp (giá trị = số ORA)
     DuplicateValue = 1,
@@ -31,6 +34,8 @@ public enum BusinessErrorCode
     ChildRecordExists = 2292,
     CheckConstraintViolated = 2290,
     AccountLocked = 28000,
+    PasswordExpired = 28001,
+    PasswordReused = 28007,
     DatabaseUnavailable = 12541,
 
     // Lỗi kiểm tra phía client, không đi tới Oracle

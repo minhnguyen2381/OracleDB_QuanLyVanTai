@@ -15,6 +15,10 @@ internal static partial class OracleErrorMapper
         [2292] = BusinessErrorCode.ChildRecordExists,
         [2290] = BusinessErrorCode.CheckConstraintViolated,
         [28000] = BusinessErrorCode.AccountLocked,
+        [28001] = BusinessErrorCode.PasswordExpired,
+        // Verify function của PROFILE_STAFF từ chối mật khẩu (bọc ORA-20044)
+        [28003] = BusinessErrorCode.InvalidPassword,
+        [28007] = BusinessErrorCode.PasswordReused,
         [12541] = BusinessErrorCode.DatabaseUnavailable,
         [12514] = BusinessErrorCode.DatabaseUnavailable,
     };

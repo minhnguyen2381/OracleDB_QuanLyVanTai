@@ -27,12 +27,26 @@ public class StaffServiceTests
     [InlineData("x; drop", "Password1", BusinessErrorCode.InvalidUsername)]
     [InlineData("seller03", "short", BusinessErrorCode.InvalidPassword)]
     [InlineData("seller03", "has\"quote1", BusinessErrorCode.InvalidPassword)]
+    [InlineData("seller03", "alllower#1", BusinessErrorCode.InvalidPassword)]
+    [InlineData("seller03", "ALLUPPER#1", BusinessErrorCode.InvalidPassword)]
+    [InlineData("seller03", "NoDigits#x", BusinessErrorCode.InvalidPassword)]
+    [InlineData("seller03", "NoSpecial12", BusinessErrorCode.InvalidPassword)]
+    [InlineData("seller03", "Seller03#x", BusinessErrorCode.InvalidPassword)]
     public async Task CreateAsync_EnforcesSameRulesAsPkgStaff(string username, string password, BusinessErrorCode expected)
     {
         var ex = await Assert.ThrowsAsync<BusinessRuleException>(
             () => _service.CreateAsync(new NewStaffRequest(username, password, "Tên", null, StaffRole.Operator)));
 
         Assert.Equal(expected, ex.Code);
+        Assert.Empty(_repository.Calls);
+    }
+
+    [Fact]
+    public async Task ResetPassword_RejectsWeakPassword()
+    {
+        var ex = await Assert.ThrowsAsync<BusinessRuleException>(() => _service.ResetPasswordAsync("SELLER01", "weakpass"));
+
+        Assert.Equal(BusinessErrorCode.InvalidPassword, ex.Code);
         Assert.Empty(_repository.Calls);
     }
 

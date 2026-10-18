@@ -31,7 +31,7 @@
   <data name="Dialog_Payment_Title" xml:space="preserve"><value>Payment</value></data>
   <data name="Dialog_Payment_Amount" xml:space="preserve"><value>Amount to pay</value></data>
   <data name="Dialog_Payment_Method" xml:space="preserve"><value>Payment method</value></data>
-  <data name="Dialog_Password_Label" xml:space="preserve"><value>New password (at least 8 characters)</value></data>
+  <data name="Dialog_Password_Label" xml:space="preserve"><value>New temporary password (the user must change it at next sign-in)</value></data>
   <data name="PaymentMethod_Cash" xml:space="preserve"><value>Cash</value></data>
   <data name="PaymentMethod_Transfer" xml:space="preserve"><value>Bank transfer</value></data>
   <data name="PaymentMethod_Card" xml:space="preserve"><value>Card</value></data>
@@ -52,12 +52,12 @@
   <data name="Err_20041" xml:space="preserve"><value>Invalid role.</value></data>
   <data name="Err_20042" xml:space="preserve"><value>Staff member not found.</value></data>
   <data name="Err_20043" xml:space="preserve"><value>You cannot lock or change your own account.</value></data>
-  <data name="Err_20044" xml:space="preserve"><value>Password must be at least 8 characters and must not contain double quotes.</value></data>
+  <data name="Err_20044" xml:space="preserve"><value>Password must be at least 8 characters with an uppercase letter, a lowercase letter, a digit and a special character, and must not contain the username or double quotes.</value></data>
   <data name="Err_20050" xml:space="preserve"><value>Trip not found.</value></data>
   <data name="Err_20051" xml:space="preserve"><value>Only scheduled trips can be cancelled.</value></data>
   <data name="Err_20052" xml:space="preserve"><value>This trip still has active tickets; use "Cancel trip".</value></data>
   <data name="Err_1" xml:space="preserve"><value>This value already exists (plate number, phone, ID card, licence number…).</value></data>
-  <data name="Err_1017" xml:space="preserve"><value>Wrong username or password.</value></data>
+  <data name="Err_1017" xml:space="preserve"><value>Wrong username or password, or the account is locked.</value></data>
   <data name="Err_1031" xml:space="preserve"><value>You do not have permission to perform this action.</value></data>
   <data name="Err_1920" xml:space="preserve"><value>This username already exists.</value></data>
   <data name="Err_2292" xml:space="preserve"><value>Cannot delete because related data exists.</value></data>
@@ -271,4 +271,9 @@
   <data name="Backup_Tickets" xml:space="preserve"><value>Tickets</value></data>
   <data name="Backup_Payments" xml:space="preserve"><value>Payments</value></data>
   <data name="Backup_ExportTitle" xml:space="preserve"><value>Backup history</value></data>
+  <data name="Err_20060" xml:space="preserve"><value>The registration request does not exist or has already been reviewed.</value></data>
+  <data name="Err_20061" xml:space="preserve"><value>There are too many pending registration requests. Please try again later.</value></data>
+  <data name="Err_20062" xml:space="preserve"><value>Invalid registration data.</value></data>
+  <data name="Err_28001" xml:space="preserve"><value>Your password has expired. Please set a new password.</value></data>
+  <data name="Err_28007" xml:space="preserve"><value>You cannot reuse a recent password.</value></data>
 </root>
