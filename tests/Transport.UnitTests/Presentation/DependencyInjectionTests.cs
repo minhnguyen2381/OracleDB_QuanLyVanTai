@@ -23,7 +23,7 @@ public class DependencyInjectionTests
         using var provider = services.BuildServiceProvider();
 
         var descriptors = provider.GetServices<PageDescriptor>().ToList();
-        Assert.Equal(12, descriptors.Count);
+        Assert.Equal(13, descriptors.Count);
 
         foreach (var descriptor in descriptors)
         {

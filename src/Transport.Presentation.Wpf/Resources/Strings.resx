@@ -312,4 +312,14 @@
   <data name="RegStatus_Pending" xml:space="preserve"><value>Pending</value></data>
   <data name="RegStatus_Approved" xml:space="preserve"><value>Approved</value></data>
   <data name="RegStatus_Rejected" xml:space="preserve"><value>Rejected</value></data>
+  <data name="Menu_LoginAudit" xml:space="preserve"><value>Sign-in log</value></data>
+  <data name="Audit_Time" xml:space="preserve"><value>Time</value></data>
+  <data name="Audit_Username" xml:space="preserve"><value>Account</value></data>
+  <data name="Audit_Action" xml:space="preserve"><value>Action</value></data>
+  <data name="Audit_Result" xml:space="preserve"><value>Result</value></data>
+  <data name="Audit_Host" xml:space="preserve"><value>Computer</value></data>
+  <data name="Audit_Object" xml:space="preserve"><value>Object</value></data>
+  <data name="Audit_ExportTitle" xml:space="preserve"><value>Sign-in log</value></data>
+  <data name="AuditResult_SUCCESS" xml:space="preserve"><value>Success</value></data>
+  <data name="AuditResult_FAILED" xml:space="preserve"><value>Failed</value></data>
 </root>

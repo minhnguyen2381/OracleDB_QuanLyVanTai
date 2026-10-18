@@ -52,6 +52,7 @@ public static class PresentationServices
         services.AddPage<StatisticsViewModel>("Menu_Statistics", "\uE9D2", 90);
         services.AddPage<StaffViewModel>("Menu_Staff", "\uE7EF", 100, operatorOnly: true);
         services.AddPage<RegistrationRequestsViewModel>("Menu_Registrations", "\uE8FA", 101, operatorOnly: true);
+        services.AddPage<LoginAuditViewModel>("Menu_LoginAudit", "\uE72E", 102, operatorOnly: true);
         services.AddPage<BackupViewModel>("Menu_Backup", "\uE74E", 110, operatorOnly: true);
         return services;
     }

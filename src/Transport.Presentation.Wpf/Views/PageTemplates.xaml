@@ -14,5 +14,6 @@
     <DataTemplate DataType="{x:Type vm:StatisticsViewModel}"><pages:StatisticsPage /></DataTemplate>
     <DataTemplate DataType="{x:Type vm:StaffViewModel}"><pages:StaffPage /></DataTemplate>
     <DataTemplate DataType="{x:Type vm:RegistrationRequestsViewModel}"><pages:RegistrationRequestsPage /></DataTemplate>
+    <DataTemplate DataType="{x:Type vm:LoginAuditViewModel}"><pages:LoginAuditPage /></DataTemplate>
     <DataTemplate DataType="{x:Type vm:BackupViewModel}"><pages:BackupPage /></DataTemplate>
 </ResourceDictionary>

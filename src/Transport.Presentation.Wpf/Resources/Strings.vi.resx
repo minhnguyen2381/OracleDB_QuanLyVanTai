@@ -312,4 +312,14 @@
   <data name="RegStatus_Pending" xml:space="preserve"><value>Đang chờ</value></data>
   <data name="RegStatus_Approved" xml:space="preserve"><value>Đã duyệt</value></data>
   <data name="RegStatus_Rejected" xml:space="preserve"><value>Đã từ chối</value></data>
+  <data name="Menu_LoginAudit" xml:space="preserve"><value>Nhật ký đăng nhập</value></data>
+  <data name="Audit_Time" xml:space="preserve"><value>Thời gian</value></data>
+  <data name="Audit_Username" xml:space="preserve"><value>Tài khoản</value></data>
+  <data name="Audit_Action" xml:space="preserve"><value>Hành động</value></data>
+  <data name="Audit_Result" xml:space="preserve"><value>Kết quả</value></data>
+  <data name="Audit_Host" xml:space="preserve"><value>Máy</value></data>
+  <data name="Audit_Object" xml:space="preserve"><value>Đối tượng</value></data>
+  <data name="Audit_ExportTitle" xml:space="preserve"><value>Nhật ký đăng nhập</value></data>
+  <data name="AuditResult_SUCCESS" xml:space="preserve"><value>Thành công</value></data>
+  <data name="AuditResult_FAILED" xml:space="preserve"><value>Thất bại</value></data>
 </root>

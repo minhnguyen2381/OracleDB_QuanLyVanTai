@@ -1,0 +1,45 @@
+<UserControl x:Class="Transport.Presentation.Wpf.Views.Pages.LoginAuditPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:l="clr-namespace:Transport.Presentation.Wpf.Localization"
+             xmlns:c="clr-namespace:Transport.Presentation.Wpf.Controls"
+             xmlns:vm="clr-namespace:Transport.Presentation.Wpf.ViewModels.Pages"
+             mc:Ignorable="d" d:DesignWidth="1100" d:DesignHeight="680"
+             d:DataContext="{d:DesignInstance Type=vm:LoginAuditViewModel}">
+    <Border Style="{StaticResource CardStyle}">
+        <DockPanel>
+            <WrapPanel DockPanel.Dock="Top" Margin="0,0,0,8">
+                <StackPanel Margin="0,0,12,0">
+                    <TextBlock Text="{l:Loc Audit_Username}" Style="{StaticResource FieldLabelStyle}" />
+                    <TextBox Width="200" Text="{Binding UsernameFilter, UpdateSourceTrigger=PropertyChanged}"
+                             AutomationProperties.Name="{l:Loc Audit_Username}" />
+                </StackPanel>
+                <StackPanel Margin="0,0,12,0">
+                    <TextBlock Text="{l:Loc Lbl_From}" Style="{StaticResource FieldLabelStyle}" />
+                    <DatePicker SelectedDate="{Binding FromDate}" AutomationProperties.Name="{l:Loc Lbl_From}" />
+                </StackPanel>
+                <StackPanel Margin="0,0,12,0">
+                    <TextBlock Text="{l:Loc Lbl_To}" Style="{StaticResource FieldLabelStyle}" />
+                    <DatePicker SelectedDate="{Binding ToDate}" AutomationProperties.Name="{l:Loc Lbl_To}" />
+                </StackPanel>
+                <Button Content="{l:Loc Btn_Search}" Command="{Binding SearchCommand}" Style="{StaticResource PrimaryButtonStyle}"
+                        VerticalAlignment="Bottom" Margin="0,0,8,0" />
+                <Button Content="{l:Loc Btn_ExportExcel}" Command="{Binding ExportToExcelCommand}" c:Shortcut.Gesture="Ctrl+E"
+                        VerticalAlignment="Bottom" />
+            </WrapPanel>
+            <DataGrid Style="{StaticResource ListGridStyle}" ItemsSource="{Binding Entries}" AutomationProperties.Name="{l:Loc Menu_LoginAudit}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="{l:Loc Audit_Time}" Binding="{Binding EventTime, StringFormat={}{0:dd/MM/yyyy HH:mm:ss}}" Width="Auto" />
+                    <DataGridTextColumn Header="{l:Loc Audit_Username}" Binding="{Binding Username}" Width="*" />
+                    <DataGridTextColumn Header="{l:Loc Audit_Action}" Binding="{Binding ActionName}" Width="*" />
+                    <DataGridTextColumn Header="{l:Loc Audit_Result}" Width="Auto"
+                                        Binding="{Binding Result, Converter={StaticResource Localize}, ConverterParameter=AuditResult_}" />
+                    <DataGridTextColumn Header="{l:Loc Audit_Host}" Binding="{Binding UserHost}" Width="*" />
+                    <DataGridTextColumn Header="{l:Loc Audit_Object}" Binding="{Binding ObjectName}" Width="*" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </DockPanel>
+    </Border>
+</UserControl>

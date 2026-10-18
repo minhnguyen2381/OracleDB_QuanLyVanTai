@@ -25,6 +25,7 @@ public static class DependencyInjection
         services.AddSingleton<IStaffRepository, StaffRepository>();
         services.AddSingleton<IRegistrationRepository, RegistrationRepository>();
         services.AddSingleton<IStatisticsQueries, StatisticsQueries>();
+        services.AddSingleton<ILoginAuditQueries, LoginAuditQueries>();
         services.AddSingleton<IBackupRepository, BackupRepository>();
 
         services.AddSingleton<Export.ClosedXmlExcelExporter>();
