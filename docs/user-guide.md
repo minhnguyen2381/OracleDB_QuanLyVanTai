@@ -203,7 +203,6 @@ Dành riêng cho tài khoản người điều hành (`ROLE_OPERATOR`):
 | **Tài xế** | Toàn quyền quản lý, cảnh báo bằng lái | *Ẩn khỏi menu giao diện* |
 | **Thống kê báo cáo** | Xem doanh thu, biểu đồ, xuất Excel | Xem doanh thu, biểu đồ, xuất Excel |
 | **Nhân viên (Oracle Users)** | Thêm user, đổi role, reset MK, khóa | *Ẩn khỏi menu giao diện* |
-| **Yêu cầu đăng ký** | Duyệt, Từ chối, Xuất Excel | *Ẩn khỏi menu giao diện* |
 | **Nhật ký đăng nhập** | Tra cứu audit trail, Xuất Excel | *Ẩn khỏi menu giao diện* |
 | **Sao lưu & Khôi phục CSDL** | Kích hoạt sao lưu, xem job đêm | *Ẩn khỏi menu giao diện* |
 
