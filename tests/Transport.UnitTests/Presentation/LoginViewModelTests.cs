@@ -20,6 +20,12 @@ public class LoginViewModelTests
         var login = CreateViewModel();
         Assert.False(login.LoginCommand.CanExecute(null));
 
+        login.Username = null!;
+        Assert.False(login.LoginCommand.CanExecute(null));
+
+        login.Username = "   ";
+        Assert.False(login.LoginCommand.CanExecute(null));
+
         login.Username = "seller01";
         login.Password = "Seller#001";
 

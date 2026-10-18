@@ -43,4 +43,17 @@ public class LoginAuditViewModelTests
 
         Assert.Equal(("seller01", new DateTime(2026, 10, 1), new DateTime(2026, 10, 18)), _audit.LastQuery);
     }
+
+    [Fact]
+    public async Task Export_WritesAllAuditColumns()
+    {
+        var vm = Create();
+        await vm.LoadAsync();
+
+        await vm.ExportToExcelCommand.ExecuteAsync(null);
+
+        Assert.Equal("Audit_ExportTitle", _context.Exporter.Title);
+        Assert.Equal(6, _context.Exporter.Headers.Count);
+        Assert.Equal(1, _context.Exporter.RowCount);
+    }
 }

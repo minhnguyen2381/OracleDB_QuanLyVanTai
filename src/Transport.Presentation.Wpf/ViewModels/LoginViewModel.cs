@@ -51,7 +51,7 @@ public sealed partial class LoginViewModel : ObservableObject
     {
         ErrorMessage = null;
         InfoMessage = null;
-        var username = Username.Trim();
+        var username = Username?.Trim() ?? string.Empty;
         try
         {
             await _auth.LoginAsync(username, Password);
@@ -103,5 +103,5 @@ public sealed partial class LoginViewModel : ObservableObject
         Password = string.Empty;
     }
 
-    private bool CanLogin() => Username.Trim().Length > 0 && Password.Length > 0;
+    private bool CanLogin() => !string.IsNullOrWhiteSpace(Username) && !string.IsNullOrEmpty(Password);
 }

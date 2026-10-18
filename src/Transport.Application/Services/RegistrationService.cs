@@ -8,13 +8,13 @@ namespace Transport.Application.Services;
 public sealed class RegistrationService(IRegistrationRepository requests, IUserSession session)
 {
     // Không cần đăng nhập; repository gọi bằng user TRANSPORT_REGISTRAR
-    public Task SubmitAsync(string username, string fullName, string? phone, CancellationToken ct = default)
+    public Task SubmitAsync(string? username, string? fullName, string? phone, CancellationToken ct = default)
     {
-        var user = username.Trim();
+        var user = username?.Trim();
         Rules.Username(user);
         Rules.Required(fullName);
         Rules.OptionalPhone(phone);
-        return requests.SubmitAsync(user, fullName.Trim(), Rules.TrimToNull(phone), ct);
+        return requests.SubmitAsync(user!, fullName!.Trim(), Rules.TrimToNull(phone), ct);
     }
 
     public async Task<IReadOnlyList<RegistrationRequest>> GetAllAsync(CancellationToken ct = default)

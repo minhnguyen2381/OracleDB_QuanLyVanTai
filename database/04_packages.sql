@@ -273,7 +273,7 @@ CREATE OR REPLACE PACKAGE BODY pkg_registration_public AS
 
   PROCEDURE submit_request(p_username IN VARCHAR2, p_full_name IN VARCHAR2, p_phone IN VARCHAR2) IS
     v_name      VARCHAR2(4000) := TRIM(p_full_name);
-    v_host      VARCHAR2(64)   := SUBSTR(SYS_CONTEXT('USERENV', 'HOST'), 1, 64);
+    v_host      VARCHAR2(64)   := NVL(SUBSTR(SYS_CONTEXT('USERENV', 'HOST'), 1, 64), 'UNKNOWN');
     v_user      VARCHAR2(30);
     v_total     PLS_INTEGER;
     v_from_host PLS_INTEGER;
@@ -292,7 +292,7 @@ CREATE OR REPLACE PACKAGE BODY pkg_registration_public AS
     END IF;
 
     -- Chống spam
-    SELECT COUNT(*), COUNT(CASE WHEN client_host = v_host THEN 1 END)
+    SELECT COUNT(*), COUNT(CASE WHEN NVL(client_host, 'UNKNOWN') = v_host THEN 1 END)
       INTO v_total, v_from_host
       FROM registration_requests
      WHERE status = 'PENDING';
@@ -318,11 +318,11 @@ END pkg_registration;
 
 CREATE OR REPLACE PACKAGE BODY pkg_registration AS
 
-  -- Yêu cầu phải đang chờ duyệt
+  -- Yêu cầu phải đang chờ duyệt (khóa dòng để tránh duyệt/từ chối đồng thời)
   FUNCTION pending_request(p_request_id IN NUMBER) RETURN registration_requests%ROWTYPE IS
     v_req registration_requests%ROWTYPE;
   BEGIN
-    SELECT * INTO v_req FROM registration_requests WHERE request_id = p_request_id AND status = 'PENDING';
+    SELECT * INTO v_req FROM registration_requests WHERE request_id = p_request_id AND status = 'PENDING' FOR UPDATE;
     RETURN v_req;
   EXCEPTION
     WHEN NO_DATA_FOUND THEN

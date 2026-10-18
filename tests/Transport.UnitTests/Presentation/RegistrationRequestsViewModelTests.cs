@@ -93,4 +93,17 @@ public class RegistrationRequestsViewModelTests
         Assert.False(vm.ApproveCommand.CanExecute(null));
         Assert.False(vm.RejectCommand.CanExecute(null));
     }
+
+    [Fact]
+    public async Task Export_WritesAllRegistrationRequestColumns()
+    {
+        var vm = Create();
+        await vm.LoadAsync();
+
+        await vm.ExportToExcelCommand.ExecuteAsync(null);
+
+        Assert.Equal("Reg_ExportTitle", _context.Exporter.Title);
+        Assert.Equal(10, _context.Exporter.Headers.Count);
+        Assert.Equal(1, _context.Exporter.RowCount);
+    }
 }

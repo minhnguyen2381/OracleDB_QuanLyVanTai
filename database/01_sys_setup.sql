@@ -8,6 +8,7 @@ SET SERVEROUTPUT ON SIZE UNLIMITED
 -- Chủ schema: chỉ dùng để tạo/bảo trì object, app không đăng nhập bằng user này.
 -- Mật khẩu do người cài nhập lúc chạy install_all.bat, không ghi trong mã nguồn.
 CREATE USER transport IDENTIFIED BY "&1" DEFAULT TABLESPACE users QUOTA UNLIMITED ON users;
+SET DEFINE OFF
 GRANT CREATE SESSION, CREATE TABLE, CREATE VIEW, CREATE PROCEDURE,
       CREATE TRIGGER, CREATE SEQUENCE, CREATE JOB TO transport;
 -- Quyền hệ thống cấp trực tiếp (không qua role) để PKG_STAFF dùng được trong definer rights
@@ -41,6 +42,7 @@ BEGIN
   RETURN TRUE;
 END staff_password_verify;
 /
+GRANT EXECUTE ON staff_password_verify TO PUBLIC;
 
 -- Profile của nhân viên: khóa 15 phút sau 5 lần sai, đổi mật khẩu mỗi 90 ngày, không dùng lại 5 mật khẩu gần nhất
 CREATE PROFILE profile_staff LIMIT

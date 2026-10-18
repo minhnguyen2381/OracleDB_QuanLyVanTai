@@ -14,7 +14,7 @@
                 <StackPanel Margin="0,0,12,0">
                     <TextBlock Text="{l:Loc Audit_Username}" Style="{StaticResource FieldLabelStyle}" />
                     <TextBox Width="200" Text="{Binding UsernameFilter, UpdateSourceTrigger=PropertyChanged}"
-                             AutomationProperties.Name="{l:Loc Audit_Username}" />
+                             AutomationProperties.Name="{l:Loc Audit_Username}" c:Shortcut.Gesture="Ctrl+F" />
                 </StackPanel>
                 <StackPanel Margin="0,0,12,0">
                     <TextBlock Text="{l:Loc Lbl_From}" Style="{StaticResource FieldLabelStyle}" />
@@ -25,7 +25,7 @@
                     <DatePicker SelectedDate="{Binding ToDate}" AutomationProperties.Name="{l:Loc Lbl_To}" />
                 </StackPanel>
                 <Button Content="{l:Loc Btn_Search}" Command="{Binding SearchCommand}" Style="{StaticResource PrimaryButtonStyle}"
-                        VerticalAlignment="Bottom" Margin="0,0,8,0" />
+                        IsDefault="True" c:Shortcut.Gesture="F5" VerticalAlignment="Bottom" Margin="0,0,8,0" />
                 <Button Content="{l:Loc Btn_ExportExcel}" Command="{Binding ExportToExcelCommand}" c:Shortcut.Gesture="Ctrl+E"
                         VerticalAlignment="Bottom" />
             </WrapPanel>

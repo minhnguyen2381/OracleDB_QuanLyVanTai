@@ -32,11 +32,12 @@ public class RegistrationServiceTests
     }
 
     [Theory]
+    [InlineData(null, "Tên", null, BusinessErrorCode.InvalidUsername)]
     [InlineData("ab", "Tên", null, BusinessErrorCode.InvalidUsername)]
     [InlineData("x; drop", "Tên", null, BusinessErrorCode.InvalidUsername)]
     [InlineData("newuser01", " ", null, BusinessErrorCode.RequiredField)]
     [InlineData("newuser01", "Tên", "123", BusinessErrorCode.InvalidPhone)]
-    public async Task Submit_ValidatesBeforeCallingOracle(string username, string fullName, string? phone, BusinessErrorCode expected)
+    public async Task Submit_ValidatesBeforeCallingOracle(string? username, string fullName, string? phone, BusinessErrorCode expected)
     {
         var ex = await Assert.ThrowsAsync<BusinessRuleException>(() => Create(Anonymous).SubmitAsync(username, fullName, phone));
 
