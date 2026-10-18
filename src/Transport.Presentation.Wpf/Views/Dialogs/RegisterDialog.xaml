@@ -17,10 +17,10 @@
         <TextBox x:Name="UsernameInput" Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}" MaxLength="30"
                  AutomationProperties.Name="{l:Loc Staff_Username}" />
         <TextBlock Text="{l:Loc Register_Password}" Style="{StaticResource FieldLabelStyle}" />
-        <PasswordBox c:PasswordBoxAssistant.BoundPassword="{Binding Password}"
+        <PasswordBox c:PasswordBoxAssistant.BoundPassword="{Binding Password}" MaxLength="64"
                      AutomationProperties.Name="{l:Loc Register_Password}" />
         <TextBlock Text="{l:Loc Register_ConfirmPassword}" Style="{StaticResource FieldLabelStyle}" />
-        <PasswordBox c:PasswordBoxAssistant.BoundPassword="{Binding ConfirmPassword}"
+        <PasswordBox c:PasswordBoxAssistant.BoundPassword="{Binding ConfirmPassword}" MaxLength="64"
                      AutomationProperties.Name="{l:Loc Register_ConfirmPassword}" />
         <TextBlock Text="{l:Loc ChangePassword_Mismatch}" Foreground="{StaticResource ErrorBrush}" Margin="0,8,0,0"
                    Visibility="{Binding IsMismatch, Converter={StaticResource BoolToVisibility}}" />
