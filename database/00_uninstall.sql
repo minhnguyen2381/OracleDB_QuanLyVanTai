@@ -34,4 +34,9 @@ DROP ROLE role_operator;
 DROP ROLE role_ticket_seller;
 DROP DIRECTORY backup_dir;
 
+-- Profile CASCADE chuyển user còn lại về DEFAULT; xóa hàm sau khi profile không còn dùng nó
+DROP PROFILE profile_staff CASCADE;
+DROP PROFILE profile_registrar CASCADE;
+DROP FUNCTION staff_password_verify;
+
 EXIT

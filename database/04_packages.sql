@@ -168,7 +168,8 @@ CREATE OR REPLACE PACKAGE BODY pkg_staff AS
     END IF;
   END check_role;
 
-  -- Mật khẩu tối thiểu 8 ký tự, không chứa dấu nháy kép (vì được bọc trong "...")
+  -- Chặn dấu nháy kép (mật khẩu được bọc trong "..." khi EXECUTE IMMEDIATE) và độ dài tối thiểu.
+  -- Luật độ phức tạp do STAFF_PASSWORD_VERIFY của PROFILE_STAFF kiểm tra (ORA-28003).
   PROCEDURE check_password(p_password IN VARCHAR2) IS
   BEGIN
     IF p_password IS NULL OR LENGTH(p_password) < 8 OR INSTR(p_password, '"') > 0 THEN
@@ -199,7 +200,9 @@ CREATE OR REPLACE PACKAGE BODY pkg_staff AS
   BEGIN
     check_role(p_role);
     check_password(p_password);
-    EXECUTE IMMEDIATE 'CREATE USER ' || v_user || ' IDENTIFIED BY "' || p_password || '"';
+    -- Mật khẩu do điều hành đặt chỉ là mật khẩu tạm: nhân viên phải đổi ở lần đăng nhập đầu
+    EXECUTE IMMEDIATE 'CREATE USER ' || v_user || ' IDENTIFIED BY "' || p_password
+                      || '" PROFILE profile_staff PASSWORD EXPIRE';
     BEGIN
       EXECUTE IMMEDIATE 'GRANT ' || p_role || ' TO ' || v_user;
       INSERT INTO staff (username, full_name, phone, role_name) VALUES (v_user, p_full_name, p_phone, p_role);
@@ -240,7 +243,7 @@ CREATE OR REPLACE PACKAGE BODY pkg_staff AS
     v_role staff.role_name%TYPE := managed_role(v_user);
   BEGIN
     check_password(p_password);
-    EXECUTE IMMEDIATE 'ALTER USER ' || v_user || ' IDENTIFIED BY "' || p_password || '"';
+    EXECUTE IMMEDIATE 'ALTER USER ' || v_user || ' IDENTIFIED BY "' || p_password || '" PASSWORD EXPIRE';
   END reset_password;
 
   PROCEDURE set_locked(p_username IN VARCHAR2, p_locked IN NUMBER) IS

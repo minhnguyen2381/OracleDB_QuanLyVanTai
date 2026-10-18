@@ -150,6 +150,9 @@ BEGIN
     'BEGIN pkg_staff.create_staff(''test_staff_01'', ''short'', ''X'', NULL, ''ROLE_OPERATOR''); END;');
   expect_error('10d. unknown staff is rejected', -20042,
     'BEGIN pkg_staff.set_locked(''nobody_xyz'', 1); END;');
+  -- Mật khẩu đủ 8 ký tự nhưng yếu: verify function của PROFILE_STAFF từ chối (ORA-28003)
+  expect_error('10e. weak password is rejected by the verify function', -28003,
+    'BEGIN pkg_staff.create_staff(''test_staff_01'', ''abcdefgh'', ''X'', NULL, ''ROLE_OPERATOR''); END;');
 
   -- 11. Vòng đời nhân viên: tạo, đổi role, khóa
   pkg_staff.create_staff('test_staff_01', 'TestPass#1', 'Test Staff', NULL, 'ROLE_TICKET_SELLER');
