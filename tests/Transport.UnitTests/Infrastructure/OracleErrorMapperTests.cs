@@ -10,7 +10,7 @@ public class OracleErrorMapperTests
     [InlineData(20020)] [InlineData(20021)] [InlineData(20030)] [InlineData(20031)] [InlineData(20032)]
     [InlineData(20040)] [InlineData(20041)] [InlineData(20042)] [InlineData(20043)] [InlineData(20044)]
     [InlineData(20050)] [InlineData(20051)] [InlineData(20052)]
-    [InlineData(20060)] [InlineData(20061)] [InlineData(20062)]
+    [InlineData(20061)] [InlineData(20062)]
     public void Map_ApplicationErrors_KeepTheirNumber(int number)
     {
         var ex = OracleErrorMapper.Map(number, $"ORA-{number}: Something.");

@@ -75,22 +75,10 @@ public class DialogViewModelTests
     }
 
     [Fact]
-    public void ApproveRegistration_DefaultsToTicketSellerAndNeedsPassword()
-    {
-        var dialog = new ApproveRegistrationViewModel("Duyệt");
-
-        Assert.Equal(StaffRole.TicketSeller, dialog.Role);
-        Assert.False(dialog.OkCommand.CanExecute(null));
-        dialog.TempPassword = "TempPass#1";
-        Assert.True(dialog.OkCommand.CanExecute(null));
-        Assert.Equal(new ApprovalInput("TempPass#1", StaffRole.TicketSeller), dialog.Result);
-    }
-
-    [Fact]
     public async Task Register_SubmitsAndCloses()
     {
         var repository = new FakeRegistrationRepository();
-        var dialog = new RegisterViewModel(new RegistrationService(repository, new FakeUserSession()), new FakeLocalizationService());
+        var dialog = new RegisterViewModel(new RegistrationService(repository), new FakeLocalizationService());
         bool? result = null;
         dialog.CloseRequested += r => result = r;
 
@@ -106,7 +94,7 @@ public class DialogViewModelTests
     [Fact]
     public async Task Register_ShowsTranslatedErrorAndStaysOpen()
     {
-        var dialog = new RegisterViewModel(new RegistrationService(new FakeRegistrationRepository(), new FakeUserSession()),
+        var dialog = new RegisterViewModel(new RegistrationService(new FakeRegistrationRepository()),
             new FakeLocalizationService())
         {
             Username = "ab",

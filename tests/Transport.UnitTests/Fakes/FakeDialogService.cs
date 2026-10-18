@@ -17,7 +17,6 @@ internal sealed class FakeDialogService : IDialogService
     public int RegistrationCount { get; private set; }
     public PasswordChange? PasswordChangeResult { get; set; }
     public List<bool> PasswordChangeRequests { get; } = [];
-    public ApprovalInput? ApprovalResult { get; set; }
 
     public bool Confirm(string message)
     {
@@ -51,12 +50,6 @@ internal sealed class FakeDialogService : IDialogService
     {
         PasswordChangeRequests.Add(requireCurrent);
         return PasswordChangeResult;
-    }
-
-    public ApprovalInput? PromptApproval(string title)
-    {
-        Prompts.Add(title);
-        return ApprovalResult;
     }
 }
 

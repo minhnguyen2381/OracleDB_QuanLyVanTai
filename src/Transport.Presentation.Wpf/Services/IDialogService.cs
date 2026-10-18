@@ -23,8 +23,5 @@ public interface IDialogService
 
     // Đổi mật khẩu; requireCurrent = false khi bị bắt đổi lúc đăng nhập. null nếu hủy
     PasswordChange? PromptPasswordChange(bool requireCurrent);
-
-    // Duyệt yêu cầu đăng ký: mật khẩu tạm + role; null nếu hủy
-    ApprovalInput? PromptApproval(string title);
 }
 

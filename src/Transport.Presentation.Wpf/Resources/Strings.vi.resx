@@ -271,7 +271,6 @@
   <data name="Backup_Tickets" xml:space="preserve"><value>Vé</value></data>
   <data name="Backup_Payments" xml:space="preserve"><value>Thanh toán</value></data>
   <data name="Backup_ExportTitle" xml:space="preserve"><value>Lịch sử sao lưu</value></data>
-  <data name="Err_20060" xml:space="preserve"><value>Yêu cầu đăng ký không tồn tại hoặc đã được xử lý.</value></data>
   <data name="Err_20061" xml:space="preserve"><value>Đang có quá nhiều yêu cầu đăng ký chờ duyệt. Vui lòng thử lại sau.</value></data>
   <data name="Err_20062" xml:space="preserve"><value>Thông tin đăng ký không hợp lệ.</value></data>
   <data name="Err_28001" xml:space="preserve"><value>Mật khẩu đã hết hạn. Vui lòng đặt mật khẩu mới.</value></data>
@@ -287,31 +286,11 @@
   <data name="ChangePassword_Confirm" xml:space="preserve"><value>Nhập lại mật khẩu mới</value></data>
   <data name="ChangePassword_Mismatch" xml:space="preserve"><value>Mật khẩu nhập lại không khớp.</value></data>
   <data name="ChangePassword_Rules" xml:space="preserve"><value>Tối thiểu 8 ký tự, có chữ hoa, chữ thường, chữ số và ký tự đặc biệt; không chứa tên đăng nhập.</value></data>
-  <data name="Reg_TempPassword" xml:space="preserve"><value>Mật khẩu tạm</value></data>
-  <data name="Reg_Approve" xml:space="preserve"><value>Duyệt</value></data>
   <data name="Login_Register" xml:space="preserve"><value>Đăng ký tài khoản</value></data>
   <data name="Register_Submitted" xml:space="preserve"><value>Đã gửi yêu cầu. Vui lòng chờ điều hành duyệt và cấp mật khẩu tạm.</value></data>
   <data name="Btn_ChangePassword" xml:space="preserve"><value>Đổi mật khẩu</value></data>
   <data name="ChangePassword_Done" xml:space="preserve"><value>Đã đổi mật khẩu.</value></data>
   <data name="Err_Unexpected" xml:space="preserve"><value>Đã xảy ra lỗi không mong muốn. Vui lòng thử lại.</value></data>
-  <data name="Menu_Registrations" xml:space="preserve"><value>Yêu cầu đăng ký</value></data>
-  <data name="Reg_Id" xml:space="preserve"><value>Mã</value></data>
-  <data name="Reg_Status" xml:space="preserve"><value>Trạng thái</value></data>
-  <data name="Reg_RequestedAt" xml:space="preserve"><value>Thời gian gửi</value></data>
-  <data name="Reg_Host" xml:space="preserve"><value>Máy gửi</value></data>
-  <data name="Reg_ReviewedBy" xml:space="preserve"><value>Người duyệt</value></data>
-  <data name="Reg_ReviewedAt" xml:space="preserve"><value>Thời gian duyệt</value></data>
-  <data name="Reg_RejectReason" xml:space="preserve"><value>Lý do từ chối</value></data>
-  <data name="Reg_OnlyPending" xml:space="preserve"><value>Chỉ yêu cầu đang chờ</value></data>
-  <data name="Reg_Reject" xml:space="preserve"><value>Từ chối</value></data>
-  <data name="Reg_ApproveTitle" xml:space="preserve"><value>Duyệt yêu cầu của {0}</value></data>
-  <data name="Reg_RejectTitle" xml:space="preserve"><value>Từ chối yêu cầu của {0}</value></data>
-  <data name="Reg_Approved" xml:space="preserve"><value>Đã tạo tài khoản. Hãy đưa trực tiếp mật khẩu tạm cho người dùng.</value></data>
-  <data name="Reg_Rejected" xml:space="preserve"><value>Đã từ chối yêu cầu.</value></data>
-  <data name="Reg_ExportTitle" xml:space="preserve"><value>Yêu cầu đăng ký</value></data>
-  <data name="RegStatus_Pending" xml:space="preserve"><value>Đang chờ</value></data>
-  <data name="RegStatus_Approved" xml:space="preserve"><value>Đã duyệt</value></data>
-  <data name="RegStatus_Rejected" xml:space="preserve"><value>Đã từ chối</value></data>
   <data name="Menu_LoginAudit" xml:space="preserve"><value>Nhật ký đăng nhập</value></data>
   <data name="Audit_Time" xml:space="preserve"><value>Thời gian</value></data>
   <data name="Audit_Username" xml:space="preserve"><value>Tài khoản</value></data>

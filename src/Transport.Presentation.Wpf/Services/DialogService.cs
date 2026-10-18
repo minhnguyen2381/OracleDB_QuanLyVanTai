@@ -62,12 +62,6 @@ public sealed class DialogService(ILocalizationService localization, Registratio
         return ShowModal(new ChangePasswordDialog(), viewModel) ? viewModel.Result : null;
     }
 
-    public ApprovalInput? PromptApproval(string title)
-    {
-        var viewModel = new ApproveRegistrationViewModel(title);
-        return ShowModal(new ApproveRegistrationDialog(), viewModel) ? viewModel.Result : null;
-    }
-
     private static bool ShowModal(Window dialog, IDialogViewModel viewModel)
     {
         dialog.DataContext = viewModel;

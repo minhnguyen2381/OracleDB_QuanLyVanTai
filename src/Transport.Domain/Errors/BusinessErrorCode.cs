@@ -22,8 +22,7 @@ public enum BusinessErrorCode
     ScheduleNotFound = 20050,
     ScheduleNotCancellable = 20051,
     ScheduleHasActiveTickets = 20052,
-    RegistrationNotFound = 20060,
-    TooManyPendingRequests = 20061,
+    TooManyRegistrations = 20061,
     InvalidRegistrationData = 20062,
 
     // Lỗi hệ thống Oracle hay gặp (giá trị = số ORA)
