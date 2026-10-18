@@ -2,6 +2,14 @@
 
 Ngày: 2026-10-18. Bổ sung cho `2026-10-17-transport-management-design.md` (gọi tắt "spec gốc"). Quy ước giữ nguyên: định danh SQL và thông điệp lỗi tiếng Anh, comment tiếng Việt, logic nghiệp vụ nằm trong PL/SQL.
 
+> **Cập nhật 2026-10-18 – tự đăng ký (Plan 6, `docs/superpowers/plans/2026-10-18-plan-6-self-registration.md`).** Bỏ luồng duyệt vì không có người duyệt. Các mục sau được **thay thế**:
+> - §2.2–2.3: không còn bảng `REGISTRATION_REQUESTS` và package `PKG_REGISTRATION`. `PKG_REGISTRATION_PUBLIC.register_account(p_username, p_password, p_full_name, p_phone)` kiểm tra dữ liệu (`-20062`), giới hạn 5 tài khoản/giờ cho mỗi user gọi theo `STAFF.CREATED_BY` (`-20061 Too many registrations. Try again later.`), rồi gọi `pkg_staff.create_staff(..., 'ROLE_TICKET_SELLER', p_expire => 0)`. Role luôn là bán vé, không `PASSWORD EXPIRE`.
+> - §2.4: `create_staff` có thêm `p_expire IN NUMBER DEFAULT 1`.
+> - §2.5: audit policy và `v_login_audit` theo dõi `PKG_STAFF` và `PKG_REGISTRATION_PUBLIC`.
+> - §3: bỏ `-20060`; `-20061` ứng với `TooManyRegistrations`.
+> - §4.1: form đăng ký có mật khẩu và nhập lại mật khẩu; đăng ký xong điền sẵn username và đăng nhập được ngay. §4.4: bỏ trang "Yêu cầu đăng ký".
+> - Đánh đổi chấp nhận: trùng username báo ORA-01920, nên có thể dò được username.
+
 ## 1. Bối cảnh – kết quả kiểm tra hiện trạng
 
 | # | Mức | Vấn đề | Cách xử lý (mục) |

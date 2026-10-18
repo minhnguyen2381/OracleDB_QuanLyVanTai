@@ -132,19 +132,22 @@ Người dùng đăng nhập bằng tài khoản Oracle cá nhân được cấp
 
 ### 4.3 Đăng ký tài khoản (Người dùng chưa có tài khoản)
 
-Khi chưa có tài khoản trong hệ thống, nhân viên có thể gửi yêu cầu đăng ký trực tiếp từ màn hình đăng nhập:
+Khi chưa có tài khoản, nhân viên tự đăng ký ngay tại màn hình đăng nhập:
 1. Nhấn nút **Đăng ký tài khoản** ở cuối form đăng nhập.
 2. Hộp thoại **Đăng ký tài khoản** xuất hiện:
    - **Tên đăng nhập**: Tối thiểu 3 ký tự, bắt đầu bằng chữ cái, chỉ chứa chữ cái, chữ số và dấu gạch dưới (`_`).
-   - **Họ và tên**: Họ tên đầy đủ của nhân viên (tối đa 100 ký tự).
-   - **Số điện thoại**: Số điện thoại liên hệ (10 chữ số, bắt đầu bằng 0, không bắt buộc).
-3. Nhấn **Gửi yêu cầu**. Hệ thống sẽ ghi nhận yêu cầu vào cơ sở dữ liệu qua tài khoản kỹ thuật chuyên dụng `TRANSPORT_REGISTRAR`.
-4. Người điều hành sẽ xét duyệt yêu cầu trong danh sách chờ và trực tiếp cấp mật khẩu tạm cho nhân viên.
+   - **Mật khẩu** và **Nhập lại mật khẩu**: theo quy tắc mật khẩu an toàn ở mục 4.4; hai ô phải khớp thì nút **Đăng ký** mới bật.
+   - **Họ và tên**: Họ tên đầy đủ (tối đa 100 ký tự).
+   - **Số điện thoại**: 10 chữ số, bắt đầu bằng 0, không bắt buộc.
+3. Nhấn **Đăng ký**. Tài khoản Oracle được tạo ngay qua tài khoản kỹ thuật `TRANSPORT_REGISTRAR`, với quyền **Nhân viên bán vé**.
+4. Hộp thoại đóng, tên đăng nhập được điền sẵn; nhập mật khẩu vừa đặt để đăng nhập (không phải đổi mật khẩu lần đầu).
+
+Lưu ý: tên đăng nhập đã tồn tại sẽ bị báo lỗi; mỗi giờ hệ thống chỉ nhận tối đa 5 tài khoản tự đăng ký. Người điều hành có thể nâng quyền hoặc khóa tài khoản ở trang **Nhân viên**.
 
 ### 4.4 Đặt mật khẩu mới lần đầu hoặc khi mật khẩu hết hạn
 
 Để đảm bảo an toàn thông tin, hệ thống áp dụng chính sách mật khẩu Oracle (`profile_staff` và hàm kiểm tra `staff_password_verify`):
-- **Bắt buộc đổi mật khẩu tạm**: Mọi tài khoản mới được tạo hoặc cấp mật khẩu tạm đều có trạng thái hết hạn ngay (`PASSWORD EXPIRE`). Trong lần đăng nhập đầu tiên bằng mật khẩu tạm, hộp thoại **Đặt mật khẩu mới** sẽ tự động bật lên.
+- **Bắt buộc đổi mật khẩu tạm**: Tài khoản do người điều hành tạo hoặc được đặt lại mật khẩu có trạng thái hết hạn ngay (`PASSWORD EXPIRE`). Trong lần đăng nhập đầu tiên bằng mật khẩu tạm, hộp thoại **Đặt mật khẩu mới** sẽ tự động bật lên. Tài khoản tự đăng ký không bị áp dụng vì mật khẩu do chính người dùng đặt.
 - **Thời hạn mật khẩu**: Mật khẩu có hiệu lực tối đa 90 ngày. Khi hết hạn (lỗi `ORA-28001`), ứng dụng yêu cầu đặt mật khẩu mới ngay khi đăng nhập.
 - **Quy tắc mật khẩu an toàn**:
   - Độ dài tối thiểu 8 ký tự.
@@ -163,21 +166,14 @@ Nhân viên có thể chủ động đổi mật khẩu bất kỳ lúc nào khi
    - Nhập lại vào ô **Nhập lại mật khẩu mới** để xác nhận trùng khớp.
 3. Nhấn **Đồng ý**. Hệ thống sẽ cập nhật mật khẩu trực tiếp trên CSDL Oracle và hiển thị thông báo thành công màu xanh.
 
-### 4.6 (Người điều hành) Duyệt yêu cầu đăng ký và Xem nhật ký đăng nhập
+### 4.6 (Người điều hành) Xem nhật ký đăng nhập
 
 Dành riêng cho tài khoản người điều hành (`ROLE_OPERATOR`):
 
-#### a) Duyệt yêu cầu đăng ký tài khoản (Menu 'Yêu cầu đăng ký')
-1. Vào menu **Yêu cầu đăng ký** (biểu tượng danh sách thẻ).
-2. Mặc định bảng chỉ hiển thị các yêu cầu có trạng thái **Đang chờ** (Pending). Bỏ chọn ô *Chỉ yêu cầu đang chờ* nếu muốn xem toàn bộ lịch sử đã duyệt hoặc từ chối.
-3. **Duyệt yêu cầu**: Chọn dòng yêu cầu $\rightarrow$ Nhấn nút **Duyệt** $\rightarrow$ Hộp thoại yêu cầu nhập mật khẩu tạm và chọn vai trò cho nhân viên (`Nhân viên bán vé` hoặc `Người điều hành`) $\rightarrow$ Nhấn **Duyệt**. Hệ thống tạo tài khoản Oracle thật cho nhân viên với mật khẩu tạm hết hạn ngay. Người điều hành trao mật khẩu tạm này trực tiếp cho nhân viên.
-4. **Từ chối yêu cầu**: Chọn dòng $\rightarrow$ Nhấn **Từ chối** $\rightarrow$ Nhập lý do từ chối $\rightarrow$ Xác nhận.
-5. Có thể nhấn **Xuất Excel** (`Ctrl + E`) để kết xuất danh sách yêu cầu.
-
-#### b) Tra cứu nhật ký đăng nhập (Menu 'Nhật ký đăng nhập')
+#### Tra cứu nhật ký đăng nhập (Menu 'Nhật ký đăng nhập')
 1. Vào menu **Nhật ký đăng nhập** (biểu tượng bảo mật ổ khóa).
 2. Lọc theo tên tài khoản hoặc khoảng thời gian (*Từ ngày* – *Đến ngày*) $\rightarrow$ Nhấn **Tìm kiếm**.
-3. Dữ liệu được trích xuất trực tiếp từ Oracle Unified Auditing qua view `V_LOGIN_AUDIT`, hiển thị: Thời gian, Tài khoản, Hành động (`LOGON`), Kết quả (`Thành công` / `Thất bại`), Tên máy trạm gửi kết nối và Đối tượng truy cập.
+3. Dữ liệu được trích xuất trực tiếp từ Oracle Unified Auditing qua view `V_LOGIN_AUDIT`, hiển thị: Thời gian, Tài khoản, Hành động (`LOGON`, hoặc `EXECUTE` khi quản trị tài khoản hay tự đăng ký), Kết quả (`Thành công` / `Thất bại`), Tên máy trạm gửi kết nối và Đối tượng truy cập.
 4. Nhấn **Xuất Excel** (`Ctrl + E`) để lưu báo cáo kiểm toán đăng nhập ra file `.xlsx`.
 
 

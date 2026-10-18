@@ -49,7 +49,7 @@ dotnet run --project src/Transport.Presentation.Wpf
 ## Bảo mật hệ thống
 
 - **Chính sách mật khẩu & Profile:** Ràng buộc độ phức tạp qua hàm `staff_password_verify` trong `profile_staff`, bắt buộc đổi mật khẩu tạm lần đầu (`PASSWORD EXPIRE`), giới hạn 5 lần sai mật khẩu khóa 15 phút, lưu vết 5 mật khẩu gần nhất không được trùng (`PASSWORD_REUSE_MAX 5`).
-- **Tài khoản đăng ký REGISTRAR:** `TRANSPORT_REGISTRAR` (mật khẩu `Register#Only1` trong `appsettings.json`) được cấu hình công khai có chủ đích theo nguyên tắc đặc quyền tối thiểu (Least Privilege): chỉ sở hữu quyền `CREATE SESSION` và `EXECUTE` duy nhất stored procedure `PKG_REGISTRATION_PUBLIC.SUBMIT_REQUEST` để gửi yêu cầu đăng ký tài khoản mới; không có quyền đọc bất kỳ bảng dữ liệu nào trong CSDL.
+- **Tài khoản đăng ký REGISTRAR:** `TRANSPORT_REGISTRAR` (mật khẩu `Register#Only1` trong `appsettings.json`) được công khai có chủ đích theo nguyên tắc đặc quyền tối thiểu: chỉ có `CREATE SESSION` và `EXECUTE` trên `PKG_REGISTRATION_PUBLIC.REGISTER_ACCOUNT`. Thủ tục này luôn tạo tài khoản **bán vé** (không bao giờ là điều hành), tối đa 5 tài khoản mỗi giờ; REGISTRAR không đọc được bảng nào.
 - **Nhật ký đăng nhập & quản trị tài khoản:** Sử dụng Oracle Unified Auditing với 2 audit policies `pol_transport_logon` và `pol_transport_account_admin`, cung cấp view `V_LOGIN_AUDIT` cho người điều hành theo dõi thời gian thực.
 - **Kiểm tra cấu hình bảo mật:** Chạy script kiểm thử bảo mật tự động `database/11_security_checks.sql` (bằng tài khoản SYS) để xác minh 100% các tiêu chí bảo mật đạt chuẩn.
 - *Ghi chú:* Các script `.bat` truyền mật khẩu qua dòng lệnh `sqlplus`/`expdp`, tiến trình khác trên cùng máy có thể thấy – chỉ chạy trên máy cài đặt tin cậy.
@@ -63,9 +63,9 @@ OracleDB_QuanLyVanTai/
 ├── database/                    # Toàn bộ mã nguồn CSDL Oracle 21c XE
 │   ├── 00_uninstall.sql         # Script dọn dẹp sạch sẽ schema và users
 │   ├── 01_sys_setup.sql         # Tạo user TRANSPORT, roles, directory BACKUP_DIR
-│   ├── 02_tables.sql            # Tạo các bảng nghiệp vụ chính và REGISTRATION_REQUESTS
+│   ├── 02_tables.sql            # Tạo các bảng nghiệp vụ chính
 │   ├── 03_triggers.sql          # Triggers nghiệp vụ chặn trùng ghế, hủy chuyến
-│   ├── 04_packages.sql          # Packages PKG_TICKET, PKG_SCHEDULE, PKG_STAFF, PKG_REGISTRATION
+│   ├── 04_packages.sql          # Packages PKG_TICKET, PKG_SCHEDULE, PKG_STAFF, PKG_REGISTRATION_PUBLIC
 │   ├── 05_views.sql             # Views V_TRIP_STATISTICS, V_LOGIN_AUDIT
 │   ├── 06_backup.sql            # Thủ tục sao lưu, bảng snapshot *_BK, Nightly Job
 │   ├── 07_grants.sql            # Phân quyền bảo mật cho Roles và REGISTRAR
