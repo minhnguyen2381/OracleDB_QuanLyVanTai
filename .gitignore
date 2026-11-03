@@ -7,3 +7,10 @@ obj/
 publish/
 TestResults/
 *.slnx.user
+
+# ClaudeSkillCommon deploy (auto-added)
+.agents/
+.claude/
+
+# Workspace bao cao (tao bang skill github-academic-report)
+bao-cao-quan-ly-van-tai/
