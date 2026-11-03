@@ -4,6 +4,15 @@ SET DEFINE OFF
 SET SQLBLANKLINES ON
 SET SERVEROUTPUT ON SIZE UNLIMITED
 
+-- Chặn chạy sai bảng mã: nếu sqlplus đọc file UTF-8 này với NLS_LANG khác AL32UTF8 thì 'Đ' thành 2 ký tự
+-- và mọi chữ tiếng Việt bị lưu sai (vd "HÃ  Ná»™i"). install_all.bat đã đặt NLS_LANG đúng.
+BEGIN
+  IF LENGTH('Đ') <> 1 THEN
+    RAISE_APPLICATION_ERROR(-20998, 'Client character set is not UTF-8. Set NLS_LANG=AMERICAN_AMERICA.AL32UTF8 and rerun.');
+  END IF;
+END;
+/
+
 -- Tuyến xe
 INSERT INTO routes (route_name, origin, destination, distance_km, duration_min, base_price) VALUES ('Hà Nội - Lào Cai',   'Hà Nội', 'Lào Cai',   300, 330, 280000);
 INSERT INTO routes (route_name, origin, destination, distance_km, duration_min, base_price) VALUES ('Hà Nội - Hải Phòng', 'Hà Nội', 'Hải Phòng', 120, 150, 120000);
